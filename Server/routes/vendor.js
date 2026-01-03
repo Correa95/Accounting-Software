@@ -68,6 +68,9 @@ router.put("/:id", async (req, res) => {
     payments,
   } = req.body;
   try {
-    const updateVendor = await prisma;
+    const updateVendor = await prisma.vendor.update({
+      where: { id: id.params.id },
+      data: {},
+    });
   } catch (error) {}
 });
