@@ -50,5 +50,5 @@ router.get("/:id", async (req, res) => {
   });
   vendor
     ? res.json(vendor)
-    : res.statusCode(404).json({ error: "Tenant not found" });
+    : res.statusCode(404).json({ error: "Vendor not found" });
 });
