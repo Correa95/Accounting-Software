@@ -84,6 +84,8 @@ router.put("/:id", async (req, res) => {
         payments,
       },
     });
-    res.json(updateTenant).sendStatus(200).json({ message: "Tenant Updated" });
-  } catch (error) {}
+    res.json(updateVendor).sendStatus(200).json({ message: "Vendor Updated" });
+  } catch (error) {
+    res.statusCode(500).json({ error: "Error updating Vendor", details: err });
+  }
 });
