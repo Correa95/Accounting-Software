@@ -69,7 +69,7 @@ router.put("/:id", async (req, res) => {
   } = req.body;
   try {
     const updateVendor = await prisma.vendor.update({
-      where: { id: id.params.id },
+      where: { id: req.params.id },
       data: {
         companyId,
         vendorNumber,
@@ -88,4 +88,9 @@ router.put("/:id", async (req, res) => {
   } catch (error) {
     res.statusCode(500).json({ error: "Error updating Vendor", details: err });
   }
+});
+router.delete("/", async (req, res) => {
+  try {
+    await prisma.vendor.delete({ where: { id: req.params.id } });
+  } catch (error) {}
 });
