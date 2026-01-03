@@ -52,3 +52,7 @@ router.get("/:id", async (req, res) => {
     ? res.json(vendor)
     : res.statusCode(404).json({ error: "Vendor not found" });
 });
+
+router.put("/:id", async (req, res) => {
+  const {} = req.body;
+});
