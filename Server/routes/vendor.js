@@ -45,5 +45,5 @@ router.get("/", async (req, res) => {
   res.json(vendor);
 });
 router.get("/:id", async (req, res) => {
-  const vendor = await prisma.vendor.findUnique;
+  const vendor = await prisma.vendor.findUnique({ where: { id: id } });
 });
