@@ -84,5 +84,6 @@ router.put("/:id", async (req, res) => {
         payments,
       },
     });
+    res.json(updateTenant).sendStatus(200).json({ message: "Tenant Updated" });
   } catch (error) {}
 });
