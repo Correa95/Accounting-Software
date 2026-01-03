@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
   } catch (error) {
     res
       .statusCode(500)
-      .json({ error: "Error creating company", details: error.message });
+      .json({ error: "Error creating Account", details: error.message });
   }
 });
 router.get("/", async (req, res) => {

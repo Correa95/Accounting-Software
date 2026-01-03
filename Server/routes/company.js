@@ -5,8 +5,8 @@ const prisma = new PrismaClient();
 
 router.post("/company", async (req, res) => {
   const {
-    companyName,
-    companyLegalName,
+    name,
+    legalName,
     address,
     phone,
     email,
@@ -27,8 +27,8 @@ router.post("/company", async (req, res) => {
   try {
     const company = await prisma.company.create({
       data: {
-        companyName,
-        companyLegalName,
+        name,
+        legalName,
         address,
         phone,
         email,
@@ -51,7 +51,7 @@ router.post("/company", async (req, res) => {
   } catch (error) {
     res
       .statusCode(500)
-      .json({ error: "Error creating company", details: error.message });
+      .json({ error: "Error creating Company", details: error.message });
   }
 });
 
@@ -71,8 +71,8 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const {
-    companyName,
-    companyLegalName,
+    name,
+    legalName,
     address,
     phone,
     email,
@@ -94,8 +94,8 @@ router.put("/:id", async (req, res) => {
     const updateCompany = await prisma.company.update({
       where: { id: req.params.id },
       data: {
-        companyName,
-        companyLegalName,
+        name,
+        legalName,
         address,
         phone,
         email,
