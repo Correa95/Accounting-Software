@@ -46,7 +46,7 @@ router.get("/", async (req, res) => {
 });
 router.get("/:id", async (req, res) => {
   const vendor = await prisma.vendor.findUnique({
-    where: { id: id.params.id },
+    where: { id: req.params.id },
   });
   vendor
     ? res.json(vendor)
