@@ -54,5 +54,20 @@ router.get("/:id", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-  const {} = req.body;
+  const {
+    companyId,
+    vendorNumber,
+    name,
+    email,
+    phone,
+    address,
+    taxId,
+    paymentTerms,
+    isActive,
+    bills,
+    payments,
+  } = req.body;
+  try {
+    const updateVendor = await prisma;
+  } catch (error) {}
 });
