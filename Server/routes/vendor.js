@@ -92,5 +92,10 @@ router.put("/:id", async (req, res) => {
 router.delete("/", async (req, res) => {
   try {
     await prisma.vendor.delete({ where: { id: req.params.id } });
-  } catch (error) {}
+  } catch (error) {
+    res
+      .statusCode(500)
+      .json({ error: "Error Deleting Vendor", details: error });
+  }
 });
+module.exports = router;
