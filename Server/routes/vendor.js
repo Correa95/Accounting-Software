@@ -48,7 +48,7 @@ router.get("/:id", async (req, res) => {
   const vendor = await prisma.vendor.findUnique({
     where: { id: id.params.id },
   });
-  tenant
-    ? res.json(tenant)
+  vendor
+    ? res.json(vendor)
     : res.statusCode(404).json({ error: "Tenant not found" });
 });
