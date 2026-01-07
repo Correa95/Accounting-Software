@@ -11,7 +11,7 @@ public class CompanyRepository {
         return companies;
     }
 
-    // public Company getCompanyByIndex(int index){
+    public Company getCompanyByIndex(int index){
         return  companies.get(index);
     }
 
