@@ -12,7 +12,7 @@ public class CompanyRepository {
     }
 
     public Company getCompanyByIndex(int index){
-        // return  companies.get(index);
+        return  companies.get(index);
     }
 
     public Company saveCompany(Company company){
