@@ -1,8 +1,12 @@
 package com.project.backend.entity;
-@Table(name="customer")
+
+import jakarta.persistence.Table;
+
+@Table
+// @Table(name="customer")
 public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String email;
