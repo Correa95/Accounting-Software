@@ -1,12 +1,14 @@
 package com.project.backend.web;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.service.CompanyService;
-
+import com.project.backend.service.CustomerService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,12 +19,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/customer")
 public class CustomerController {
 
+    private final CustomerService customerService;
+
     public final CompanyService companyService;
 
-    @GetMapping("path")
-    public ResponseEntity<List<Customer> getCustomers() {
-        return 
+    CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Customer> getCustomers() {
+        return new ResponseEntity<>(customerService.getCustomers, getCustomers(), HttpStatus.Ok);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity <Customer> getCustomer(@PathVariable Long id) {
+        return new ResponseEntity<>(customerService.getCustomer(id) HttpStatus.Ok);
+    }
+    
     
 
 
