@@ -29,7 +29,7 @@ public class CustomerController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Customer> getCustomers() {
-        return new ResponseEntity<>(customerService.getCustomers, getCustomers(), HttpStatus.Ok);
+        return new ResponseEntity<>(customerService.getCustomers(), HttpStatus.Ok);
     }
 
     @GetMapping("/{id}")
