@@ -23,6 +23,14 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findById(id);
     }
 
+    @Override
+    public Customer savCustomer(Customer customer){
+        return customerRepository.save(customer);
+    }
+
+    @Override
     
+
+
 
 }
