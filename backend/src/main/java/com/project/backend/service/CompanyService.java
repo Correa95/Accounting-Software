@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.project.backend.entity.Company;
+
 @Service
 public interface  CompanyService {
   

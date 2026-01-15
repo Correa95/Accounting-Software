@@ -1,10 +1,14 @@
 package com.project.backend.web;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 
-@Reques
+@RequestMapping
+@GetMapping("/customer")
 public class CustomerController {
+    
 
     
 
