@@ -7,11 +7,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.backend.entity.Customer;
 import com.project.backend.service.CompanyService;
 import com.project.backend.service.CustomerService;
-import lombok.AllArgsConstructor;
 
-import org.springframework.web.bind.annotation.RequestParam;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+
+
 
 
 @AllArgsConstructor
@@ -29,13 +34,19 @@ public class CustomerController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Customer> getCustomers() {
-        return new ResponseEntity<>(customerService.getCustomers(), HttpStatus.Ok);
+        return new ResponseEntity<>(customerService.getCustomers(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Customer> getCustomer(@PathVariable Long id) {
-        return new ResponseEntity<>(customerService.getCustomer(id) HttpStatus.Ok);
+        return new ResponseEntity<>(customerService.getCustomer(id), HttpStatus.Ok);
     }
+
+    @PostMapping
+    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
+        return new ResponseEntity<>(customerService.savCustomer(customer), HttpStatus.CREATED);
+    }
+    
 
 
     
