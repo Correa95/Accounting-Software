@@ -21,11 +21,11 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    public final CompanyService companyService;
+    // public final CompanyService companyService;
 
-    CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+    // CustomerController(CustomerService customerService) {
+    //     this.customerService = customerService;
+    // }
 
     @GetMapping("/all")
     public ResponseEntity<List<Customer> getCustomers() {
@@ -33,9 +33,11 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity <Customer> getCustomer(@PathVariable Long id) {
+    public ResponseEntity<Customer> getCustomer(@PathVariable Long id) {
         return new ResponseEntity<>(customerService.getCustomer(id) HttpStatus.Ok);
     }
+
+
     
     
 
