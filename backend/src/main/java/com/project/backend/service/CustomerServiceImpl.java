@@ -37,7 +37,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer updaCustomer(long id, Customer customer){
         Customer existingCustomer = getCustomer(id);
-Company existingCustomer = getCompany(id);
+    Company existingCustomer = getCompany(id);
+
     existingCustomer.setName(name.getName());
     existingCustomer.setAddress(customer.getAddress());
     existingCustomer.setPhone(customer.getPhone());
@@ -45,7 +46,7 @@ Company existingCustomer = getCompany(id);
     existingCustomer.setTaxId(customer.getTaxId());
 
 
-    existingCustomer.setFiscalPeriod(customer.getFiscalPeriod());
+    
     return companyRepository.save(existingCustomer);
     }
 
