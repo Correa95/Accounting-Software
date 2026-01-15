@@ -1,6 +1,8 @@
 package com.project.backend.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import lombok.AllArgsConstructor;
 import com.project.backend.entity.Customer;
 import com.project.backend.repository.CustomerRepository;
@@ -29,7 +31,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    
+    public Customer updaCustomer(long id, Customer customer){
+        Customer existingCustomer = getCustomer(id);
+
+    }
+
 
 
 
