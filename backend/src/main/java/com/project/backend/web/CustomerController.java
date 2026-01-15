@@ -14,6 +14,8 @@ import com.project.backend.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -45,6 +47,12 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
         return new ResponseEntity<>(customerService.savCustomer(customer), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable String id, @RequestBody Customer customer) {
+        Customer updaCustomer = customerService
+        return new ResponseEntity<>(customerService.updateCustomer(id, customer))
     }
     
 
