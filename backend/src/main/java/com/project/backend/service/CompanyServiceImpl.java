@@ -32,16 +32,16 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     public Company updateCompany(Long id, Company company) {
-    Company existing = getCompany(id);
-    existing.setName(name.getName());
-    existing.setLegalName(company.getLegalName());
-    existing.setAddress(company.getAddress());
-    existing.setPhone(company.getPhone());
-    existing.setEmail(company.getEmail());
-    existing.setTaxId(company.getTaxId());
-    existing.setCurrencyCode(company.getCurrencyCode());
-    existing.setFiscalPeriod(company.getFiscalPeriod());
-    return companyRepository.save(existing);
+    Company existingCompany = getCompany(id);
+    existingCompany.setName(name.getName());
+    existingCompany.setLegalName(company.getLegalName());
+    existingCompany.setAddress(company.getAddress());
+    existingCompany.setPhone(company.getPhone());
+    existingCompany.setEmail(company.getEmail());
+    existingCompany.setTaxId(company.getTaxId());
+    existingCompany.setCurrencyCode(company.getCurrencyCode());
+    existingCompany.setFiscalPeriod(company.getFiscalPeriod());
+    return companyRepository.save(existingCompany);
 }
 
     @Override
