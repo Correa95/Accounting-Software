@@ -11,6 +11,14 @@ import com.project.backend.repository.CustomerRepository;
 public class CustomerServiceImpl implements CustomerService {
 
     public final CustomerRepository customerRepository;
-    
+
+
+    @Override
+    public List<Customer> getCustomers(){
+        return customerRepository.findAll();
+    }
+
+    @Override
+    pub
 
 }
