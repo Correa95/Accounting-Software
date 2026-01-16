@@ -12,6 +12,6 @@ public interface  CustomerService {
     Customer getCustomer(long customerId, long companyId);
     Customer saveCustomer(Customer customer, long companyId);
     Customer updateCustomer(long customerId, long companyId, Customer customer);
-    void deleteCustomer(Long customerId, long companyId);
+    void deleteCustomer(long customerId, long companyId);
 
 }

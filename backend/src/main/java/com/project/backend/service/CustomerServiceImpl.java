@@ -19,7 +19,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CompanyRepository companyRepository;
 
     @Override
-    public List<Customer> getCustomers(Long companyId) {
+    public List<Customer> getCustomers(long companyId) {
         return customerRepository.findByCompanyId(companyId);
     }
 
@@ -56,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomer(Long customerId, Long companyId) {
+    public void deleteCustomer(long customerId, long companyId) {
         Customer customer = getCustomer(customerId, companyId);
         customer.setActive(false);
         customerRepository.save(customer);
