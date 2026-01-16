@@ -9,6 +9,6 @@ import com.project.backend.entity.Customer;
 
 public interface  CustomerRepository extends JpaRepository<Customer, Long>{
     List<Customer> findByCompanyId(Long companyId);
-    Optional<Customer> 
+    Optional<Customer> findByIdAndCompanyId(Long id, Long companyId);
     
 }

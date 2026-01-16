@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import lombok.AllArgsConstructor;
-
 import com.project.backend.entity.Company;
 import com.project.backend.entity.Customer;
 import com.project.backend.repository.CompanyRepository;
 import com.project.backend.repository.CustomerRepository;
+
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
@@ -20,11 +20,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Customer> getCustomers(long companyId) {
+        // This find the customer associated with the company
         return customerRepository.findByCompanyId(companyId);
     }
 
     @Override
     public Customer getCustomer(long customerId, long companyId) {
+        // find the customer that belong only to this company
         return customerRepository
                 .findByIdAndCompanyId(customerId, companyId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
