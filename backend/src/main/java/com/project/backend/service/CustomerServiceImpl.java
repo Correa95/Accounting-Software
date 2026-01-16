@@ -24,14 +24,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomer(Long customerId, Long companyId) {
+    public Customer getCustomer(long customerId, long companyId) {
         return customerRepository
                 .findByIdAndCompanyId(customerId, companyId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
     }
 
     @Override
-    public Customer saveCustomer(Customer customer, Long companyId) {
+    public Customer saveCustomer(Customer customer, long companyId) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
 
@@ -41,10 +41,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer updateCustomer(Long customerId, Long companyId, Customer customer) {
+    public Customer updateCustomer(long customerId, long companyId, Customer customer) {
         Customer existingCustomer = getCustomer(customerId, companyId);
 
-        existingCustomer.setName(customer.getName());
+        existingCustomer.setName(customer.getCustomerName());
         existingCustomer.setPhone(customer.getPhone());
         existingCustomer.setEmail(customer.getEmail());
         existingCustomer.setBillingAddress(customer.getBillingAddress());
