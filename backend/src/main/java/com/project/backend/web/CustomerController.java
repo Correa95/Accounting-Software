@@ -32,7 +32,7 @@ public class CustomerController {
 
   // Get all customers for a company
     @GetMapping
-    public ResponseEntity<List<Customer> getCustomers(@PathVariable long companyId) {
+    public ResponseEntity<List<Customer>> getCustomers(@PathVariable long companyId) {
         return new ResponseEntity<>(customerService.getCustomers(companyId), HttpStatus.OK);
     }
 
