@@ -56,6 +56,6 @@ public class CustomerServiceImpl implements CustomerService {
     public void deleteCustomer(Long customerId, Long companyId) {
         Customer customer = getCustomer(customerId, companyId);
         customer.setActive(false);
-        customerRepository.deleteCus(customer);
+        customerRepository.save(customer);
     }
 }
