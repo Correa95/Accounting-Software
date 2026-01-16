@@ -8,10 +8,10 @@ import com.project.backend.entity.Customer;
 
 @Service
 public interface  CustomerService {
-    List<Customer> getCustomers();
-    Customer getCustomer(Long id);
-    Customer savCustomer(Customer customer);
-    Customer updateCustomer(long id, Customer customer);
-    void deleteCustomer(Long id);
+    List<Customer> getCustomers(long companyId);
+    Customer getCustomer(Long customerId, long companyId);
+    Customer savCustomer(Customer customer, long companyId);
+    Customer updateCustomer(long customerId, long companyId, Customer customer);
+    void deleteCustomer(Long customerId, long companyId);
 
 }

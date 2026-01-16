@@ -4,7 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,14 +15,16 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name="customer")
+@Table(name="customer", 
+uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"company_id", "email"})})
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable=false)
-    private String name;
+    private String customerName;
 
     @Column(nullable=false)
     private String email;
@@ -37,13 +42,17 @@ public class Customer {
     private String taxId;
 
     @Column(nullable=false)
-    private int paymentTerm;
+    private Integer paymentTerm;
 
     @Column(nullable=false)
     private double creditLimit;
 
     @Column(nullable=false)
     private boolean isActive;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "company_id", referencedColumnName = "id")
+    private Company company;
 
     
 }

@@ -3,55 +3,58 @@ package com.project.backend.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import lombok.AllArgsConstructor;
 
 import com.project.backend.entity.Company;
 import com.project.backend.entity.Customer;
+import com.project.backend.repository.CompanyRepository;
 import com.project.backend.repository.CustomerRepository;
-
 
 @AllArgsConstructor
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    public final CustomerRepository customerRepository;
-
+    private final CustomerRepository customerRepository;
+    private final CompanyRepository companyRepository;
 
     @Override
-    public List<Customer> getCustomers(){
-        return customerRepository.findAll();
+    public List<Customer> getCustomers(Long companyId) {
+        return customerRepository.findByCompanyId(companyId);
     }
 
     @Override
-    public Customer getCustomer(Long id){
-        return customerRepository.findById(id);
+    public Customer getCustomer(Long customerId, Long companyId) {
+        return customerRepository
+                .findByIdAndCompanyId(customerId, companyId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
     }
 
     @Override
-    public Customer savCustomer(Customer customer){
+    public Customer saveCustomer(Customer customer, Long companyId) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+
+        customer.setCompany(company);
         return customerRepository.save(customer);
     }
 
     @Override
-    public Customer updaCustomer(long id, Customer customer){
+    public Customer updateCustomer(Long customerId, Long companyId, Customer customer) {
+        Customer existingCustomer = getCustomer(customerId, companyId);
 
-        Customer existingCustomer = getCustomer(id);
-        
-
-        existingCustomer.setName(name.getName());
+        existingCustomer.setName(customer.getName());
         existingCustomer.setPhone(customer.getPhone());
         existingCustomer.setEmail(customer.getEmail());
+        existingCustomer.setBillingAddress(customer.getBillingAddress());
+        existingCustomer.setShippingAddress(customer.getShippingAddress());
 
-        existingCustomer.setAddress(customer.billingAddress());
-        existingCustomer.setAddress(customer.shippingAddress());
-
-    
-    return companyRepository.save(existingCustomer);
+        return customerRepository.save(existingCustomer);
     }
 
-
-
-
+    @Override
+    public void deleteCustomer(Long customerId, Long companyId) {
+        Customer customer = getCustomer(customerId, companyId);
+        customerRepository.delete(customer);
+    }
 }
