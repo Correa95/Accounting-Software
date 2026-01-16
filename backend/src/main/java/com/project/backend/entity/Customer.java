@@ -45,10 +45,10 @@ public class Customer {
     private Integer paymentTerm;
 
     @Column(nullable=false)
-    private double creditLimit;
+    private BigDecimal creditLimit;
 
     @Column(nullable=false)
-    private boolean isActive;
+    private boolean active = true;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
