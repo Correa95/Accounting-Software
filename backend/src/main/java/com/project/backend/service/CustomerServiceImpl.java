@@ -35,6 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
 
+                
         customer.setCompany(company);
         return customerRepository.save(customer);
     }
@@ -48,6 +49,8 @@ public class CustomerServiceImpl implements CustomerService {
         existingCustomer.setEmail(customer.getEmail());
         existingCustomer.setBillingAddress(customer.getBillingAddress());
         existingCustomer.setShippingAddress(customer.getShippingAddress());
+        existingCustomer.setPaymentTerm(customer.getPaymentTerm());
+        existingCustomer.setCreditLimit(customer.getCreditLimit());
 
         return customerRepository.save(existingCustomer);
     }
