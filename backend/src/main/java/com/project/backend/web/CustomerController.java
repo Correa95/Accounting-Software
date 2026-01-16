@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.entity.Customer;
-import com.project.backend.service.CompanyService;
+
 import com.project.backend.service.CustomerService;
 
 import lombok.AllArgsConstructor;
@@ -59,8 +59,10 @@ public class CustomerController {
         @PathVariable Long companyId,
         @PathVariable Long customerId) {
 
+    // customerService.deleteCustomer(customerId, companyId);
     customerService.deleteCustomer(customerId, companyId);
-    return new ResponseEntity<>(customerService.deleteCustomer(companyId, customerId), HttpStatus.NO_CONTENT); // HTTP 204
+        return ResponseEntity.noContent().build();
+    // return new ResponseEntity<>(customerService.deleteCustomer(customerId, companyId), HttpStatus.NO_CONTENT); // HTTP 204
 }
         
 
