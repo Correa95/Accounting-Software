@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer updateCustomer(long customerId, long companyId, Customer customer) {
         Customer existingCustomer = getCustomer(customerId, companyId);
 
-        existingCustomer.setName(customer.getCustomerName());
+        existingCustomer.setCustomerName(customer.getCustomerName());
         existingCustomer.setPhone(customer.getPhone());
         existingCustomer.setEmail(customer.getEmail());
         existingCustomer.setBillingAddress(customer.getBillingAddress());
