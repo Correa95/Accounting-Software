@@ -45,7 +45,7 @@ public class CustomerController {
      // Create a customer
     @PostMapping
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer, @PathVariable long companyId) {
-        return new ResponseEntity<>(customerService.savCustomer(customer, companyId), HttpStatus.CREATED);
+        return new ResponseEntity<>(customerService.saveCustomer(customer, companyId), HttpStatus.CREATED);
     }
     // Update a customer
     @PutMapping("/{customerId}")
