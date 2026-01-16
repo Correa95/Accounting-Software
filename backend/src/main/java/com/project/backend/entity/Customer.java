@@ -1,6 +1,7 @@
 package com.project.backend.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -50,8 +51,8 @@ public class Customer {
     @Column(nullable=false)
     private boolean active = true;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "company_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id", nullable = false, referencedColumnName = "id")
     private Company company;
 
     
