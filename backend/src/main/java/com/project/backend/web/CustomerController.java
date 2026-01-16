@@ -39,7 +39,7 @@ public class CustomerController {
     // Get a single customer
     @GetMapping("/{customerId}")
     public ResponseEntity<Customer> getCustomer(@PathVariable Long companyId, @PathVariable long customerId) {
-        return new ResponseEntity<>(customerService.getCustomer(customerId, companyId), HttpStatus.Ok);
+        return new ResponseEntity<>(customerService.getCustomer(customerId, companyId), HttpStatus.OK);
     }
 
      // Create a customer
