@@ -178,8 +178,8 @@
     -Ownership validation (companyId)
     -No HTTP or DB leakage
 
-Repository
+# Repository
 
-Pure persistence
+-Pure persistence
 
-No business logic
+-No business logic
