@@ -174,11 +174,9 @@
 
 # ServiceImpl
 
--Business rules
-
--Ownership validation (companyId)
-
--No HTTP or DB leakage
+    -Business rules
+    -Ownership validation (companyId)
+    -No HTTP or DB leakage
 
 Repository
 
