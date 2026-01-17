@@ -1,5 +1,8 @@
 package com.project.backend.common.enums;
 
-public class InvoiceStatus {
-    
+public enum InvoiceStatus {
+    DRAFT,
+    SENT,
+    PAID,
+    VOID
 }
