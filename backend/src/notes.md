@@ -180,6 +180,5 @@
 
 # Repository
 
--Pure persistence
-
--No business logic
+    -Pure persistence
+    -No business logic
