@@ -58,11 +58,10 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(
         @PathVariable Long companyId,
         @PathVariable Long customerId) {
-
-    // customerService.deleteCustomer(customerId, companyId);
+    
     customerService.deleteCustomer(customerId, companyId);
         return ResponseEntity.noContent().build();
-    // return new ResponseEntity<>(customerService.deleteCustomer(customerId, companyId), HttpStatus.NO_CONTENT); // HTTP 204
+    
     }
 }  
 

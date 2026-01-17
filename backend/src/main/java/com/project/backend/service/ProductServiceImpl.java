@@ -1,0 +1,61 @@
+package com.project.backend.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.project.backend.entity.Company;
+import com.project.backend.entity.Product;
+import com.project.backend.repository.CompanyRepository;
+import com.project.backend.repository.ProductRepository;
+
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+@Service
+public  class ProductServiceImpl implements ProductService{
+
+    public final ProductRepository productRepository;
+    public final CompanyRepository companyRepository;
+
+    @Override
+    public List<Product> getProducts(long companyId){
+        // This find the customer associated with the company
+        return productRepository.findByCompanyId(companyId);
+    }
+
+    @Override
+    public Product getProduct(long productId, long companyId){
+        // find the customer that is only associated with this company
+
+        return productRepository.findByProductIdAndCompanyId(productId, companyId).orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+
+    @Override
+    public Product saveProduct(Product product, long companyId){
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+        product.setCompany(company);
+        product.setAvailable(true);
+        return productRepository.save(product);
+
+    }
+
+    @Override
+    public Product updateProduct(long productId, long companyId, Product product){
+        Product existingProduct = getProduct(productId, companyId);
+
+        existingProduct.setProductName(product.getProductName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setUnitPrice(product.getUnitPrice());
+        existingProduct.setCost(product.getCost());
+        return productRepository.save(existingProduct);
+    }
+
+    @Override
+    public void deleteProduct(long productId, long companyId){
+        Product product = getProduct(productId, companyId);
+        product.setAvailable(false);
+        productRepository.save(product);
+    }
+}

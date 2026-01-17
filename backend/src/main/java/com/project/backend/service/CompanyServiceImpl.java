@@ -17,12 +17,13 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     public List<Company> getCompanies(){
-        return CompanyRepository.findAll();
+        return companyRepository.findAll();
     }
 
     @Override
-    public Company getCompany(Long id){
-        return companyRepository.findById(id);
+    public Company getCompany(long id){
+        return companyRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Company not found"));
     }
 
     @Override
@@ -31,21 +32,22 @@ public class CompanyServiceImpl implements CompanyService{
     }
 
     @Override
-    public Company updateCompany(Long id, Company company) {
+    public Company updateCompany(long id, Company company) {
     Company existingCompany = getCompany(id);
-    existingCompany.setName(name.getName());
+    existingCompany.setName(company.getName());
     existingCompany.setLegalName(company.getLegalName());
     existingCompany.setAddress(company.getAddress());
     existingCompany.setPhone(company.getPhone());
     existingCompany.setEmail(company.getEmail());
     existingCompany.setTaxId(company.getTaxId());
     existingCompany.setCurrencyCode(company.getCurrencyCode());
-    existingCompany.setFiscalPeriod(company.getFiscalPeriod());
+    existingCompany.setFiscalYearStart(company.getFiscalYearStart());
+    existingCompany.setFiscalYearEnd(company.getFiscalYearEnd());
     return companyRepository.save(existingCompany);
 }
 
     @Override
-    public void deleteCompany(Long id){
+    public void deleteCompany(long id){
         companyRepository.deleteById(id);
     }
 }
