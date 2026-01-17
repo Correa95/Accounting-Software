@@ -56,9 +56,12 @@ public class Company {
     
     @Column(name="fiscal_year_end", nullable = false)
     private LocalDate fiscalYearEnd;
-
+    
     @Enumerated(EnumType.STRING)
-    private BusinessType businessType;
+
+
+        // @Enumerated(EnumType.STRING)
+    // private BusinessType businessType;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     private List<Account> accounts;
