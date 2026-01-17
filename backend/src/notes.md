@@ -168,19 +168,17 @@
 
 # Interface (ProductService)
 
--Contract
+    -Contract
+    -Testable
+    -Replaceable
 
--Testable
+# ServiceImpl
 
--Replaceable
+-Business rules
 
-ServiceImpl
+-Ownership validation (companyId)
 
-Business rules
-
-Ownership validation (companyId)
-
-No HTTP or DB leakage
+-No HTTP or DB leakage
 
 Repository
 
