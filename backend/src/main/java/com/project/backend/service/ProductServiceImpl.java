@@ -62,6 +62,6 @@ public  class ProductServiceImpl implements ProductService{
 
     private void validateProductType(ProductType productType)
     if(product == null){
-        throw new 
+        throw new RuntimeException("Product Type must be Selected");
     }
 }
