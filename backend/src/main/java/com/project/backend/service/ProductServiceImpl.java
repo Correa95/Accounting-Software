@@ -28,12 +28,12 @@ public  class ProductServiceImpl implements ProductService{
     @Override
     public Product getProduct(long productId, long companyId){
         // find the customer that is only associated with this company
-
         return productRepository.findByProductIdAndCompanyId(productId, companyId).orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     @Override
     public Product saveProduct(Product product, long companyId){
+        validateProductType(product.getProductType());
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
         product.setCompany(company);
@@ -65,7 +65,6 @@ public  class ProductServiceImpl implements ProductService{
     }
 
     private void validateProductType(ProductType productType){
-
         if(productType == null){
             throw new RuntimeException("Product Type must be Selected");
         }
