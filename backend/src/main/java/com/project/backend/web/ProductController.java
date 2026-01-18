@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,15 +46,15 @@ public class ProductController {
         return new ResponseEntity<>(productService.saveProduct(product, companyId), HttpStatus.CREATED);
     }
 
-    @PutMapping("path/{id}")
+    @PutMapping("/{productId}")
     public ResponseEntity<Product> updateProduct(@PathVariable long companyId, @PathVariable long productId, @RequestBody Product product) {
-        
-        
-        return ResponseEntity;
+        return new ResponseEntity<>(productService.updateProduct(productId, companyId, product), HttpStatus.OK);
     }
-    
-    
-    
+
+    @DeleteMapping ResponseEntity<void> deleteProduct(@PathVariable long productId,@PathVariable long companyId){
+        productService.deleteProduct(productId, companyId);
+        return ResponseEntity.noContent().build();
+    }
 
     
 }
