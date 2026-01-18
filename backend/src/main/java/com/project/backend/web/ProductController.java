@@ -40,9 +40,8 @@ public class ProductController {
 
     @PostMapping("path")
     public ResponseEntity Product createProduct(@RequestBody Product product, @PathVariable long companyId) {
-        //TODO: process POST request
         
-        return entity;
+        return new ResponseEntity<>(productService.saveProduct(product, companyId));
     }
     
     
