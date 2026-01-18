@@ -2,6 +2,7 @@ package com.project.backend.web;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.entity.Product;
 import com.project.backend.service.ProductService;
+
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @AllArgsConstructor
@@ -24,14 +29,22 @@ public class ProductController {
 
 
     @GetMapping
-    public ResponseEntity <List<Product>> getProducts(@PathVariable long companyId) {
-        return new ResponseEntity<>(productService.getProducts(long companyId));
+    public ResponseEntity<List<Product>> getProducts(@PathVariable long companyId) {
+        return new ResponseEntity<>(productService.getProducts(long companyId), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable long companyId, @PathVariable long productId) {
-        return 
+        return new ResponseEntity<>(productService.getProduct(productId, companyId), HttpStatus.OK);
     }
+
+    @PostMapping("path")
+    public ResponseEntity Product createProduct(@RequestBody Product product, @PathVariable long companyId) {
+        //TODO: process POST request
+        
+        return entity;
+    }
+    
     
     
 
