@@ -26,9 +26,9 @@ public  class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Product getProduct(long productId, long companyId){
+    public Product getProduct(long id, long companyId){
         // find the customer that is only associated with this company
-        return productRepository.findByProductIdAndCompanyId(productId, companyId).orElseThrow(() -> new RuntimeException("Product not found"));
+        return productRepository.findByIdAndCompanyId(id, companyId).orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     @Override
