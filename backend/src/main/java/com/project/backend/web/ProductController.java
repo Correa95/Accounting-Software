@@ -16,8 +16,8 @@ import lombok.AllArgsConstructor;
 public class ProductController {
 
     @GetMapping()
-    public ResponseEntity List<Product> getProducts(@PathVariable long com) {
-        return new String();
+    public ResponseEntity List<Product> getProducts(@PathVariable long companyId) {
+        return new ResponseEntity<>(productService.getProducts(long productId, long companyId))
     }
     
 
