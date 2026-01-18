@@ -29,8 +29,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
+    public ResponseEntity<Product> getProduct(@PathVariable long companyId, @PathVariable long productId) {
+        return 
     }
     
     
