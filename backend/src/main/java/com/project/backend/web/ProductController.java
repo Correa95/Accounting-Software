@@ -46,10 +46,10 @@ public class ProductController {
     }
 
     @PutMapping("path/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody String entity) {
-        //TODO: process PUT request
+    public ResponseEntity<Product> updateProduct(@PathVariable long companyId, @PathVariable long productId, @RequestBody Product product) {
         
-        return entity;
+        
+        return ResponseEntity;
     }
     
     
