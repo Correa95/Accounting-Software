@@ -38,10 +38,10 @@ public class ProductController {
         return new ResponseEntity<>(productService.getProduct(productId, companyId), HttpStatus.OK);
     }
 
-    @PostMapping("path")
+    @PostMapping("/product{id}")
     public ResponseEntity Product createProduct(@RequestBody Product product, @PathVariable long companyId) {
         
-        return new ResponseEntity<>(productService.saveProduct(product, companyId));
+        return new ResponseEntity<>(productService.saveProduct(product, companyId), HttpStatus.CREATED);
     }
     
     
