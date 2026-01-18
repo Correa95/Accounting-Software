@@ -10,8 +10,24 @@ public class ServiceOfferingImpl implements ServiceOfferingService{
 
     private final ServiceOffering serviceOffering;
 
-    public List<ServiceOffering>ServiceOfferingImpl> getServiceOffering(long companyId, ServiceOffering serviceOffering){
-        return serviceOffering.findById(companyId)
+    @Override
+    public List<ServiceOffering>>  getServiceOfferings(long companyId, ServiceOffering serviceOffering){
+        return serviceOffering.findById(companyId);
+    }
+
+    @Override
+    public ServiceOffering getServiceOffering(long ServiceOfferingId, long companyId){
+        return serviceOffering.findByIdAndCompanyId(ServiceOfferingId, companyId);
+    }
+
+    @Override
+    public ServiceOffering saveServiceOffering(ServiceOffering, serviceOffering, long companyId){
+        return serviceOffering.save(serviceOffering, companyId);
+    }
+
+    @Override
+    public ServiceOffering updatServiceOffering(ServiceOffering serviceOffering, long companyId){
+        Company company = getServiceOffering(companyId)
         
     }
     
