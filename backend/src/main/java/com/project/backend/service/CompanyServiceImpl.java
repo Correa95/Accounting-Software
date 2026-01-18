@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.project.backend.common.enums.BusinessType;
 import com.project.backend.entity.Company;
 import com.project.backend.repository.CompanyRepository;
 
@@ -28,6 +29,7 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     public Company saveCompany(Company company){
+        validateBusinessType(company.getBusinessType());
         return companyRepository.save(company);
     }
 
@@ -43,11 +45,25 @@ public class CompanyServiceImpl implements CompanyService{
     existingCompany.setCurrencyCode(company.getCurrencyCode());
     existingCompany.setFiscalYearStart(company.getFiscalYearStart());
     existingCompany.setFiscalYearEnd(company.getFiscalYearEnd());
+
+        
+    if (company.getBusinessType() != null) {
+        existingCompany.setBusinessType(company.getBusinessType());
+    }
+
+
     return companyRepository.save(existingCompany);
 }
 
     @Override
     public void deleteCompany(long id){
         companyRepository.deleteById(id);
+    }
+
+    
+    private void validateBusinessType(BusinessType businessType) {
+        if (businessType == null) {
+            throw new RuntimeException("Business type must be selected");
+        }
     }
 }

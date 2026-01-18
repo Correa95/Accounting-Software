@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.project.backend.common.enums.ProductType;
 import com.project.backend.entity.Company;
 import com.project.backend.entity.Product;
 import com.project.backend.repository.CompanyRepository;
@@ -57,5 +58,10 @@ public  class ProductServiceImpl implements ProductService{
         Product product = getProduct(productId, companyId);
         product.setAvailable(false);
         productRepository.save(product);
+    }
+
+    private void validateProductType(ProductType productType)
+    if(product == null){
+        throw new 
     }
 }

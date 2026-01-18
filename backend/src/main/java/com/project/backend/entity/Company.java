@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import com.project.backend.enums.BusinessType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -56,12 +57,9 @@ public class Company {
     
     @Column(name="fiscal_year_end", nullable = false)
     private LocalDate fiscalYearEnd;
-    
+
     @Enumerated(EnumType.STRING)
-
-
-        // @Enumerated(EnumType.STRING)
-    // private BusinessType businessType;
+    private BusinessType businessType;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     private List<Account> accounts;
