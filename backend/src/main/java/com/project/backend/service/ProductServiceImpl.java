@@ -50,6 +50,10 @@ public  class ProductServiceImpl implements ProductService{
         existingProduct.setDescription(product.getDescription());
         existingProduct.setUnitPrice(product.getUnitPrice());
         existingProduct.setCost(product.getCost());
+
+        if(product.getProductType() != null){
+            existingProduct.setProductType(product.getProductType());
+        }
         return productRepository.save(existingProduct);
     }
 
@@ -60,8 +64,10 @@ public  class ProductServiceImpl implements ProductService{
         productRepository.save(product);
     }
 
-    private void validateProductType(ProductType productType)
-    if(product == null){
-        throw new RuntimeException("Product Type must be Selected");
+    private void validateProductType(ProductType productType){
+
+        if(productType == null){
+            throw new RuntimeException("Product Type must be Selected");
+        }
     }
 }
