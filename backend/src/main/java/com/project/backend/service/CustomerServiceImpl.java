@@ -25,10 +25,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomer(long customerId, long companyId) {
+    public Customer getCustomer(long id, long companyId) {
         // find the customer that is only associated with this company
         return customerRepository
-                .findByIdAndCompanyId(customerId, companyId)
+                .findByIdAndCompanyId(id, companyId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
     }
 
