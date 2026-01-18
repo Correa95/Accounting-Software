@@ -16,6 +16,8 @@ import com.project.backend.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -39,9 +41,15 @@ public class ProductController {
     }
 
     @PostMapping("/product{id}")
-    public ResponseEntity Product createProduct(@RequestBody Product product, @PathVariable long companyId) {
-        
+    public ResponseEntity<Product> createProduct(@RequestBody Product product, @PathVariable long companyId) {
         return new ResponseEntity<>(productService.saveProduct(product, companyId), HttpStatus.CREATED);
+    }
+
+    @PutMapping("path/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody String entity) {
+        //TODO: process PUT request
+        
+        return entity;
     }
     
     
