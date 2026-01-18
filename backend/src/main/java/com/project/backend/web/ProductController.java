@@ -23,10 +23,16 @@ public class ProductController {
 
 
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity <List<Product>> getProducts(@PathVariable long companyId) {
-        return new ResponseEntity<>(productService.getProducts(long companyId))
+        return new ResponseEntity<>(productService.getProducts(long companyId));
     }
+
+    @GetMapping("/{id}")
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
     
 
     
