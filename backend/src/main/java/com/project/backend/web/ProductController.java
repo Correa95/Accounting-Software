@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("companies/{companyId}/product")
+@RequestMapping("companies/{companyId}/products")
 public class ProductController {
 
     private final ProductService productService;
 
     @GetMapping
     public ResponseEntity<List<Product>> getProducts(@PathVariable long companyId) {
-        return new ResponseEntity<>(productService.getProducts(long companyId), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProducts(companyId), HttpStatus.OK);
     }
 
     @GetMapping("/{productId}")
@@ -38,7 +38,7 @@ public class ProductController {
         return new ResponseEntity<>(productService.getProduct(productId, companyId), HttpStatus.OK);
     }
 
-    @PostMapping("/product{id}")
+    @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product, @PathVariable long companyId) {
         return new ResponseEntity<>(productService.saveProduct(product, companyId), HttpStatus.CREATED);
     }
@@ -49,7 +49,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-     public ResponseEntity<void> deleteProduct(@PathVariable long productId, @PathVariable long companyId){
+     public ResponseEntity<Void> deleteProduct(@PathVariable long productId, @PathVariable long companyId){
         productService.deleteProduct(productId, companyId);
         return ResponseEntity.noContent().build();
     }

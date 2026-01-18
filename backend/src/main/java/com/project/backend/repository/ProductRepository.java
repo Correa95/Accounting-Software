@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.project.backend.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long>{
-    // This find the Product associated with the company
-    List<Product> findById(long companyId);
+   // Return all active products for a company
+    List<Product> findByCompanyIdAndAvailableTrue(Long companyId);
 
-    // Optional is used because the Product might not exist or not belong to the this specific company
-    Optional<Product> findByIdAndCompanyId(long id, long companyId);
+
+     // Return a specific product for a company 
+    Optional<Product> findByIdAndCompanyId(Long productId, Long companyId);
 }

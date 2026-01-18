@@ -2,11 +2,11 @@ package com.project.backend.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+
 
 import com.project.backend.entity.Product;
 
-@Service
+
 public interface ProductService {
 
     List<Product> getProducts(long companyId);
