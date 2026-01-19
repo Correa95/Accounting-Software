@@ -39,10 +39,9 @@ public class ServiceOfferingController {
         return new ResponseEntity<>(serviceOfferingService.getServiceOffering(serviceOfferingId, companyId), HttpStatus.OK);
     }
 
-    @PostMapping("path")
+    @PostMapping
     public ResponseEntity<ServiceOffering> createSErviceOffering(@RequestBody ServiceOffering serviceOffering, @PathVariable long companyId) {
-       
-        return new ResponseEntity<>;
+        return new ResponseEntity<>(serviceOfferingService.createServiceOffering(serviceOffering, companyId), HttpStatus.CREATED);
     }
     
 
