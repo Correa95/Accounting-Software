@@ -56,7 +56,10 @@ public class ServiceOfferingController {
 
     // Deleting Service Offering
     @DeleteMapping("/{serviceOfferingId}")
-    public void deleteServiceOffering(@PathVariable long serviceOfferingId, @PathVariable)
+    public ResponseEntity<void> deleteServiceOffering(@PathVariable long serviceOfferingId, @PathVariable long companyId){
+        servi
+        return new ResponseEntity.noContent().build();
+    }
     
 
 
