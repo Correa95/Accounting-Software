@@ -18,11 +18,6 @@ import com.project.backend.service.CustomerService;
 
 import lombok.AllArgsConstructor;
 
-
-
-
-
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("/companies/{companyId}/customers")

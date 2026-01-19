@@ -15,7 +15,6 @@ import com.project.backend.service.ServiceOfferingService;
 
 import lombok.AllArgsConstructor;
 
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -48,13 +47,13 @@ public class ServiceOfferingController {
         return new ResponseEntity<>(serviceOfferingService.createServiceOffering(serviceOffering, companyId), HttpStatus.CREATED);
     }
 
-    // Updating Service Offering
+    // Updating a Service Offering
     @PutMapping("/{serviceOfferingId}")
     public ResponseEntity<ServiceOffering> updateServiceOffering(@PathVariable long serviceOfferingId, @PathVariable long companyId, @RequestBody ServiceOffering serviceOffering) {
         return new ResponseEntity<>(serviceOfferingService.updateServiceOffering(serviceOfferingId, companyId, serviceOffering), HttpStatus.OK);
     }
 
-    // Deleting Service Offering
+    // Deleting a Service Offering
     @DeleteMapping("/{serviceOfferingId}")
     public ResponseEntity<Void> deleteServiceOffering(@PathVariable long serviceOfferingId, @PathVariable long companyId){
         serviceOfferingService.deleteServiceOffering(serviceOfferingId, companyId);
