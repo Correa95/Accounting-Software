@@ -39,14 +39,14 @@ public class ServiceOfferingImpl implements ServiceOfferingService{
     }
 
     @Override
-    public ServiceOffering updateServiceOffering(long serviceOfferingId, ServiceOffering updatedServiceOffering, long companyId){
+    public ServiceOffering updateServiceOffering(long serviceOfferingId, long companyId, ServiceOffering serviceOffering){
 
         ServiceOffering existing = getServiceOffering(serviceOfferingId, companyId);
 
-        existing.setServiceOfferingName(updatedServiceOffering.getServiceOfferingName());
-        existing.setDescription(updatedServiceOffering.getDescription());
-        existing.setHourlyRate(updatedServiceOffering.getHourlyRate());
-        existing.setActive(updatedServiceOffering.getActive());
+        existing.setServiceOfferingName(serviceOffering.getServiceOfferingName());
+        existing.setDescription(serviceOffering.getDescription());
+        existing.setHourlyRate(serviceOffering.getHourlyRate());
+        existing.setActive(serviceOffering.getActive());
 
         return serviceOfferingRepository.save(existing);
        
