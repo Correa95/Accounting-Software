@@ -13,7 +13,7 @@ public interface ServiceOfferingService {
 
     // ServiceOffering updateServiceOffering(ServiceOffering serviceOffering, long companyId);
     
-    ServiceOffering updateServiceOffering(long serviceOfferingId, ServiceOffering updatedServiceOffering, long companyId);
+    ServiceOffering updateServiceOffering(long serviceOfferingId, long companyId, ServiceOffering serviceOffering);
     void deleteServiceOffering(long serviceOfferingId, long companyId);
 }
 
