@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.entity.ServiceOffering;
+import com.project.backend.service.ServiceOfferingService;
 
 import lombok.AllArgsConstructor;
 
@@ -14,13 +15,12 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("companies/{companyId}/serviceOfferings")
 
-    private final  ServiceOfferingService serviceOfferingService;
-
 public class ServiceOfferingController {
-
+    private final  ServiceOfferingService serviceOfferingService;
+    
     @GetMapping("/{serviceOfferingId}")
     public ResponseEntity<ServiceOffering> getServiceOfferings(long companyId){
-        return new ResponseEntity<>(serviceOfferingService.getServiceOfferings(companyId), HttpStatus.OK);
+        
     }
     
 }
