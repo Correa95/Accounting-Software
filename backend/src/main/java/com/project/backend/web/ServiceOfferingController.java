@@ -1,5 +1,7 @@
 package com.project.backend.web;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +13,11 @@ import com.project.backend.entity.ServiceOffering;
 import com.project.backend.service.ServiceOfferingService;
 
 import lombok.AllArgsConstructor;
+
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @AllArgsConstructor
@@ -21,15 +27,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ServiceOfferingController {
     private final  ServiceOfferingService serviceOfferingService;
     
-    @GetMapping()
-    public ResponseEntity<ServiceOffering> getServiceOfferings(@PathVariable long companyId){
-        return  new ResponseEntity<>(serviceOfferingService.getServiceOfferings(companyId), HttpStatus.OK);
+    // Get all customers for a company
+    @GetMapping
+    public ResponseEntity<List<ServiceOffering>> getServiceOfferings(@PathVariable long companyId){
+        return new ResponseEntity<>(serviceOfferingService.getServiceOfferings(companyId), HttpStatus.OK);
     }
 
+    // Get a single customer
     @GetMapping("/{serviceOfferingId}")
     public ResponseEntity<ServiceOffering> getServiceOffering(@PathVariable long serviceOfferingId, @PathVariable long companyId) {
-        return new ResponseEntity<>(serviceOfferingService.getServiceOffering(serviceOfferingId, companyId));
+        return new ResponseEntity<>(serviceOfferingService.getServiceOffering(serviceOfferingId, companyId), HttpStatus.OK);
     }
+
+    @PostMapping("path")
+    public ResponseEntity<ServiceOffering> createSErviceOffering(@RequestBody ServiceOffering serviceOffering, @PathVariable long companyId) {
+       
+        return new ResponseEntity<>;
+    }
+    
+
+
     
     
 }
