@@ -19,7 +19,7 @@ import lombok.AllArgsConstructor;
 public class ServiceOfferingController {
     private final  ServiceOfferingService serviceOfferingService;
     
-    @GetMapping("/{serviceOfferingId}")
+    @GetMapping()
     public ResponseEntity<ServiceOffering> getServiceOfferings(@PathVariable long companyId){
         return  new ResponseEntity<>(serviceOfferingService.getServiceOfferings(companyId), HttpStatus.OK);
     }
