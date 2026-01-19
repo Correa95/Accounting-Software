@@ -23,7 +23,7 @@ public  class ProductServiceImpl implements ProductService{
     @Override
     public List<Product> getProducts(long companyId){
         // Return only active products for this company
-        return productRepository.findByCompanyIdAndAvailableTrue(companyId);
+        return productRepository.findByCompanyIdAndActiveTrue(companyId);
     }
 
     @Override

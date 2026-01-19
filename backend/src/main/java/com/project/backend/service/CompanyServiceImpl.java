@@ -8,9 +8,10 @@ import com.project.backend.common.enums.BusinessType;
 import com.project.backend.entity.Company;
 import com.project.backend.repository.CompanyRepository;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+
+@RequiredArgsConstructor
 @Service
 public class CompanyServiceImpl implements CompanyService{
 
@@ -30,26 +31,46 @@ public class CompanyServiceImpl implements CompanyService{
     @Override
     public Company saveCompany(Company company){
         validateBusinessType(company.getBusinessType());
+        company.setActive(true);
         return companyRepository.save(company);
     }
 
     @Override
     public Company updateCompany(long id, Company company) {
     Company existingCompany = getCompany(id);
-    existingCompany.setName(company.getName());
-    existingCompany.setLegalName(company.getLegalName());
-    existingCompany.setAddress(company.getAddress());
-    existingCompany.setPhone(company.getPhone());
-    existingCompany.setEmail(company.getEmail());
-    existingCompany.setTaxId(company.getTaxId());
-    existingCompany.setCurrencyCode(company.getCurrencyCode());
-    existingCompany.setFiscalYearStart(company.getFiscalYearStart());
-    existingCompany.setFiscalYearEnd(company.getFiscalYearEnd());
+    
+    
+        if (company.getName() != null)
+            existingCompany.setName(company.getName());
 
-        
-    if (company.getBusinessType() != null) {
-        existingCompany.setBusinessType(company.getBusinessType());
-    }
+        if (company.getLegalName() != null)
+            existingCompany.setLegalName(company.getLegalName());
+
+        if (company.getAddress() != null)
+            existingCompany.setAddress(company.getAddress());
+
+        if (company.getPhone() != null)
+            existingCompany.setPhone(company.getPhone());
+
+        if (company.getEmail() != null)
+            existingCompany.setEmail(company.getEmail());
+
+        if (company.getTaxId() != null)
+            existingCompany.setTaxId(company.getTaxId());
+
+        if (company.getCurrencyCode() != null)
+            existingCompany.setCurrencyCode(company.getCurrencyCode());
+
+        if (company.getFiscalYearStart() != null)
+            existingCompany.setFiscalYearStart(company.getFiscalYearStart());
+
+        if (company.getFiscalYearEnd() != null)
+            existingCompany.setFiscalYearEnd(company.getFiscalYearEnd());
+
+        if (company.getBusinessType() != null) {
+            validateBusinessType(company.getBusinessType());
+            existingCompany.setBusinessType(company.getBusinessType());
+        }
 
 
     return companyRepository.save(existingCompany);
@@ -57,13 +78,15 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     public void deleteCompany(long id){
-        companyRepository.deleteById(id);
+        Company company = getCompany(id);
+        company.setActive(true);
+        companyRepository.save(company);
     }
 
     
     private void validateBusinessType(BusinessType businessType) {
         if (businessType == null) {
-            throw new RuntimeException("Business type must be selected");
+            throw new IllegalArgumentException("Business type must be selected");
         }
     }
 }

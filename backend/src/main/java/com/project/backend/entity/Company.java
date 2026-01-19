@@ -1,17 +1,21 @@
 package com.project.backend.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.project.backend.common.enums.BusinessType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import com.project.backend.enums.BusinessType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "company")
+@Table(name = "companies")
 public class Company {
 
     @Id
@@ -40,14 +44,17 @@ public class Company {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable=false)
+    private boolean active = true;
 
     @Column(name="tax_id", nullable = false)
     private String taxId;
 
-    @Column(name="tax_rate", nullable = false)
-    private String taxRate;
+    @Column(name="tax_rate", nullable = false, precision = 5, scale = 2)
+    private BigDecimal taxRate;
     
     @Column(name="currency_code", nullable = false)
     private String currencyCode;
@@ -59,6 +66,7 @@ public class Company {
     private LocalDate fiscalYearEnd;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private BusinessType businessType;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)

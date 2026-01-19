@@ -9,7 +9,7 @@ import com.project.backend.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long>{
    // Return all active products for a company
-    List<Product> findByCompanyIdAndAvailableTrue(Long companyId);
+    List<Product> findByCompanyIdAndActiveTrue(Long companyId);
 
 
      // Return a specific product for a company 
