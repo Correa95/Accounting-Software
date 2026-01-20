@@ -4,12 +4,11 @@ import java.util.List;
 
 import com.project.backend.entity.Vendor;
 
-
-
-
 public interface  VendorService {
-    List<Vendor> getVendors(long companyId);
-    Vendor getVendor(long vendorId, long companyId);
+    List<Vendor> getAllVendors(long companyId);
+    Vendor getVendorById(long vendorId, long companyId);
     Vendor createVendor(Vendor vendor, long companyId);
+    Vendor updateVendor(long vendorId, long companyId, Vendor vendor);
+    void  deactivateVendor(long vendorId, long companyId);
     
 }

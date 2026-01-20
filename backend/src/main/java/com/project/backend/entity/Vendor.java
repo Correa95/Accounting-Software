@@ -1,12 +1,19 @@
 package com.project.backend.entity;
 
+import com.project.backend.common.enums.PaymentTerms;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +23,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(
+    name = "vendors",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"company_id", "vendorNumber"}),
+        @UniqueConstraint(columnNames = {"company_id", "email"})
+    }
+)
 public class Vendor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,13 +49,15 @@ public class Vendor {
     private String address;
 
     @Column(nullable = false)
-    private int vendorNumber;
+    private Long vendorNumber;
 
     @Column(nullable = false)
     private String taxId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String paymentTerms;
+    private PaymentTerms paymentTerms;
+
 
     @Column(nullable = false)
     private boolean active = true;
