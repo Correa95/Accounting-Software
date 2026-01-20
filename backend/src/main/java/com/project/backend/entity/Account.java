@@ -1,5 +1,7 @@
 package com.project.backend.entity;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,6 +15,8 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private 
+    private Long id; 
+    private String accountName;
+    private BigDecimal balance;
     
 }
