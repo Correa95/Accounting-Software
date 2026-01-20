@@ -41,21 +41,23 @@ public class VendorController {
     }
 
 
-    
+    // Create vendor
     @PostMapping
     public ResponseEntity<Vendor> createVendor(@RequestBody Vendor vendor, @PathVariable long companyId) {
         return new ResponseEntity<>(vendorService.createVendor(vendor, companyId), HttpStatus.CREATED);
     }
 
+    // Update Vendor
     @PutMapping("/{vendorId}")
     public ResponseEntity<Vendor> updateVendor(@PathVariable long vendorId, @PathVariable long companyId, @RequestBody Vendor vendor){
         return new ResponseEntity<>(vendorService.updateVendor(vendorId, companyId, vendor), HttpStatus.OK);
     }
 
+    // Delete Vendor
     @DeleteMapping("/{vendorId}")
     public Void deactivateVendor(@PathVariable long vendorId, @PathVariable long companyId){
         vendorService.deactivateVendor(vendorId, companyId);
-        return ResponseEntity.onContent().build();
+        return ResponseEntity.noContent().build();
     }
     
     
