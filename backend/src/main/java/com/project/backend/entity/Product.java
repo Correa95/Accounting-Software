@@ -21,12 +21,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "product", uniqueConstraints = {@UniqueConstraint(columnNames = {"company_id", "product_name"})})
+@Entity
 public class Product {
 
     @Id
