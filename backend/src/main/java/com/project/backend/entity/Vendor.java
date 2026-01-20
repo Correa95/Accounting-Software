@@ -23,7 +23,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Table(
     name = "vendors",
     uniqueConstraints = {
@@ -31,6 +30,7 @@ import lombok.Setter;
         @UniqueConstraint(columnNames = {"company_id", "email"})
     }
 )
+@Entity
 public class Vendor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
