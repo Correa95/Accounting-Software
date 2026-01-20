@@ -55,7 +55,7 @@ public class VendorController {
 
     // Delete Vendor
     @DeleteMapping("/{vendorId}")
-    public Void deactivateVendor(@PathVariable long vendorId, @PathVariable long companyId){
+    public ResponseEntity<Void> deactivateVendor(@PathVariable long vendorId, @PathVariable long companyId){
         vendorService.deactivateVendor(vendorId, companyId);
         return ResponseEntity.noContent().build();
 
