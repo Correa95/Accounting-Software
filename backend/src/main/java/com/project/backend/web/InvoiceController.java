@@ -71,8 +71,8 @@ public class InvoiceController {
     if (invoice.getAccount() != null) {
         existingInvoice.setAccount(invoice.getAccount());
     }
-    // return ResponseEntity<>(invoiceService.updateInvoice(existingInvoice, companyId), HttpStatus.OK);
-    // }
+    return ResponseEntity<>(invoiceService.updateInvoice(existingInvoice, companyId), HttpStatus.OK);
+    }
 
     // @DeleteMapping("/{invoiceId}")
     // public ResponseEntity<Void> deactivateInvoice(@PathVariable long invoiceId, @PathVariable long companyId ){
