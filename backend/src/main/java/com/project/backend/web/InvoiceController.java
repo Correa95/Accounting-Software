@@ -50,14 +50,14 @@ public class InvoiceController {
 //     // return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
 //     }
 
-    // @PutMapping("/{invoiceId}")
-    // public ResponseEntity<Invoice> updateInvoice(
-    //     @PathVariable Long companyId,
-    //     @PathVariable Long invoiceId,
-    //     @RequestBody Invoice invoice) {
+    @PutMapping("/{invoiceId}")
+    public ResponseEntity<Invoice> updateInvoice(
+        @PathVariable Long companyId,
+        @PathVariable Long invoiceId,
+        @RequestBody Invoice invoice) {
 
     // // Fetch the existing invoice
-    // Invoice existingInvoice = invoiceService.getInvoiceById(invoiceId, companyId);
+    Invoice existingInvoice = invoiceService.getInvoiceById(invoiceId, companyId);
 
     // // Update basic fields
     // existingInvoice.setInvoiceNumber(invoice.getInvoiceNumber());
