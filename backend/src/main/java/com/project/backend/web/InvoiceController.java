@@ -12,14 +12,16 @@ import com.project.backend.entity.Invoice;
 import com.project.backend.service.AccountService;
 import com.project.backend.service.InvoiceService;
 
+import lombok.AllArgsConstructor;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("companies/{companyId}/invoices")
 public class InvoiceController {
@@ -50,7 +52,7 @@ public class InvoiceController {
     // Invoice createdInvoice = invoiceService.createInvoice(invoice, companyId);
     return new ResponseEntity<>(invoiceService.createInvoice(invoice, companyId), HttpStatus.CREATED);
 //     // return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
-//     }
+    }
 
     @PutMapping("/{invoiceId}")
     public ResponseEntity<Invoice> updateInvoice(
@@ -76,13 +78,13 @@ public class InvoiceController {
     return ResponseEntity<>(invoiceService.updateInvoice(existingInvoice, companyId), HttpStatus.OK);
     }
 
-    // @DeleteMapping("/{invoiceId}")
-    // public ResponseEntity<Void> deactivateInvoice(@PathVariable long invoiceId, @PathVariable long companyId ){
+    @DeleteMapping("/{invoiceId}")
+    public ResponseEntity<Void> deactivateInvoice(@PathVariable long invoiceId, @PathVariable long companyId ){
 
-    //     invoice.setInvoice(false);
-    //     invoiceService.deactivateInvoice(invoiceId, companyId)
-    //     return ResponseEntity.onContent.build();
-    // }
+        invoice.setInvoice(false);
+        invoiceService.deactivateInvoice(invoiceId, companyId)
+        return ResponseEntity.onContent.build();
+    }
 
 }
     

@@ -31,7 +31,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice createInvoice(Invoice invoice, Long companyId) {
+    public Invoice createInvoice(Invoice invoice, Long companyId, long customerId) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new EntityNotFoundException("Company not found"));
         invoice.setCompany(company);
