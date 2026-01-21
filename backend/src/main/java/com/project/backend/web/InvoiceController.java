@@ -41,12 +41,12 @@ public class InvoiceController {
         @PathVariable Long companyId,
         @RequestBody Invoice invoice) {
 
-//     // Optional: fetch AR account for the company automatically
-//     Account accountReceivable = accountService.getAccountByType(companyId, AccountType.ACCOUNTS_RECEIVABLE);
-//     invoice.setAccount(accountReceivable);
+    // Optional: fetch AR account for the company automatically
+    Account accountReceivable = accountService.getAccountByType(companyId, AccountType.ACCOUNTS_RECEIVABLE);
+    invoice.setAccount(accountReceivable);
 
-//     Invoice createdInvoice = invoiceService.createInvoice(invoice, companyId);
-//     return new ResponseEntity<>(invoiceService.createInvoice(invoice, companyId), HttpStatus.CREATED);
+    Invoice createdInvoice = invoiceService.createInvoice(invoice, companyId);
+    return new ResponseEntity<>(invoiceService.createInvoice(invoice, companyId), HttpStatus.CREATED);
 //     // return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
 //     }
 
