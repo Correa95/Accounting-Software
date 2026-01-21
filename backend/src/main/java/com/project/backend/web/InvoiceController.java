@@ -36,10 +36,10 @@ public class InvoiceController {
         return new ResponseEntity<>(invoiceService.getInvoiceById(invoiceId, companyId), HttpStatus.OK);
     }
     // Create invoice
-//     @PostMapping
-// public ResponseEntity<Invoice> createInvoice(
-//         @PathVariable Long companyId,
-//         @RequestBody Invoice invoice) {
+    @PostMapping
+    public ResponseEntity<Invoice> createInvoice(
+        @PathVariable Long companyId,
+        @RequestBody Invoice invoice) {
 
 //     // Optional: fetch AR account for the company automatically
 //     Account accountReceivable = accountService.getAccountByType(companyId, AccountType.ACCOUNTS_RECEIVABLE);
