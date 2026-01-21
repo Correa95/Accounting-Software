@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.common.enums.AccountType;
 import com.project.backend.entity.Account;
+import com.project.backend.entity.Customer;
 import com.project.backend.entity.Invoice;
 import com.project.backend.service.AccountService;
 import com.project.backend.service.InvoiceService;
@@ -31,6 +32,7 @@ public class InvoiceController {
 
     private final InvoiceService invoiceService;
     private final AccountService accountService;
+    private
 // Get all invoices
     @GetMapping
     public ResponseEntity<List<Invoice>> getAllInvoices(@PathVariable long companyId) {
@@ -42,12 +44,16 @@ public class InvoiceController {
         return new ResponseEntity<>(invoiceService.getInvoiceById(invoiceId, companyId), HttpStatus.OK);
     }
     // Create invoice
-    @PostMapping
+    @PostMapping("/customers/{customerId}")
     public ResponseEntity<Invoice> createInvoice(
         @PathVariable Long companyId,
         @PathVariable Long customerId,
         @RequestBody Invoice invoice) {
 
+
+        // Optional: fetch AR account for the customer automatically
+    Customer customer = customerService.getCustomerById(customerId, companyId);
+    invoice.setCustomer(customer);
     // Optional: fetch AR account for the company automatically
     Account accountReceivable = accountService.getAccountType(companyId, AccountSubType.ACCOUNTS_RECEIVABLE);
     // Account accountReceivable = accountService.getAccountType(companyId, AccountSubType.ACCOUNTS_RECEIVABLE);
