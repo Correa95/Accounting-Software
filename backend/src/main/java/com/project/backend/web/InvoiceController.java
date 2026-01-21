@@ -1,6 +1,7 @@
 package com.project.backend.web;
 
 import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import com.project.backend.common.enums.AccountSubType;
 
 @AllArgsConstructor
 @RestController
@@ -46,7 +49,8 @@ public class InvoiceController {
         @RequestBody Invoice invoice) {
 
     // Optional: fetch AR account for the company automatically
-    Account accountReceivable = accountService.getAccountType(companyId, AccountType.ACCOUNT_RECEIVABLE);
+    Account accountReceivable = accountService.getAccountType(companyId, AccountSubType.ACCOUNTS_RECEIVABLE);
+    // Account accountReceivable = accountService.getAccountType(companyId, AccountSubType.ACCOUNTS_RECEIVABLE);
     invoice.setAccount(accountReceivable);
 
     // Invoice createdInvoice = invoiceService.createInvoice(invoice, companyId);
