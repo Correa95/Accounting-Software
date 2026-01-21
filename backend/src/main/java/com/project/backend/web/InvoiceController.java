@@ -45,7 +45,7 @@ public class InvoiceController {
     Account accountReceivable = accountService.getAccountByType(companyId, AccountType.ACCOUNTS_RECEIVABLE);
     invoice.setAccount(accountReceivable);
 
-    Invoice createdInvoice = invoiceService.createInvoice(invoice, companyId);
+    // Invoice createdInvoice = invoiceService.createInvoice(invoice, companyId);
     return new ResponseEntity<>(invoiceService.createInvoice(invoice, companyId), HttpStatus.CREATED);
 //     // return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
 //     }
