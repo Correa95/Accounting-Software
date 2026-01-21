@@ -31,6 +31,7 @@ public class InvoiceController {
     public ResponseEntity<List<Invoice>> getAllInvoices(@PathVariable long companyId) {
         return new ResponseEntity<>(invoiceService.getAllInvoices(companyId), HttpStatus.OK);
     }
+    //Get single Invoice
     @GetMapping("/{invoiceId}")
     public ResponseEntity<Invoice> getInvoiceById(@PathVariable long invoiceId, @PathVariable long companyId) {
         return new ResponseEntity<>(invoiceService.getInvoiceById(invoiceId, companyId), HttpStatus.OK);
@@ -39,10 +40,11 @@ public class InvoiceController {
     @PostMapping
     public ResponseEntity<Invoice> createInvoice(
         @PathVariable Long companyId,
+        @PathVariable Long customerId,
         @RequestBody Invoice invoice) {
 
     // Optional: fetch AR account for the company automatically
-    Account accountReceivable = accountService.getAccountByType(companyId, AccountType.ACCOUNTS_RECEIVABLE);
+    Account accountReceivable = accountService.getAccountByType(companyId, AccountType.ACCOUNT_RECEIVABLE);
     invoice.setAccount(accountReceivable);
 
     // Invoice createdInvoice = invoiceService.createInvoice(invoice, companyId);
