@@ -60,17 +60,17 @@ public class InvoiceController {
     Invoice existingInvoice = invoiceService.getInvoiceById(invoiceId, companyId);
 
     // // Update basic fields
-    // existingInvoice.setInvoiceNumber(invoice.getInvoiceNumber());
-    // existingInvoice.setInvoiceDate(invoice.getInvoiceDate());
-    // existingInvoice.setInvoiceDueDate(invoice.getInvoiceDueDate());
-    // existingInvoice.setInvoiceAmount(invoice.getInvoiceAmount());
-    // existingInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
-    // existingInvoice.setActive(invoice.isActive());
+    existingInvoice.setInvoiceNumber(invoice.getInvoiceNumber());
+    existingInvoice.setInvoiceDate(invoice.getInvoiceDate());
+    existingInvoice.setInvoiceDueDate(invoice.getInvoiceDueDate());
+    existingInvoice.setInvoiceAmount(invoice.getInvoiceAmount());
+    existingInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
+    existingInvoice.setActive(invoice.isActive());
 
     // // Optional: Only update AR account if explicitly passed
-    // if (invoice.getAccount() != null) {
-    //     existingInvoice.setAccount(invoice.getAccount());
-    // }
+    if (invoice.getAccount() != null) {
+        existingInvoice.setAccount(invoice.getAccount());
+    }
     // return ResponseEntity<>(invoiceService.updateInvoice(existingInvoice, companyId), HttpStatus.OK);
     // }
 
