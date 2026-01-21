@@ -19,13 +19,13 @@ public class CustomerServiceImpl implements CustomerService {
     private final CompanyRepository companyRepository;
 
     @Override
-    public List<Customer> getCustomers(long companyId) {
+    public List<Customer> getAllCustomers(long companyId) {
         // This find the customer associated with the company
         return customerRepository.findByCompanyId(companyId);
     }
 
     @Override
-    public Customer getCustomer(long customerId, long companyId) {
+    public Customer getCustomerById(long customerId, long companyId) {
         // find the customer that is only associated with this company
         return customerRepository
                 .findByIdAndCompanyId(customerId, companyId)
@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer updateCustomer(long customerId, long companyId, Customer customer) {
-        Customer existingCustomer = getCustomer(customerId, companyId);
+        Customer existingCustomer = getCustomerById(customerId, companyId);
 
         existingCustomer.setCustomerName(customer.getCustomerName());
         existingCustomer.setPhone(customer.getPhone());
@@ -59,7 +59,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void deleteCustomer(long customerId, long companyId) {
-        Customer customer = getCustomer(customerId, companyId);
+        Customer customer = getCustomerById(customerId, companyId);
         customer.setActive(false);
         customerRepository.save(customer);
     }

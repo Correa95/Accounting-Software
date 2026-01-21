@@ -2,7 +2,13 @@ package com.project.backend.entity;
 
 import java.math.BigDecimal;
 
+import com.project.backend.common.enums.AccountSubType;
+import com.project.backend.common.enums.AccountType;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,9 +34,22 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; 
 
+    @Column(nullable = false)
     private String accountName;
 
-    private BigDecimal balance;
+     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccountType accountType;  // ASSET, LIABILITY, etc.
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccountSubType accountSubType; 
+    // ACCOUNTS_RECEIVABLE, ACCOUNTS_PAYABLE
+
+
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal balance = BigDecimal.ZERO;
+
 
      @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", nullable = false)

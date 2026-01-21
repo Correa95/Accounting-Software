@@ -28,13 +28,13 @@ public class CustomerController {
   // Get all customers for a company
     @GetMapping
     public ResponseEntity<List<Customer>> getCustomers(@PathVariable long companyId) {
-        return new ResponseEntity<>(customerService.getCustomers(companyId), HttpStatus.OK);
+        return new ResponseEntity<>(customerService.getAllCustomers(companyId), HttpStatus.OK);
     }
 
     // Get a single customer
     @GetMapping("/{customerId}")
-    public ResponseEntity<Customer> getCustomer(@PathVariable Long companyId, @PathVariable long customerId) {
-        return new ResponseEntity<>(customerService.getCustomer(customerId, companyId), HttpStatus.OK);
+    public ResponseEntity<Customer> getCustomerById(@PathVariable Long companyId, @PathVariable long customerId) {
+        return new ResponseEntity<>(customerService.getCustomerById(customerId, companyId), HttpStatus.OK);
     }
 
      // Create a customer

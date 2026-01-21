@@ -1,7 +1,6 @@
 package com.project.backend.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,39 +14,30 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+@Entity
+@Table(name = "journal_entry_lines")
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "bills")
-@Entity
-public class Bill {
-    @Id
+public class JournalEntryLine {
+     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private boolean active = true;
+    @Column(precision = 19, scale = 4)
+    private BigDecimal debit;
 
-    @Column(nullable = false)
-    private String billNumber;
-
-    @Column(nullable = false)
-    private LocalDate billDate;
-
-    @Column(nullable = false)
-    private LocalDate billDueDate;
-
-    @Column(nullable = false, precision = 19, scale= 4)
-    private BigDecimal totalAmount;
-
-    
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
+    @Column(precision = 19, scale = 4)
+    private BigDecimal credit;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "vendor_id", nullable = false)
-    private Vendor vendor;
+    @JoinColumn(name = "journal_entry_id")
+    private JournalEntry journalEntry;
 
-    
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+
 }

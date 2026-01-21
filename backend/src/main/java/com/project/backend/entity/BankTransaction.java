@@ -28,14 +28,23 @@ public class BankTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable=false)
     private LocalDate transactionDate;
+    
+    @Column(nullable=false)
+    private BigDecimal transactionAmount;
 
-    private BigDecimal amount;
-
-    private String description;
-
+    @Column(nullable=false)
+    private String transactionType;
+    
+    @Column(nullable=false)
+    private String transactionDescription;
+    
+    @Column(nullable=false)
+    private boolean active = true;
+    
     @Column(unique = true)
-    private String bankReference;
+    private String bankReferenceNumber;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", nullable = false)

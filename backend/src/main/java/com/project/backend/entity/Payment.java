@@ -27,6 +27,9 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private boolean  active = true;
+
     @Column(name = "reference_number")
     private String referenceNumber; // optional check or transaction number
 

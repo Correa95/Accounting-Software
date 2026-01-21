@@ -1,8 +1,9 @@
 package com.project.backend.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,17 +38,11 @@ public class JournalEntry {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false, precision = 19, scale = 4)
-    private BigDecimal debit;
-
-    @Column(nullable = false, precision = 19, scale = 4)
-    private BigDecimal credit;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+// One-to-many relationship with JournalEntryLine
+    @OneToMany(mappedBy = "journalEntry", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JournalEntryLine> lines;
 }
