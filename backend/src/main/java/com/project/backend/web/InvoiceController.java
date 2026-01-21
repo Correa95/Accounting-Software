@@ -46,7 +46,7 @@ public class InvoiceController {
         @RequestBody Invoice invoice) {
 
     // Optional: fetch AR account for the company automatically
-    Account accountReceivable = accountService.getAccountByType(companyId, AccountType.ACCOUNT_RECEIVABLE);
+    Account accountReceivable = accountService.getAccountType(companyId, AccountType.ACCOUNT_RECEIVABLE);
     invoice.setAccount(accountReceivable);
 
     // Invoice createdInvoice = invoiceService.createInvoice(invoice, companyId);
