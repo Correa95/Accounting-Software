@@ -55,7 +55,7 @@ public class JournalEntryServiceImpl implements JournalEntryService{
     public void deactivateJournalEntry(long journalEntryId, long companyId){
 
         JournalEntry journalEntry = getJournalEntryById(journalEntryId, companyId);
-        journalEntry.setDeleted(false);
+        journalEntry.setDeleted(true);
         journalEntry.setDeletedAt(LocalDate.now());
         journalEntryRepository.save(journalEntry);
     }
