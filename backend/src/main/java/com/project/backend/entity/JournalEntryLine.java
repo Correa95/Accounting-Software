@@ -25,7 +25,7 @@ public class JournalEntryLine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    
+    private String memo;
 
     @Column(precision = 19, scale = 4)
     private BigDecimal debit;
