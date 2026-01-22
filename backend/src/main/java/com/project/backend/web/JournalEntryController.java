@@ -10,6 +10,7 @@ import com.project.backend.repository.JournalEntryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.project.backend.service.JournalEntryService;
@@ -45,6 +46,12 @@ public class JournalEntryController {
     @PutMapping("/{journalEntryId}")
     public ResponseEntity<JournalEntry> createJournalEntry(@PathVariable long companyId, @RequestBody JournalEntry journalEntry) {
         return ResponseEntity<>(journalEntryService.createJournalEntry(companyId, JournalEntry), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{journalEntryId}")
+    public void deactivateJournalEntry(@PathVariable long journalEntryId, @PathVariable long journalEntryId){
+        journalEntryService.deactivate
+        ResponseEntity<>(journalEntryService.)
     }
     
     

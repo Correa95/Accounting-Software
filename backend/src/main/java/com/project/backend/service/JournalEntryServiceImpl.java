@@ -61,7 +61,8 @@ public class JournalEntryServiceImpl implements JournalEntryService{
     }
 
     // Optional: post a journal entry (locks it)
-    public JournalEntry postJournalEntry(Long journalEntryId, Long companyId) {
+    @Override
+    public JournalEntry postJournalEntry(long  journalEntryId, long  companyId) {
         JournalEntry journalEntry = getJournalEntryById(journalEntryId, companyId);
 
         if (journalEntry.getStatus() != JournalEntryStatus.DRAFT) {
@@ -75,7 +76,8 @@ public class JournalEntryServiceImpl implements JournalEntryService{
     }
 
     // Optional: reverse a journal entry (creates new entry with opposite amounts)
-    public JournalEntry reverseJournalEntry(Long journalEntryId, Long companyId, String reason) {
+    @Override
+    public JournalEntry reverseJournalEntry(long journalEntryId, long companyId, String reason) {
         JournalEntry original = getJournalEntryById(journalEntryId, companyId);
 
         // implement reversing logic: flip debit/credit amounts
