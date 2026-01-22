@@ -41,12 +41,13 @@ public class JournalEntryController {
 
     @PostMapping
     public ResponseEntity<JournalEntry> createJournalEntry(@PathVariable long companyId, @RequestBody JournalEntry journalEntry) {
-        return new ResponseEntity<>();
+        return new ResponseEntity<>(journalEntryService.createJournalEntry(journalEntry, companyId), HttpStatus.CREATED);
     }
 
     @PutMapping("/{journalEntryId}")
-    public ResponseEntity<JournalEntry> createJournalEntry(@PathVariable long companyId, @RequestBody JournalEntry journalEntry) {
-        return new ResponseEntity<>(journalEntryService.createJournalEntry(companyId, JournalEntry), HttpStatus.CREATED);
+    public ResponseEntity<JournalEntry> updateJournalEntry(@PathVariable long journalEntryId, @PathVariable long companyId, JournalEntry journalEntry) 
+    {
+        return new ResponseEntity<>(journalEntryService.updateJournalEntry(journalEntryId, companyId, journalEntry), HttpStatus.OK);
     }
 
     // @DeleteMapping("/{journalEntryId}")
