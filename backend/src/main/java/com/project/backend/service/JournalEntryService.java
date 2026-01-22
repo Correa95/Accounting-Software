@@ -36,6 +36,6 @@ public interface  JournalEntryService {
 // Required by GAAP
 // Creates a new entry with opposite debits/credits
 // Original entry remains untouched
-    JournalEntry reverseJournalEntry(long journalEntryId, long companyId, String reason);
+    // JournalEntry reverseJournalEntry(long journalEntryId, long companyId, String reason);
     
 }
