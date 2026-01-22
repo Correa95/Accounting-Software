@@ -31,28 +31,29 @@ public class JournalEntryController {
 
     @GetMapping
     public ResponseEntity<List<JournalEntry>> getAllJournalEntries(@PathVariable long companyId) {
-        return new ResponseEntity<>(journalEntryService.findByCompanyIdAndDeletedFalse(companyId), HttpStatus.OK);
+        return new ResponseEntity<>(journalEntryService.getAllJournalEntries(companyId), HttpStatus.OK);
     }
+
     @GetMapping("/{journalEntryId}")
     public ResponseEntity<JournalEntry> getJournalEntryById(@PathVariable long journalEntryId, @PathVariable long companyId) {
-        return new ResponseEntity<>(journalEntryService.findByIdAndCompanyIdAndDeletedFalse(journalEntryId, companyId), HttpStatus.OK);
+        return new ResponseEntity<>(journalEntryService.getJournalEntryById(journalEntryId, companyId), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<JournalEntry> createJournalEntry(@PathVariable long companyId, @RequestBody JournalEntry journalEntry) {
-        return ResponseEntity<>(journalEntryService.createJournalEntry(companyId, JournalEntry), HttpStatus.CREATED);
+        return new ResponseEntity<>();
     }
 
     @PutMapping("/{journalEntryId}")
     public ResponseEntity<JournalEntry> createJournalEntry(@PathVariable long companyId, @RequestBody JournalEntry journalEntry) {
-        return ResponseEntity<>(journalEntryService.createJournalEntry(companyId, JournalEntry), HttpStatus.CREATED);
+        return new ResponseEntity<>(journalEntryService.createJournalEntry(companyId, JournalEntry), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{journalEntryId}")
-    public void deactivateJournalEntry(@PathVariable long journalEntryId, @PathVariable long journalEntryId){
-        journalEntryService.deactivateJournalEntry(journalEntryId, journalEntryId);
-        ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{journalEntryId}")
+    // public void deactivateJournalEntry(@PathVariable long journalEntryId, @PathVariable long journalEntryId){
+    //     journalEntryService.deactivateJournalEntry(journalEntryId, journalEntryId);
+    //     ResponseEntity.noContent().build();
+    // }
     
     
 }
