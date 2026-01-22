@@ -5,7 +5,7 @@ import java.util.List;
 import com.project.backend.entity.JournalEntryLine;
 
 public interface  JournalEntryLineService {
-    List<JournalEntryLine> getJournalEntryLines(long journalEntryId, long companyId);
+    List<JournalEntryLine> getAllJournalEntryLines(long journalEntryId, long companyId);
 
     JournalEntryLine addJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine journalEntryLine);
 

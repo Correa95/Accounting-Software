@@ -29,23 +29,23 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
 
     @Transactional
     @Override
-    public JournalEntryLine addJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine line) {
+    public JournalEntryLine addJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine journalEntryLine) {
         JournalEntry entry = getJournalEntry(journalEntryId, companyId);
 
         if (entry.getStatus() == JournalEntryStatus.POSTED) {
             throw new IllegalStateException("Cannot add lines to a POSTED journal entry");
         }
 
-        validateLine(line);
+        validateLine(journalEntryLine);
 
-        line.setJournalEntry(entry);
-        return journalEntryLineRepository.save(line);
+        journalEntryLine.setJournalEntry(entry);
+        return journalEntryLineRepository.save(journalEntryLine);
     }
 
     @Transactional
     @Override
-    public JournalEntryLine upJournalEntryLine(long lineId, long companyId, JournalEntryLine updatedLine) {
-        JournalEntryLine existing = journalEntryLineRepository.findById(lineId)
+    public JournalEntryLine updateJournalEntryLine(long journalEntryLineId, long companyId, JournalEntryLine journalEntryLine) {
+        JournalEntryLine existing = journalEntryLineRepository.findById(journalEntryLineId)
                 .orElseThrow(() -> new RuntimeException("Journal entry line not found"));
 
         JournalEntry entry = existing.getJournalEntry();
@@ -58,34 +58,39 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
             throw new IllegalStateException("Cannot modify lines of a POSTED journal entry");
         }
 
-        validateLine(updatedLine);
+        validateLine(journalEntryLine);
 
-        existing.setDebit(updatedLine.getDebit());
-        existing.setCredit(updatedLine.getCredit());
-        existing.setAccount(updatedLine.getAccount());
-        existing.setMemo(updatedLine.getMemo());
+        existing.setDebit(journalEntryLine.getDebit());
+        existing.setCredit(journalEntryLine.getCredit());
+        existing.setAccount(journalEntryLine.getAccount());
+        existing.setMemo(journalEntryLine.getMemo());
 
         return journalEntryLineRepository.save(existing);
     }
 
     @Transactional
-    @Override
-    public void deleteJournalEntryLine(long journalEntryLineId, long companyId) {
-        JournalEntryLine line = journalEntryLineRepository.findById(journalEntryLineId)
-                .orElseThrow(() -> new RuntimeException("Journal entry line not found"));
+@Override
+public void deleteJournalEntryLine(long journalEntryLineId, long companyId) {
+    JournalEntryLine line = journalEntryLineRepository.findById(journalEntryLineId)
+            .orElseThrow(() -> new RuntimeException("Journal entry line not found"));
 
-        JournalEntry entry = line.getJournalEntry();
-
-        if (entry.getCompany().getId() != companyId) {
-            throw new RuntimeException("Unauthorized access");
-        }
-
-        if (entry.getStatus() == JournalEntryStatus.POSTED) {
-            throw new IllegalStateException("Cannot delete lines from a POSTED journal entry");
-        }
-
-        journalEntryLineRepository.delete(line);
+    // Force load journalEntry and company (avoid lazy issues)
+    JournalEntry entry = line.getJournalEntry();
+    if (entry == null || entry.getCompany() == null) {
+        throw new RuntimeException("Journal entry or company not found for this line");
     }
+
+    if (!entry.getCompany().getId().equals(companyId)) {
+        throw new RuntimeException("Unauthorized access");
+    }
+
+    if (entry.getStatus() == JournalEntryStatus.POSTED) {
+        throw new IllegalStateException("Cannot delete lines from a POSTED journal entry");
+    }
+
+    journalEntryLineRepository.delete(line);
+}
+
 
     // ---------- HELPERS ----------
     private JournalEntry getJournalEntry(long journalEntryId, long companyId) {
@@ -94,9 +99,9 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
                 .orElseThrow(() -> new RuntimeException("Journal entry not found"));
     }
 
-    private void validateLine(JournalEntryLine line) {
-        BigDecimal debit = line.getDebit();
-        BigDecimal credit = line.getCredit();
+    private void validateLine(JournalEntryLine journalEntryLine) {
+        BigDecimal debit = journalEntryLine.getDebit();
+        BigDecimal credit = journalEntryLine.getCredit();
 
         if ((debit == null || debit.signum() == 0) &&
             (credit == null || credit.signum() == 0)) {

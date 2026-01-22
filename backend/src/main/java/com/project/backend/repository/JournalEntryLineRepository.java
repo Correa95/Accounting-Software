@@ -1,7 +1,16 @@
 package com.project.backend.repository;
 
-import com.project.backend.entity.JournalEntry;
+import java.util.List;
 
-public class JournalEntryLineRepository extends JpaRepository<JournalEntryLine, Long>{
-    
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.project.backend.entity.JournalEntryLine;
+
+@Repository
+public interface JournalEntryLineRepository extends JpaRepository<JournalEntryLine, Long> {
+
+    // Get all lines for a specific journal entry
+    List<JournalEntryLine> findByJournalEntryId(Long journalEntryId);
+
 }
