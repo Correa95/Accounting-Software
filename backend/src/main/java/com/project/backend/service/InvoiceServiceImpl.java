@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.project.backend.common.enums.InvoiceStatus;
 import com.project.backend.entity.Company;
 import com.project.backend.entity.Invoice;
 import com.project.backend.repository.CompanyRepository;
@@ -39,15 +40,58 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.save(invoice);
     }
 
-    @Override
-    public Invoice updateInvoice(Long invoiceId, Long companyId, Invoice invoice) {
-        Invoice existing = getInvoiceById(invoiceId, companyId);
-        if (invoice.getCustomer() != null) existing.setCustomer(invoice.getCustomer());
-        if (invoice.getInvoiceAmount() != null) existing.setInvoiceAmount(invoice.getInvoiceAmount());
-        if (invoice.getInvoiceDate() != null) existing.setInvoiceDate(invoice.getInvoiceDate());
-        if (invoice.getInvoiceDueDate() != null) existing.setInvoiceDueDate(invoice.getInvoiceDueDate());
-        return invoiceRepository.save(existing);
+@Override
+public Invoice updateInvoice(Long invoiceId, Long companyId, Invoice invoice) {
+
+    Invoice existingInvoice = getInvoiceById(invoiceId, companyId);
+
+    // 🚫 Lock invoice once sent, paid, or void
+    if (existingInvoice.getInvoiceStatus() != InvoiceStatus.DRAFT) {
+        throw new IllegalStateException(
+            "Only DRAFT invoices can be edited"
+        );
     }
+    // ✅ Allowed updates (DRAFT only)
+    if (invoice.getInvoiceNumber() != null)
+        existingInvoice.setInvoiceNumber(invoice.getInvoiceNumber());
+
+    if (invoice.getInvoiceDate() != null)
+        existingInvoice.setInvoiceDate(invoice.getInvoiceDate());
+
+    if (invoice.getInvoiceDueDate() != null)
+        existingInvoice.setInvoiceDueDate(invoice.getInvoiceDueDate());
+
+    if (invoice.getInvoiceAmount() != null)
+        existingInvoice.setInvoiceAmount(invoice.getInvoiceAmount());
+
+    // ❌ DO NOT allow customer/account/status changes here
+
+     // Validate ownership
+    if (!invoice.getCompany().getId().equals(companyId)) {
+        throw new IllegalStateException("Invoice does not belong to company");
+    }
+
+    // Optionally: protect against editing non-DRAFT invoices
+    if (invoice.getInvoiceStatus() != InvoiceStatus.DRAFT) {
+        throw new IllegalStateException("Only DRAFT invoices can be edited");
+    }
+    return invoiceRepository.save(existingInvoice);
+}
+
+    
+    // @Override
+    // public Invoice updateInvoice(Long invoiceId, Long companyId, Invoice invoice) {
+
+    //     Invoice existing = getInvoiceById(invoiceId, companyId);
+
+    //     if (invoice.getCustomer() != null) existing.setCustomer(invoice.getCustomer());
+    //     if (invoice.getInvoiceAmount() != null) existing.setInvoiceAmount(invoice.getInvoiceAmount());
+    //     if (invoice.getInvoiceDate() != null) existing.setInvoiceDate(invoice.getInvoiceDate());
+    //     if (invoice.getInvoiceDueDate() != null) existing.setInvoiceDueDate(invoice.getInvoiceDueDate());
+    //     return invoiceRepository.save(existing);
+    // }
+
+
 
     @Override
     public void deactivateInvoice(Long invoiceId, Long companyId) {

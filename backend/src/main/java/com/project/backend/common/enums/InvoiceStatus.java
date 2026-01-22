@@ -6,3 +6,8 @@ public enum InvoiceStatus {
     PAID,
     VOID
 }
+// note for invoice status behavior
+// DRAFT  → Editable
+// SENT   → Locked (AR recognized)
+// PAID   → Locked
+// VOID   → Locked (historical)

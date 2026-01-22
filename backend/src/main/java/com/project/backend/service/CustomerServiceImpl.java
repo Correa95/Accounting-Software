@@ -58,7 +58,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomer(long customerId, long companyId) {
+    public void deactivateCustomer(long customerId, long companyId) {
         Customer customer = getCustomerById(customerId, companyId);
         customer.setActive(false);
         customerRepository.save(customer);

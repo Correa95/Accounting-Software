@@ -50,10 +50,10 @@ public class CustomerController {
 
     // Delete a customer
     @DeleteMapping("/{customerId}")
-    public ResponseEntity<Void> deleteCustomer(
+    public ResponseEntity<Void> deactivateCustomer(
         @PathVariable Long companyId,
         @PathVariable Long customerId) {
-    customerService.deleteCustomer(customerId, companyId);
+    customerService.deactivateCustomer(customerId, companyId);
         return ResponseEntity.noContent().build();
     
     }

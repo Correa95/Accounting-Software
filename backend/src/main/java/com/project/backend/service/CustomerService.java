@@ -2,8 +2,6 @@ package com.project.backend.service;
 
 import java.util.List;
 
-
-
 import com.project.backend.entity.Customer;
 
 
@@ -12,6 +10,6 @@ public interface  CustomerService {
     Customer getCustomerById(long customerId, long companyId);
     Customer saveCustomer(Customer customer, long companyId);
     Customer updateCustomer(long customerId, long companyId, Customer customer);
-    void deleteCustomer(long customerId, long companyId);
+    void deactivateCustomer(long customerId, long companyId);
 
 }

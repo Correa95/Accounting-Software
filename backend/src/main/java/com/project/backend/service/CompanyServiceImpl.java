@@ -72,14 +72,13 @@ public class CompanyServiceImpl implements CompanyService{
             existingCompany.setBusinessType(company.getBusinessType());
         }
 
-
     return companyRepository.save(existingCompany);
 }
 
     @Override
     public void deleteCompany(long id){
         Company company = getCompany(id);
-        company.setActive(true);
+        company.setActive(false);
         companyRepository.save(company);
     }
 

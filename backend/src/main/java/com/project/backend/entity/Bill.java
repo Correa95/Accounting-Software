@@ -3,6 +3,8 @@ package com.project.backend.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.project.backend.common.enums.BillStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,6 +39,16 @@ public class Bill {
     @Column(nullable = false)
     private LocalDate billDueDate;
 
+    @Column(nullable = false)
+    private BillStatus billStatus = BillStatus.DRAFT;
+
+    @Column(updatable = false)
+    private LocalDate createdAt;
+
+    @Column
+    private LocalDate updatedAt;
+
+
     @Column(nullable = false, precision = 19, scale= 4)
     private BigDecimal totalAmount;
 
@@ -48,6 +60,11 @@ public class Bill {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "vendor_id", nullable = false)
     private Vendor vendor;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
+
 
     
 }

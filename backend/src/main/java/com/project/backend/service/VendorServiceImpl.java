@@ -2,16 +2,15 @@ package com.project.backend.service;
 
 import java.util.List;
 
-import com.project.backend.repository.VendorRepository;
-
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
 import com.project.backend.entity.Company;
 import com.project.backend.entity.Vendor;
 import com.project.backend.repository.CompanyRepository;
+import com.project.backend.repository.VendorRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
