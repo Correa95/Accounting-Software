@@ -45,6 +45,12 @@ public class JournalEntry {
     @Column(nullable = false)
     private String description;
 
+    @Column(name = "posting_date")
+    private LocalDate postingDate;
+
+    @Column(name = "posted_by")
+    private String postedBy; // or User entity later
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private JournalEntryStatus status;

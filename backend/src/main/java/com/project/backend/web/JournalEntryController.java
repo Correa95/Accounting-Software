@@ -20,14 +20,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-
-
-
 @RestController
 @RequestMapping("companies/{companyId}/journalEntries")
 public class JournalEntryController {
 
     private final JournalEntryService journalEntryService;
+    public JournalEntryController(JournalEntryService journalEntryService){
+        this.journalEntryService = journalEntryService;
+    }
 
     @GetMapping
     public ResponseEntity<List<JournalEntry>> getAllJournalEntries(@PathVariable long companyId) {
@@ -45,33 +45,27 @@ public class JournalEntryController {
     }
 
     @PutMapping("/{journalEntryId}")
-    public ResponseEntity<JournalEntry> updateJournalEntry(@PathVariable long journalEntryId, @PathVariable long companyId, JournalEntry journalEntry) 
+    public ResponseEntity<JournalEntry> updateJournalEntry(@PathVariable long journalEntryId, @PathVariable long companyId, @RequestBody JournalEntry journalEntry) 
     {
         return new ResponseEntity<>(journalEntryService.updateJournalEntry(journalEntryId, companyId, journalEntry), HttpStatus.OK);
     }
 
     @DeleteMapping("/{journalEntryId}")
     public void deactivateJournalEntry(@PathVariable long companyId, @PathVariable long journalEntryId){
-        journalEntryService.deactivateJournalEntry(companyId, journalEntryId);
+        journalEntryService.deactivateJournalEntry(journalEntryId, companyId);
         ResponseEntity.noContent().build();
     }
 
     // POST journal entry (lock it)
     @PostMapping("/{journalEntryId}/post")
-    public ResponseEntity<JournalEntry> postJournalEntry(
-            @PathVariable long companyId,
-            @PathVariable long journalEntryId) {
+    public ResponseEntity<JournalEntry> postJournalEntry(@PathVariable long companyId, @PathVariable long journalEntryId) {
         return new ResponseEntity<>(journalEntryService.postJournalEntry(journalEntryId, companyId), HttpStatus.OK);
     }
 
     // REVERSE journal entry
     @PostMapping("/{journalEntryId}/reverse")
-    public ResponseEntity<JournalEntry> reverseJournalEntry(
-        @PathVariable long companyId,
-        @PathVariable long journalEntryId,
-        @RequestBody String reason) {
-
-    return new ResponseEntity(journalEntryService.reverseJournalEntry(journalEntryId, companyId, reason), HttpStatus.OK);
+    public ResponseEntity<JournalEntry> reverseJournalEntry(@PathVariable long companyId, @PathVariable long journalEntryId,@RequestBody String reason) {
+    return new ResponseEntity<>(journalEntryService.reverseJournalEntry(journalEntryId, companyId, reason), HttpStatus.OK);
 }
 
     

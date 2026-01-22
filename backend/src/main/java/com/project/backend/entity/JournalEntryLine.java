@@ -25,6 +25,8 @@ public class JournalEntryLine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    
+
     @Column(precision = 19, scale = 4)
     private BigDecimal debit;
 
@@ -38,6 +40,7 @@ public class JournalEntryLine {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id")
     private Account account;
+
 
 
 }
