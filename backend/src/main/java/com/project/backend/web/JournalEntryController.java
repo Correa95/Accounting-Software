@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 
 import com.project.backend.entity.JournalEntry;
-import com.project.backend.repository.JournalEntryRepository;
+
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,11 +50,30 @@ public class JournalEntryController {
         return new ResponseEntity<>(journalEntryService.updateJournalEntry(journalEntryId, companyId, journalEntry), HttpStatus.OK);
     }
 
-    // @DeleteMapping("/{journalEntryId}")
-    // public void deactivateJournalEntry(@PathVariable long journalEntryId, @PathVariable long journalEntryId){
-    //     journalEntryService.deactivateJournalEntry(journalEntryId, journalEntryId);
-    //     ResponseEntity.noContent().build();
-    // }
+    @DeleteMapping("/{journalEntryId}")
+    public void deactivateJournalEntry(@PathVariable long companyId, @PathVariable long journalEntryId){
+        journalEntryService.deactivateJournalEntry(companyId, journalEntryId);
+        ResponseEntity.noContent().build();
+    }
+
+    // POST journal entry (lock it)
+    @PostMapping("/{journalEntryId}/post")
+    public ResponseEntity<JournalEntry> postJournalEntry(
+            @PathVariable long companyId,
+            @PathVariable long journalEntryId) {
+        return new ResponseEntity<>(journalEntryService.postJournalEntry(journalEntryId, companyId), HttpStatus.OK);
+    }
+
+    // REVERSE journal entry
+    @PostMapping("/{journalEntryId}/reverse")
+    public ResponseEntity<JournalEntry> reverseJournalEntry(
+        @PathVariable long companyId,
+        @PathVariable long journalEntryId,
+        @RequestBody String reason) {
+
+    return new ResponseEntity(journalEntryService.reverseJournalEntry(journalEntryId, companyId, reason), HttpStatus.OK);
+}
+
     
     
 }
