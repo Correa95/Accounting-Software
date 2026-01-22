@@ -2,15 +2,15 @@ package com.project.backend.service;
 
 import java.util.List;
 
-import com.project.backend.entity.JournalEntry;
+import com.project.backend.entity.JournalEntryLine;
 
-public interface  JournalEntryLine {
-    List<JournalEntryLine> getLinesByJournalEntry(long journalEntryId, long companyId);
+public interface  JournalEntryLineService {
+    List<JournalEntryLine> getJournalEntryLines(long journalEntryId, long companyId);
 
     JournalEntryLine addJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine journalEntryLine);
 
     JournalEntryLine updateJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine journalEntryLine);
 
-    void deleteLine(long )
+    void deleteJournalEntryLine(long journalEntryLineId, long companyId);
 
 }
