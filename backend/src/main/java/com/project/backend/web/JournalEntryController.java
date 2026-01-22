@@ -50,8 +50,8 @@ public class JournalEntryController {
 
     @DeleteMapping("/{journalEntryId}")
     public void deactivateJournalEntry(@PathVariable long journalEntryId, @PathVariable long journalEntryId){
-        journalEntryService.deactivate
-        ResponseEntity<>(journalEntryService.)
+        journalEntryService.deactivateJournalEntry(journalEntryId, journalEntryId);
+        ResponseEntity.noContent().build();
     }
     
     
