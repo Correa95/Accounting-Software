@@ -46,13 +46,8 @@ public class Account {
     private AccountSubType accountSubType; 
     // ACCOUNTS_RECEIVABLE, ACCOUNTS_PAYABLE
 
-
-    private AccountSubType accountSubType;
-    private boolean active = true;
     @Column(nullable = false)
     private boolean active = true;
-
-
 
     @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal balance = BigDecimal.ZERO;
