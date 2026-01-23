@@ -62,6 +62,6 @@ public class Invoice {
     private Account account;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JournalEntryLine> journalLines;
+    private List<JournalEntryLine> journalEntryLines;
 
 }

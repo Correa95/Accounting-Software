@@ -11,6 +11,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findByCompanyIdAndSubTypeAndActiveTrue(
             Long companyId,
-            AccountSubType subType
+            AccountSubType accountSubType
     );
 }
