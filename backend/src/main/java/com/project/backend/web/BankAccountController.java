@@ -34,7 +34,7 @@ public class BankAccountController {
 
     @PostMapping
     public BankAccount createBankAccount(@PathVariable long companyId, @RequestBody BankAccount account) {
-        account.setCompany(new Company(companyId)); // set only id
+        // account.setCompany(new Company(companyId)); // set only id
         return bankAccountService.createBankAccount(account);
     }
 
