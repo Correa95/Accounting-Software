@@ -113,5 +113,5 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
             debit.signum() > 0 && credit.signum() > 0) {
             throw new IllegalStateException("Line cannot have both debit and credit");
         }
-    }
+        }
 }

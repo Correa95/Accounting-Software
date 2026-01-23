@@ -12,7 +12,7 @@ import com.project.backend.service.JournalEntryLineService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/companies/{companyId}/journalEntries/{journalEntryId}/lines")
+@RequestMapping("/companies/{companyId}/journalEntries/{journalEntryId}/journalEntryLine")
 @RequiredArgsConstructor
 public class JournalEntryLineController {
 
