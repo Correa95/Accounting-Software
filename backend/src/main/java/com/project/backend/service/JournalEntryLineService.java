@@ -9,7 +9,7 @@ public interface  JournalEntryLineService {
 
     JournalEntryLine addJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine journalEntryLine);
 
-    JournalEntryLine updateJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine journalEntryLine);
+    JournalEntryLine updateJournalEntryLine(long journalEntryLinesId, long companyId, JournalEntryLine journalEntryLine);
 
     void deleteJournalEntryLine(long journalEntryLineId, long companyId);
 

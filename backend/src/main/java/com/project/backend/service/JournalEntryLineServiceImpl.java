@@ -22,9 +22,11 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
     private final JournalEntryRepository journalEntryRepository;
 
     @Override
-    public List<JournalEntryLine> getJournalEntryLines(long journalEntryId, long companyId) {
-        JournalEntry entry = getJournalEntry(journalEntryId, companyId);
-        return entry.getLines();
+    public List<JournalEntryLine> getAllJournalEntryLines(long journalEntryId, long companyId) {
+        // JournalEntry entry = getJournalEntry(journalEntryId, companyId);
+        // return entry.getLines();
+        return journalEntryRepository.getAllJournalEntry(journalEntryId, companyId);
+        // return entry.getLines();
     }
 
     @Transactional

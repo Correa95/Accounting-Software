@@ -7,10 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import com.project.backend.entity.JournalEntryLine;
 
-@Repository
-public interface JournalEntryLineRepository extends JpaRepository<JournalEntryLine, Long> {
+// @Repository
+// public interface JournalEntryLineRepository extends JpaRepository<JournalEntryLine, Long> {
 
-    // Get all lines for a specific journal entry
-    List<JournalEntryLine> findByJournalEntryId(Long journalEntryId);
-
-}
+//     List<JournalEntryLine> findByJournalEntryIdAndJournalEntryCompanyId(
+//         Long journalEntryId,
+//         Long companyId
+//     );
+// }
