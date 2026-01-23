@@ -20,18 +20,18 @@ public class BankTransactionServiceImpl implements BankTransactionService {
     private final CompanyRepository companyRepository;
 
     @Override
-    public List<BankTransaction> getAllBankTransactions(Long companyId) {
+    public List<BankTransaction> getAllBankTransactions(long companyId) {
         return bankTransactionRepository.findByCompanyIdAndActiveTrue(companyId);
     }
 
     @Override
-    public BankTransaction getBankTransaction(Long bankTransactionId, Long companyId) {
+    public BankTransaction getBankTransaction(long bankTransactionId, long companyId) {
         return bankTransactionRepository.findByIdAndCompanyIdAndActiveTrue(bankTransactionId, companyId)
                 .orElseThrow(() -> new EntityNotFoundException("BankTransaction not found"));
     }
 
     @Override
-    public BankTransaction createBankTransaction(BankTransaction bankTransaction, Long companyId) {
+    public BankTransaction createBankTransaction(BankTransaction bankTransaction, long companyId) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new EntityNotFoundException("Company not found"));
         bankTransaction.setCompany(company);
@@ -40,7 +40,7 @@ public class BankTransactionServiceImpl implements BankTransactionService {
     }
 
     @Override
-    public BankTransaction updateBankTransaction(Long transactionId, Long companyId, BankTransaction bankTransaction) {
+    public BankTransaction updateBankTransaction(long transactionId, long companyId, BankTransaction bankTransaction) {
         BankTransaction existing = getBankTransaction(transactionId, companyId);
         if (bankTransaction.getTransactionAmount() != null) existing.setTransactionAmount(bankTransaction.getTransactionAmount());
         if (bankTransaction.getTransactionDate() != null) existing.setTransactionDate(bankTransaction.getTransactionDate());
@@ -50,7 +50,7 @@ public class BankTransactionServiceImpl implements BankTransactionService {
     }
 
     @Override
-    public void deactivateBankTransaction(Long bankTransactionId, Long companyId) {
+    public void deactivateBankTransaction(long bankTransactionId, long companyId) {
         BankTransaction bankTransaction = getBankTransaction(bankTransactionId, companyId);
         bankTransaction.setActive(false);
         bankTransactionRepository.save(bankTransaction);
