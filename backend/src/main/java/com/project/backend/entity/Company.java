@@ -98,6 +98,11 @@ public class Company {
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     private List<BankTransaction> bankTransactions;
 
+      // --- CUSTOM CONSTRUCTOR FOR STUB ---
+    public Company(Long id) {
+        this.id = id;
+    }
+
 
 
     
