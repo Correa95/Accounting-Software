@@ -3,6 +3,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.project.backend.entity.Company;
 
 import com.project.backend.entity.BankAccount;
 import com.project.backend.service.BankAccountService;
