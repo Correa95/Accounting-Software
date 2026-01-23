@@ -4,9 +4,9 @@ import java.util.List;
 import com.project.backend.entity.BankTransaction;
 
 public interface BankTransactionService {
-    List<BankTransaction> getAllBankTransactions(Long companyId);
-    BankTransaction getBankTransaction(Long bankTransactionId, Long companyId);
-    BankTransaction createBankTransaction(BankTransaction bankTransaction, Long companyId);
-    BankTransaction updateBankTransaction(Long bankTransactionId, Long companyId, BankTransaction bankTransaction);
-    void deactivateBankTransaction(Long bankTransactionId, Long companyId);
+    List<BankTransaction> getAllBankTransactions(long companyId);
+    BankTransaction getBankTransaction(long bankTransactionId, long companyId);
+    BankTransaction createBankTransaction(BankTransaction bankTransaction, long companyId);
+    BankTransaction updateBankTransaction(long bankTransactionId, long companyId, BankTransaction bankTransaction);
+    void deactivateBankTransaction(long bankTransactionId, long companyId);
 }
