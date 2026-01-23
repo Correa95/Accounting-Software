@@ -9,8 +9,9 @@ import com.project.backend.entity.Account;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    Optional<Account> findByCompanyIdAndSubTypeAndActiveTrue(
+    Optional<Account> findByCompanyIdAndAccountSubTypeAndActiveTrue(
             Long companyId,
             AccountSubType accountSubType
     );
+
 }
