@@ -21,12 +21,11 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
     private final JournalEntryLineRepository journalEntryLineRepository;
     private final JournalEntryRepository journalEntryRepository;
 
+
     @Override
     public List<JournalEntryLine> getAllJournalEntryLines(long journalEntryId, long companyId) {
-        // JournalEntry entry = getJournalEntry(journalEntryId, companyId);
-        // return entry.getLines();
-        return journalEntryRepository.getAllJournalEntry(journalEntryId, companyId);
-        // return entry.getLines();
+        return journalEntryLineRepository
+                .findByJournalEntryIdAndJournalEntryCompanyId(journalEntryId, companyId);
     }
 
     @Transactional
@@ -71,8 +70,8 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
     }
 
     @Transactional
-@Override
-public void deleteJournalEntryLine(long journalEntryLineId, long companyId) {
+    @Override
+    public void deleteJournalEntryLine(long journalEntryLineId, long companyId) {
     JournalEntryLine line = journalEntryLineRepository.findById(journalEntryLineId)
             .orElseThrow(() -> new RuntimeException("Journal entry line not found"));
 
@@ -91,7 +90,7 @@ public void deleteJournalEntryLine(long journalEntryLineId, long companyId) {
     }
 
     journalEntryLineRepository.delete(line);
-}
+    }
 
 
     // ---------- HELPERS ----------
