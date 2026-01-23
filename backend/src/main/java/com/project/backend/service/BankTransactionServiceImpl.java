@@ -45,7 +45,7 @@ public class BankTransactionServiceImpl implements BankTransactionService {
         if (bankTransaction.getTransactionAmount() != null) existing.setTransactionAmount(bankTransaction.getTransactionAmount());
         if (bankTransaction.getTransactionDate() != null) existing.setTransactionDate(bankTransaction.getTransactionDate());
         if (bankTransaction.getTransactionType() != null) existing.setTransactionType(bankTransaction.getTransactionType());
-        if (bankTransaction.getBankReferenceNumber() != null) existing.setBankReferenceNumber(bankTransaction.getBankReferenceNumber());
+        if (bankTransaction.getReferenceNumber() != null) existing.setReferenceNumber(bankTransaction.getReferenceNumber());
         return bankTransactionRepository.save(existing);
     }
 

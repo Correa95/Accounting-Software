@@ -3,8 +3,12 @@ package com.project.backend.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.project.backend.common.enums.TransactionType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,23 +35,33 @@ public class BankTransaction {
     @Column(nullable=false)
     private LocalDate transactionDate;
     
-    @Column(nullable=false)
+    @Column(name="transaction_amount", nullable=false)
     private BigDecimal transactionAmount;
 
-    @Column(nullable=false)
-    private String transactionType;
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType; 
     
     @Column(nullable=false)
-    private String transactionDescription;
+    private String description;
+    
+    @Column(unique = true)
+    private String referenceNumber; // e.g., payment ID, invoice number, check number
     
     @Column(nullable=false)
     private boolean active = true;
     
-    @Column(unique = true)
-    private String bankReferenceNumber;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bank_account_id", nullable = false)
+    private BankAccount bankAccount; // Bank account used
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "journal_entry_id")
+    private JournalEntry journalEntry; // Optional link to journal entry
+
+
 
 }
