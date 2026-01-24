@@ -36,8 +36,8 @@ public class CompanyServiceImpl implements CompanyService{
     }
 
     @Override
-    public Company updateCompany(long id, Company company) {
-    Company existingCompany = getCompany(id);
+    public Company updateCompany(long companyId, Company company) {
+    Company existingCompany = getCompanyById(companyId);
     
     
         if (company.getName() != null)
@@ -76,8 +76,8 @@ public class CompanyServiceImpl implements CompanyService{
 }
 
     @Override
-    public void deleteCompany(long id){
-        Company company = getCompanyById(id);
+    public void deleteCompany(long companyId){
+        Company company = getCompanyById(companyId);
         company.setActive(false);
         companyRepository.save(company);
     }
