@@ -56,11 +56,13 @@
 		</dependency>
 
 		<!-- Provide the H2 Database -->
+		
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 
 		<dependency>
 		<!-- Allow us to interact with the H2 database -->
