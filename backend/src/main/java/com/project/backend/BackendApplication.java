@@ -1,16 +1,10 @@
 package com.project.backend;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.project.backend.common.enums.BusinessType;
-import com.project.backend.entity.Company;
-// import com.project.backend.entity.Customer;
 import com.project.backend.repository.CompanyRepository;
 // import com.project.backend.repository.CustomerRepository;
 
@@ -28,21 +22,21 @@ public class BackendApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception{
 
-		Company companies = new Company(
-    "acme",
-    "Acme Corporation LLC",
-    "123 Main St",
-    "555-1234",
-    "info@acme.com",
-    "12-3456789",
-    new BigDecimal("7.50"),
-    "USD",
-    LocalDate.of(2025, 1, 1),
-    LocalDate.of(2025, 12, 31),
-    BusinessType.SERVICE
-);
+// 		Company companies = new Company(
+//     "acme",
+//     "Acme Corporation LLC",
+//     "123 Main St",
+//     "555-1234",
+//     "info@acme.com",
+//     "12-3456789",
+//     new BigDecimal("7.50"),
+//     "USD",
+//     LocalDate.of(2025, 1, 1),
+//     LocalDate.of(2025, 12, 31),
+//     BusinessType.SERVICE
+// );
 
-companyRepository.save(company);
+// companyRepository.save(company);
 
 		// Company[] companies = new Company[]{
 		// 	new Company("acme", "Acme Corporation LLC", "123 Main St","555-1234", "info@acme.com", "12-3456789", new BigDecimal("7.50"), "USD", LocalDate.of(2025, 1, 1), LocalDate.of(2025, 12, 31), BusinessType.SERVICE, true)
