@@ -17,7 +17,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getAccountType(Long companyId, AccountSubType subType) {
         return accountRepository
-                .findByCompanyIdAndSubTypeAndActiveTrue(companyId, subType)
+                .findByCompanyIdAndAccountSubTypeAndActiveTrue(companyId, subType)
                 .orElseThrow(() -> new IllegalStateException("Account of type " + subType + " not found for company " + companyId));
     }
 }
