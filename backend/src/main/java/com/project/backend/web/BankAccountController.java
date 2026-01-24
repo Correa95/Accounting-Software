@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class BankAccountController {
 
+    pri
     private final BankAccountService bankAccountService;
 
     @GetMapping  
@@ -29,9 +30,11 @@ public class BankAccountController {
     }
 
     @PostMapping
-    public BankAccount createBankAccount(@PathVariable long companyId, @RequestBody BankAccount account) {
-        account.setCompany(new Company(companyId)); // set only id
-        return bankAccountService.createBankAccount(account);
+    public BankAccount createBankAccount(@PathVariable long companyId, @RequestBody BankAccount bankAccount) {
+        // account.setCompany(new Company(companyId)); // set only id
+        Company company = companyService.getCompanyById(companyId);
+        bankAccount.setCompany(company);
+        return bankAccountService.createBankAccount(bankAccount);
     }
 
     @PutMapping("/{accountId}")

@@ -30,7 +30,7 @@ public class ServiceOfferingServiceImpl implements ServiceOfferingService{
 
     @Override
     public ServiceOffering createServiceOffering(ServiceOffering serviceOffering, long companyId){
-        Company company = companyService.getCompany(companyId);
+        Company company = companyService.getCompanyById(companyId);
 
         serviceOffering.setCompany(company);
         serviceOffering.setActive(true);
