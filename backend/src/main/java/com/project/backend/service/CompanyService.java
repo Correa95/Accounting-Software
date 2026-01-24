@@ -10,7 +10,7 @@ import com.project.backend.entity.Company;
 public interface  CompanyService {
   
     List<Company> getCompanies();
-    Company getCompany(long id);
+    Company getCompanyById(long id);
     Company saveCompany(Company company);
     Company updateCompany(long id, Company company);
     void deleteCompany(long id);
