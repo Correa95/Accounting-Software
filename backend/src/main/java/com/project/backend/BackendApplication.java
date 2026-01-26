@@ -11,7 +11,7 @@ public class BackendApplication  {
 	
 }
 // @Override
-// public void run(String... args) throws Exception{
+public void run(String... args) throws Exception{
 	// @Autowired
 	// CompanyRepository companyRepository;
 	// @Autowired
