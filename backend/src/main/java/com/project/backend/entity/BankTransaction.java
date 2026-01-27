@@ -45,7 +45,7 @@ public class BankTransaction {
     private String description;
     
     @Column(unique = true)
-    private String referenceNumber; // e.g., payment ID, invoice number, check number
+    private String referenceNumber; // payment ID, invoice number, check number
     
     @Column(nullable=false)
     private boolean active = true;
@@ -56,11 +56,11 @@ public class BankTransaction {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_account_id", nullable = false)
-    private BankAccount bankAccount; // Bank account used
+    private BankAccount bankAccount; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "journal_entry_id")
-    private JournalEntry journalEntry; // Optional link to journal entry
+    private JournalEntry journalEntry; 
 
 
 
