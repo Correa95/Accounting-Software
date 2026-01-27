@@ -1,5 +1,6 @@
 import { Route, Router } from "react-router-dom";
 import "./App.css";
+import Accounting from "./components/Accounting";
 import Dashboard from "./components/Dashboard";
 import Report from "./components/Report";
 import Statements from "./components/Statements";
