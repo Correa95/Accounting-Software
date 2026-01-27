@@ -4,9 +4,11 @@ import Accounting from "./components/Accounting";
 import Dashboard from "./components/Dashboard";
 import Report from "./components/Report";
 import Statements from "./components/Statements";
+import NavBar from "./components/NavBar";
 
 function App() {
   <div className="app">
+    <NavBar />
     <Router>
       <Route path="/" element={<Dashboard />} />
       <Route path="/accounting" element={<Accounting />} />
