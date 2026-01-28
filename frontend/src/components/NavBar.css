@@ -4,25 +4,23 @@
   border: 2px solid yellow;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
+  /* align-items: center; */
 }
 
-ul {
+ul,
+ol {
   display: flex;
   flex-direction: column;
   border: 2px solid red;
   padding: 32px;
 }
 
-ol {
-  border: 2px solid red;
-  display: flex;
-  flex-direction: column;
-}
-
 li {
-  font-size: large;
+  font-size: 16px;
   font-weight: 700;
   font-style: italic;
   list-style: none;
+  margin-bottom: 8px;
+  cursor: pointer;
 }
