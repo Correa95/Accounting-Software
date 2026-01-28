@@ -1,9 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-.app {
+/* .app {
   width: 100vw;
   background-color: #212121;
   height: 100vh;
@@ -11,7 +6,7 @@
   justify-content: center;
   align-items: center;
   border: 2px solid red;
-}
+} */
 
 /* Reset-ish */
 * {
@@ -26,7 +21,6 @@ body,
   height: 100%;
 }
 
-/* App layout */
 .app {
   display: grid;
   grid-template-columns: 240px 1fr; /* sidebar | content */
@@ -34,11 +28,10 @@ body,
   background-color: #f5f6fa;
 }
 
-/* Sidebar */
 .nav {
-  background-color: #111827; /* dark slate */
+  background-color: #111827;
   color: #fff;
-  padding: 1.5rem 1rem;
+  padding: 24px 16px;
 }
 
 /* Main content */
