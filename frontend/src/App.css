@@ -5,6 +5,7 @@
 }
 .app {
   width: 100vw;
+  background-color: #212121;
   height: 100vh;
   display: flex;
   justify-content: center;
