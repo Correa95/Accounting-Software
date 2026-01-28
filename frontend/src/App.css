@@ -16,11 +16,9 @@ body,
   height: 100vh;
   color: #fff;
   background-color: #212121;
-  /* background-color: #f5f6fa; */
 }
 
 .nav {
-  /* background-color: #111827; */
   color: #fff;
   padding: 24px 16px;
   border: 2px solid red;
