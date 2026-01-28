@@ -12,3 +12,38 @@
   align-items: center;
   border: 2px solid red;
 }
+
+/* Reset-ish */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* App layout */
+.app {
+  display: grid;
+  grid-template-columns: 240px 1fr; /* sidebar | content */
+  height: 100vh;
+  background-color: #f5f6fa;
+}
+
+/* Sidebar */
+.nav {
+  background-color: #111827; /* dark slate */
+  color: #fff;
+  padding: 1.5rem 1rem;
+}
+
+/* Main content */
+.main {
+  padding: 2rem;
+  overflow-y: auto;
+  background-color: #f9fafb;
+}
