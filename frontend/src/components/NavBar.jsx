@@ -8,6 +8,11 @@ function NavBar() {
         <li>Accounting</li>
         <li>Vendors</li>
       </ul>
+      <ol>
+        <li>Help</li>
+        <li>Setting</li>
+        <li>Log Out</li>
+      </ol>
     </nav>
   );
 }
