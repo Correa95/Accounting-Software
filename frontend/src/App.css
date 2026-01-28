@@ -23,6 +23,7 @@ body,
   /* background-color: #111827; */
   color: #fff;
   padding: 24px 16px;
+  border: 2px solid red;
 }
 
 .main {
