@@ -12,14 +12,16 @@ function App() {
       <div className="nav">
         <NavBar />
       </div>
-      .main
-      <Routes>
-        <NavBar />
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/accounting" element={<Accounting />} />
-        <Route path="/reports" element={<Report />} />
-        <Route path="/statements" element={<Statements />} />
-      </Routes>
+
+      <div className="main">
+        <Routes>
+          <NavBar />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/accounting" element={<Accounting />} />
+          <Route path="/reports" element={<Report />} />
+          <Route path="/statements" element={<Statements />} />
+        </Routes>
+      </div>
     </div>
   );
 }
