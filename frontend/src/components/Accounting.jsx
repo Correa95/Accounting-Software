@@ -1,5 +1,9 @@
 function Accounting() {
-  return <div></div>;
+  return (
+    <div>
+      <h1>ACCOUNTING</h1>
+    </div>
+  );
 }
 
 export default Accounting;

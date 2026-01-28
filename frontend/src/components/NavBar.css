@@ -3,3 +3,9 @@
   height: 20%;
   border: 2px solid red;
 }
+ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #212121;
+}

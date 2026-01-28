@@ -1,11 +1,11 @@
 import NavBar from "./NavBar";
 
-function Overview() {
+function Dashboard() {
   return (
-    <div className="overview">
-      <NavBar />
+    <div className="dashboard">
+      <h1>DASHBOARD</h1>
     </div>
   );
 }
 
-export default Overview;
+export default Dashboard;
