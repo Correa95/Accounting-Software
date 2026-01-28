@@ -3,13 +3,16 @@
   height: 20%;
   border: 2px solid yellow;
 }
+
 ul {
   display: flex;
   flex-direction: column;
   /* background-color: #212121; */
 }
+
 li {
   font-size: large;
   font-weight: 700;
   font-style: italic;
+  list-style: none;
 }
