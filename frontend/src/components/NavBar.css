@@ -21,5 +21,6 @@ li {
   font-style: italic;
   list-style: none;
   margin-bottom: 8px;
+  border-bottom: 5px solid #fff;
   cursor: pointer;
 }
