@@ -10,7 +10,7 @@ import NavBar from "./components/NavBar";
 function App() {
   return (
     <div className="app">
-      <nav className="sideBar">
+      <nav className="navBarContainer">
         <NavBar />
       </nav>
 
