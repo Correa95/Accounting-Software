@@ -12,7 +12,7 @@ function NavBar() {
           <IoNotificationsOutline size={30} />
         </button>
         <button className="btnMessage">
-          <FaRegMessage />
+          <FaRegMessage size={30} />
         </button>
       </div>
     </div>
