@@ -1,4 +1,4 @@
-import "./NavBar.css";
+import "./sideBar.css";
 function NavBar() {
   return (
     <nav className="navbarContainer">
