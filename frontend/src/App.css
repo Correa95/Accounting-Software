@@ -13,7 +13,7 @@ body,
 .app {
   height: 100vh;
   display: grid;
-  grid-template-rows: 40px 1fr;
+  grid-template-rows: 150px 1fr;
   color: #fff;
   background-color: #212121;
 }

@@ -2,7 +2,8 @@ import "./navBar.css";
 function NavBar() {
   return (
     <div className="navBarContainer">
-      <div className="logo"></div>
+      <h1>Tech</h1>
+
       <div className="notification">
         <div className="btn"></div>
       </div>
