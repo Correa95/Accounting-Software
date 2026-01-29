@@ -13,6 +13,7 @@ ol {
   flex-direction: column;
   border: 2px solid red;
   padding: 32px;
+  align-items: center;
 }
 
 li {
