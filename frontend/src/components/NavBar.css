@@ -1,4 +1,27 @@
 .navBarContainer {
-  /* width: 100vw; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 2px solid green;
+}
+
+.logo {
+  padding: 20px;
+  border: 2px solid red;
+}
+
+.notifications {
+  padding: 20px;
+  border: 2px solid red;
+}
+
+.btnNot {
+  padding: 10px;
+}
+
+.btnMessage {
+  padding: 10px;
+}
+.icon {
+  size:;
 }
