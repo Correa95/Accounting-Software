@@ -1,7 +1,7 @@
 import "./sideBar.css";
 function NavBar() {
   return (
-    <nav className="navbarContainer">
+    <nav className="sideBarContainer">
       <ul>
         <li>Dashboard</li>
         <li>Reports</li>
