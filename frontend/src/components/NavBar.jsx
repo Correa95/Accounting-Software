@@ -1,11 +1,11 @@
+import "./navBar.css";
 function NavBar() {
   return (
     <div className="navBarContainer">
-      <ul>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
+      <div className="logo"></div>
+      <div className="notification">
+        <div className="btn"></div>
+      </div>
     </div>
   );
 }

@@ -1,3 +1,5 @@
 .navBarContainer {
-  width: 100vw hei;
+  width: 100vw;
+  height: 200px;
+  border: 2px solid red;
 }
