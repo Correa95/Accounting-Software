@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Accounting from "./components/Accounting";
 import Dashboard from "./components/Dashboard";
@@ -9,26 +9,24 @@ import NavBar from "./components/NavBar";
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="app">
-        <nav className="sideBar">
-          <NavBar />
-        </nav>
+    <div className="app">
+      <nav className="sideBar">
+        <NavBar />
+      </nav>
 
-        <div className="content">
-          <SideBar />
+      <div className="content">
+        <SideBar />
 
-          <main className="main">
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/accounting" element={<Accounting />} />
-              <Route path="/reports" element={<Report />} />
-              <Route path="/statements" element={<Statements />} />
-            </Routes>
-          </main>
-        </div>
+        <main className="main">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/accounting" element={<Accounting />} />
+            <Route path="/reports" element={<Report />} />
+            <Route path="/statements" element={<Statements />} />
+          </Routes>
+        </main>
       </div>
-    </BrowserRouter>
+    </div>
   );
 }
 
