@@ -4,24 +4,31 @@ import Accounting from "./components/Accounting";
 import Dashboard from "./components/Dashboard";
 import Report from "./components/Report";
 import Statements from "./components/Statements";
+import SideBar from "./components/SideBar";
 import NavBar from "./components/NavBar";
 
 function App() {
   return (
-    <div className="app">
-      <div className="nav">
-        <NavBar />
-      </div>
+    <BrowserRouter>
+      <div className="app">
+        <nav className="sideBar">
+          <NavBar />
+        </nav>
 
-      <div className="main">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/accounting" element={<Accounting />} />
-          <Route path="/reports" element={<Report />} />
-          <Route path="/statements" element={<Statements />} />
-        </Routes>
+        <div className="content">
+          <SideBar />
+
+          <main className="main">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/accounting" element={<Accounting />} />
+              <Route path="/reports" element={<Report />} />
+              <Route path="/statements" element={<Statements />} />
+            </Routes>
+          </main>
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 }
 

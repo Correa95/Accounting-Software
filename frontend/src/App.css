@@ -11,17 +11,22 @@ body,
 }
 
 .app {
-  display: grid;
-  grid-template-columns: 240px 1fr;
   height: 100vh;
+  display: grid;
+  grid-template-rows: 60px 1fr;
   color: #fff;
   background-color: #212121;
 }
+.content {
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+}
 
-.nav {
+.sideBar {
   color: #fff;
   padding: 24px 16px;
-  border: 2px solid red;
+  border: 2px solid yellow;
 }
 
 .main {
