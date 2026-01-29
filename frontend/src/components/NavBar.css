@@ -13,16 +13,17 @@ ol {
   flex-direction: column;
   border: 2px solid red;
   padding: 32px;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center; */
+  /* justify-content: center; */
 }
 
 li {
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 700;
   font-style: italic;
   list-style: none;
+  padding: 10px;
   margin-bottom: 8px;
-  border-bottom: 5px solid #fff;
+  border-bottom: 2px solid #fff;
   cursor: pointer;
 }
