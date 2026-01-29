@@ -9,10 +9,10 @@ function NavBar() {
       </div>
       <div className="notifications">
         <button className="btnNot">
-          <IoNotificationsOutline size={30} />
+          <IoNotificationsOutline size={25} />
         </button>
         <button className="btnMessage">
-          <FaRegMessage size={30} />
+          <FaRegMessage size={25} />
         </button>
       </div>
     </div>
