@@ -8,6 +8,7 @@ function Dashboard() {
     <div className="dashboard">
       <h1>DASHBOARD</h1>
       <div className="cards">
+        <div className="card"></div>
         <BankCard />
         <Transaction />
         <Charts />
