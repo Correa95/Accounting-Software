@@ -1,7 +1,8 @@
-import BankCard from "./BankCard";
-import Transaction from "./Transaction";
-import Charts from "./Charts.";
-import Mathew from "./Mathew";
+import BankCard from "./components/BankCard";
+import Transaction from "./components/Transaction";
+import Charts from "./components/Charts.";
+import Mathew from "./components/Mathew";
+import "./Dashboard.css";
 
 function Dashboard() {
   return (
