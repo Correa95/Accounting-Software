@@ -6,7 +6,7 @@
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 on top, 2 bottom */
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
 .card {

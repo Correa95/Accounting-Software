@@ -1,7 +1,7 @@
 function BankCard() {
   return (
-    <div className="bankCard">
-      <h1>CARDS</h1>
+    <div className="bankCardContainer">
+      <h1>CARDS</h1>.<button>Connect Card</button>
     </div>
   );
 }
