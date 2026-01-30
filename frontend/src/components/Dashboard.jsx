@@ -8,15 +8,21 @@ function Dashboard() {
     <div className="dashboard">
       <h1>DASHBOARD</h1>
       <div className="cards">
-        <div className="card"></div>
-        <div className="card"></div>
-        <div className="card"></div>
+        <div className="card">
+          <BankCard />
+        </div>
+
+        <div className="card">
+          <Transaction />
+        </div>
+
+        <div className="card">
+          <Charts />
+        </div>
+
         <div className="card">
           <Mathew />
         </div>
-        <BankCard />
-        <Transaction />
-        <Charts />
       </div>
     </div>
   );
