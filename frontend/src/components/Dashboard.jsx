@@ -9,10 +9,14 @@ function Dashboard() {
       <h1>DASHBOARD</h1>
       <div className="cards">
         <div className="card"></div>
+        <div className="card"></div>
+        <div className="card"></div>
+        <div className="card">
+          <Mathew />
+        </div>
         <BankCard />
         <Transaction />
         <Charts />
-        <Mathew />
       </div>
     </div>
   );
