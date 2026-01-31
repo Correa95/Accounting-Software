@@ -13,6 +13,7 @@ import com.project.backend.repository.JournalEntryLineRepository;
 import com.project.backend.repository.JournalEntryRepository;
 // import com.project.backend.repository.JournalEntryRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -48,8 +49,8 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
     @Override
     public JournalEntryLine updateJournalEntryLine(long journalEntryLineId, long companyId, JournalEntryLine journalEntryLine) {
         JournalEntryLine existing = journalEntryLineRepository.findById(journalEntryLineId)
-                .orElseThrow(() -> 
-                throw new EntityNotFoundException("Journal entry not found");)
+                .orElseThrow(() -> throw new EntityNotFoundException("Journal entry line not found"));
+                
 
 
         JournalEntry entry = existing.getJournalEntry();
