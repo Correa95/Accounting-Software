@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.backend.entity.JournalEntry;
 import com.project.backend.entity.JournalEntryLine;
 import com.project.backend.enums.JournalEntryStatus;
+import com.project.backend.repository.JournalEntryLineRepository;
 import com.project.backend.repository.JournalEntryRepository;
 // import com.project.backend.repository.JournalEntryRepository;
 
@@ -18,9 +19,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JournalEntryLineServiceImpl implements JournalEntryLineService {
 
-    private final JournalEntryLineRepository journalEntryLineRepository;
-
-    // private final JournalEntryRepository journalEntryRepository;
+     private final JournalEntryLineRepository journalEntryLineRepository;
+    private final JournalEntryRepository journalEntryRepository; // ✅ REQUIRED
 
     @Override
     public List<JournalEntryLine> getAllJournalEntryLines(long journalEntryId, long companyId) {
