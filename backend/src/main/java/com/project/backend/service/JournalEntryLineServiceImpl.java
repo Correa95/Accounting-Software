@@ -30,7 +30,7 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
     @Transactional
     @Override
     public JournalEntryLine addJournalEntryLine(
-            long journalEntryId, long companyId, JournalEntryLine line) {
+            long journalEntryId, long companyId, JournalEntryLine journalEntryLine) {
 
         JournalEntry entry = journalEntryRepository
                 .findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId)
@@ -40,12 +40,12 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
             throw new IllegalStateException("Cannot add lines to POSTED journal entry");
         }
 
-        validateLine(line);
+        validateLine(journalEntryLine);
 
-        line.setJournalEntry(entry);
-        line.setCompany(entry.getCompany());
+        journalEntryLine.setJournalEntry(entry);
+        journalEntryLine.setCompany(entry.getCompany());
 
-        return journalEntryLineRepository.save(line);
+        return journalEntryLineRepository.save(journalEntryLine);
     }
 
     @Transactional
