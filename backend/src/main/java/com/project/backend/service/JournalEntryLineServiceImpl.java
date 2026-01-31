@@ -48,7 +48,9 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
     @Override
     public JournalEntryLine updateJournalEntryLine(long journalEntryLineId, long companyId, JournalEntryLine journalEntryLine) {
         JournalEntryLine existing = journalEntryLineRepository.findById(journalEntryLineId)
-                .orElseThrow(() -> new RuntimeException("Journal entry line not found"));
+                .orElseThrow(() -> 
+                throw new EntityNotFoundException("Journal entry not found");)
+
 
         JournalEntry entry = existing.getJournalEntry();
 
