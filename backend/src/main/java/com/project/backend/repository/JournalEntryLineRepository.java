@@ -11,13 +11,11 @@ import com.project.backend.entity.JournalEntryLine;
 @Repository
 public interface JournalEntryLineRepository extends JpaRepository<JournalEntryLine, Long> {
 
-    // Get all active lines for a company
-    List<JournalEntryLine> findByCompany_IdAndActiveTrue(Long companyId);
+    List<JournalEntryLine> findByCompany_IdAndActiveTrue(long  companyId);
 
-    // Get all active lines for a company within a date range
     List<JournalEntryLine> findByCompany_IdAndActiveTrueAndEntryDateBetween(
-            Long companyId, LocalDate startDate, LocalDate endDate);
+            long  companyId, LocalDate startDate, LocalDate endDate);
 
-    // Get all lines for a specific journal entry within a company
-    List<JournalEntryLine> findByJournalEntry_IdAndCompany_Id(Long journalEntryId, Long companyId);
+    List<JournalEntryLine> findByJournalEntry_IdAndCompany_Id(
+            long  journalEntryId, long  companyId);
 }

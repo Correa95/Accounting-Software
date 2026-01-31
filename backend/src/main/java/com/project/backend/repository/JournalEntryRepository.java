@@ -1,23 +1,18 @@
 package com.project.backend.repository;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.project.backend.entity.JournalEntryLine;
+import com.project.backend.entity.JournalEntry;
 
 @Repository
-public interface JournalEntryLineRepository extends JpaRepository<JournalEntryLine, Long> {
+public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long> {
 
-    // All active lines for a company
-    List<JournalEntryLine> findByCompany_IdAndActiveTrue(Long companyId);
+    List<JournalEntry> findByCompany_IdAndDeletedFalse(long companyId);
 
-    // Active lines for company filtered by date range
-    List<JournalEntryLine> findByCompany_IdAndActiveTrueAndEntryDateBetween(
-            Long companyId, LocalDate startDate, LocalDate endDate);
-
-    // Fix for your red line: get all lines for a journal entry and company
-    List<JournalEntryLine> findByJournalEntryIdAndCompany_Id(Long journalEntryId, Long companyId);
+    Optional<JournalEntry> findByIdAndCompany_IdAndDeletedFalse(
+            long journalEntryId, long companyId);
 }
