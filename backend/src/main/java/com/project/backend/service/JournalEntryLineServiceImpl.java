@@ -51,10 +51,10 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
     @Transactional
     @Override
     public void deleteJournalEntryLine(long lineId, long companyId) {
-        JournalEntryLine line = journalEntryLineRepository.findById(lineId)
+        JournalEntryLine journalEntryLine = journalEntryLineRepository.findById(lineId)
                 .orElseThrow(() -> new RuntimeException("Line not found"));
 
-        JournalEntry entry = line.getJournalEntry();
+        JournalEntry entry = journalEntryLine.getJournalEntry();
 
         if (!entry.getCompany().getId().equals(companyId)) {
             throw new RuntimeException("Unauthorized access");
@@ -64,12 +64,12 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
             throw new IllegalStateException("Cannot delete lines from POSTED journal entry");
         }
 
-        journalEntryLineRepository.delete(line);
+        journalEntryLineRepository.delete(journalEntryLine);
     }
 
-    private void validateLine(JournalEntryLine line) {
-        BigDecimal debit = line.getDebit();
-        BigDecimal credit = line.getCredit();
+    private void validateLine(JournalEntryLine journalEntryLine) {
+        BigDecimal debit = journalEntryLine.getDebit();
+        BigDecimal credit = journalEntryLine.getCredit();
 
         if ((debit == null || debit.signum() == 0)
                 && (credit == null || credit.signum() == 0)) {
