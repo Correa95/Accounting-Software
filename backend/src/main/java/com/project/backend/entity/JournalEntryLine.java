@@ -37,6 +37,9 @@ public class JournalEntryLine {
     @Column(nullable = false)
     private LocalDate entryDate; 
 
+    @Column(nullable = false)
+    private boolean active = true;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id")
     private Company company;
