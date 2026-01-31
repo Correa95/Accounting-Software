@@ -6,11 +6,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.backend.common.enums.JournalEntryStatus;
 import com.project.backend.entity.JournalEntry;
 import com.project.backend.entity.JournalEntryLine;
-import com.project.backend.repository.JournalEntryLineRepository;
+import com.project.backend.enums.JournalEntryStatus;
 import com.project.backend.repository.JournalEntryRepository;
+// import com.project.backend.repository.JournalEntryRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,13 +19,12 @@ import lombok.RequiredArgsConstructor;
 public class JournalEntryLineServiceImpl implements JournalEntryLineService {
 
     private final JournalEntryLineRepository journalEntryLineRepository;
-    private final JournalEntryRepository journalEntryRepository;
 
+    // private final JournalEntryRepository journalEntryRepository;
 
     @Override
     public List<JournalEntryLine> getAllJournalEntryLines(long journalEntryId, long companyId) {
-        return journalEntryLineRepository
-                .findByJournalEntryIdAndJournalEntryCompanyId(journalEntryId, companyId);
+        return journalEntryLineRepository.findByJournalEntry_IdAndCompany_Id(journalEntryId, companyId);
     }
 
     @Transactional
@@ -40,6 +39,8 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
         validateLine(journalEntryLine);
 
         journalEntryLine.setJournalEntry(entry);
+        journalEntryLine.setCompany(entry.getCompany());
+
         return journalEntryLineRepository.save(journalEntryLine);
     }
 
@@ -51,7 +52,7 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
 
         JournalEntry entry = existing.getJournalEntry();
 
-        if (entry.getCompany().getId() != companyId) {
+        if (!entry.getCompany().getId().equals(companyId)) {
             throw new RuntimeException("Unauthorized access");
         }
 
@@ -72,31 +73,30 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
     @Transactional
     @Override
     public void deleteJournalEntryLine(long journalEntryLineId, long companyId) {
-    JournalEntryLine line = journalEntryLineRepository.findById(journalEntryLineId)
-            .orElseThrow(() -> new RuntimeException("Journal entry line not found"));
+        JournalEntryLine line = journalEntryLineRepository.findById(journalEntryLineId)
+                .orElseThrow(() -> new RuntimeException("Journal entry line not found"));
 
-    // Force load journalEntry and company (avoid lazy issues)
-    JournalEntry entry = line.getJournalEntry();
-    if (entry == null || entry.getCompany() == null) {
-        throw new RuntimeException("Journal entry or company not found for this line");
+        JournalEntry entry = line.getJournalEntry();
+
+        if (entry == null || entry.getCompany() == null) {
+            throw new RuntimeException("Journal entry or company not found for this line");
+        }
+
+        if (!entry.getCompany().getId().equals(companyId)) {
+            throw new RuntimeException("Unauthorized access");
+        }
+
+        if (entry.getStatus() == JournalEntryStatus.POSTED) {
+            throw new IllegalStateException("Cannot delete lines from a POSTED journal entry");
+        }
+
+        journalEntryLineRepository.delete(line);
     }
 
-    if (!entry.getCompany().getId().equals(companyId)) {
-        throw new RuntimeException("Unauthorized access");
-    }
-
-    if (entry.getStatus() == JournalEntryStatus.POSTED) {
-        throw new IllegalStateException("Cannot delete lines from a POSTED journal entry");
-    }
-
-    journalEntryLineRepository.delete(line);
-    }
-
-
-    // ---------- HELPERS ----------
+    // ---------------- Helper Methods ----------------
     private JournalEntry getJournalEntry(long journalEntryId, long companyId) {
         return journalEntryRepository
-                .findByIdAndCompanyIdAndDeletedFalse(journalEntryId, companyId)
+                .findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId)
                 .orElseThrow(() -> new RuntimeException("Journal entry not found"));
     }
 
@@ -113,5 +113,5 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
             debit.signum() > 0 && credit.signum() > 0) {
             throw new IllegalStateException("Line cannot have both debit and credit");
         }
-        }
+    }
 }

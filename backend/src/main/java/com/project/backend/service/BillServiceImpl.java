@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.project.backend.common.enums.AccountSubType;
-import com.project.backend.common.enums.BillStatus;
 import com.project.backend.entity.Account;
 import com.project.backend.entity.Bill;
 import com.project.backend.entity.Company;
 import com.project.backend.entity.Vendor;
+import com.project.backend.enums.AccountSubType;
+import com.project.backend.enums.BillStatus;
 import com.project.backend.repository.BillRepository;
 import com.project.backend.repository.CompanyRepository;
 import com.project.backend.repository.VendorRepository;
@@ -62,7 +62,6 @@ public class BillServiceImpl implements BillService {
 
         Bill existingBill = getBillById(billId, companyId);
 
-        // Only allow edits for DRAFT bills
         if (existingBill.getBillStatus() != BillStatus.DRAFT) {
             throw new IllegalStateException("Only DRAFT bills can be edited");
         }
@@ -72,7 +71,6 @@ public class BillServiceImpl implements BillService {
         if (bill.getBillDueDate() != null) existingBill.setBillDueDate(bill.getBillDueDate());
         if (bill.getTotalAmount() != null) existingBill.setTotalAmount(bill.getTotalAmount());
 
-        // ❌ Do NOT allow changing vendor or account
 
         return billRepository.save(existingBill);
     }

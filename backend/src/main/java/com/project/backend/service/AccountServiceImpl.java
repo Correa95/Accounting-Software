@@ -2,8 +2,8 @@ package com.project.backend.service;
 
 import org.springframework.stereotype.Service;
 
-import com.project.backend.common.enums.AccountSubType;
 import com.project.backend.entity.Account;
+import com.project.backend.enums.AccountSubType;
 import com.project.backend.repository.AccountRepository;
 
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
 package com.project.backend.service;
 
-import com.project.backend.common.enums.AccountSubType;
 import com.project.backend.entity.Account;
+import com.project.backend.enums.AccountSubType;
 
 public interface AccountService {
 

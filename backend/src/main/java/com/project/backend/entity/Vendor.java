@@ -1,6 +1,6 @@
 package com.project.backend.entity;
 
-import com.project.backend.common.enums.PaymentTerms;
+import com.project.backend.enums.PaymentTerms;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

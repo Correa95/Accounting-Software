@@ -1,12 +1,15 @@
 package com.project.backend.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.project.backend.common.enums.InvoiceStatus;
 import com.project.backend.entity.Company;
 import com.project.backend.entity.Invoice;
+import com.project.backend.enums.InvoiceStatus;
 import com.project.backend.repository.CompanyRepository;
 import com.project.backend.repository.InvoiceRepository;
 
@@ -19,41 +22,49 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
     private final CompanyRepository companyRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Invoice> getAllInvoices(Long companyId) {
+    public List<Invoice> getAllInvoices(long companyId) {
         return invoiceRepository.findByCompanyIdAndActiveTrue(companyId);
     }
 
     @Override
-    public Invoice getInvoiceById(Long invoiceId, Long companyId) {
+    public Invoice getInvoiceById(long invoiceId, long companyId) {
         return invoiceRepository.findByIdAndCompanyIdAndActiveTrue(invoiceId, companyId)
                 .orElseThrow(() -> new EntityNotFoundException("Invoice not found"));
     }
 
     @Override
-    public Invoice createInvoice(Invoice invoice, Long companyId, long customerId) {
+    @Transactional
+    public Invoice createInvoice(long companyId, long customerId, Invoice invoice) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new EntityNotFoundException("Company not found"));
+        long nextSeq = jdbcTemplate.queryForObject(
+                "SELECT nextval('invoice_number_seq')",
+                long.class
+        );
+
+        String year = String.valueOf(LocalDate.now().getYear());
+        String invoiceNumber = String.format("INV-%s-%06d", year, nextSeq);
+        invoice.setInvoiceNumber(invoiceNumber);
+        invoice.setInvoiceStatus(InvoiceStatus.DRAFT);
         invoice.setCompany(company);
         invoice.setActive(true);
         return invoiceRepository.save(invoice);
     }
 
-@Override
-public Invoice updateInvoice(Long invoiceId, Long companyId, Invoice invoice) {
+    @Override
+    @Transactional
+    public Invoice updateInvoice(long invoiceId, long companyId, Invoice invoice) {
 
     Invoice existingInvoice = getInvoiceById(invoiceId, companyId);
 
-    // 🚫 Lock invoice once sent, paid, or void
     if (existingInvoice.getInvoiceStatus() != InvoiceStatus.DRAFT) {
         throw new IllegalStateException(
             "Only DRAFT invoices can be edited"
         );
     }
-    // ✅ Allowed updates (DRAFT only)
-    if (invoice.getInvoiceNumber() != null)
-        existingInvoice.setInvoiceNumber(invoice.getInvoiceNumber());
 
     if (invoice.getInvoiceDate() != null)
         existingInvoice.setInvoiceDate(invoice.getInvoiceDate());
@@ -64,37 +75,49 @@ public Invoice updateInvoice(Long invoiceId, Long companyId, Invoice invoice) {
     if (invoice.getInvoiceAmount() != null)
         existingInvoice.setInvoiceAmount(invoice.getInvoiceAmount());
 
-    // ❌ DO NOT allow customer/account/status changes here
-
-     // Validate ownership
-    if (!invoice.getCompany().getId().equals(companyId)) {
-        throw new IllegalStateException("Invoice does not belong to company");
-    }
-
-    // Optionally: protect against editing non-DRAFT invoices
-    if (invoice.getInvoiceStatus() != InvoiceStatus.DRAFT) {
-        throw new IllegalStateException("Only DRAFT invoices can be edited");
-    }
     return invoiceRepository.save(existingInvoice);
-}
-
-    
-    // @Override
-    // public Invoice updateInvoice(Long invoiceId, Long companyId, Invoice invoice) {
-
-    //     Invoice existing = getInvoiceById(invoiceId, companyId);
-
-    //     if (invoice.getCustomer() != null) existing.setCustomer(invoice.getCustomer());
-    //     if (invoice.getInvoiceAmount() != null) existing.setInvoiceAmount(invoice.getInvoiceAmount());
-    //     if (invoice.getInvoiceDate() != null) existing.setInvoiceDate(invoice.getInvoiceDate());
-    //     if (invoice.getInvoiceDueDate() != null) existing.setInvoiceDueDate(invoice.getInvoiceDueDate());
-    //     return invoiceRepository.save(existing);
-    // }
-
-
+    }
 
     @Override
-    public void deactivateInvoice(Long invoiceId, Long companyId) {
+    @Transactional
+    public Invoice sendInvoice(long invoiceId, long companyId) {
+    Invoice invoice = getInvoiceById(invoiceId, companyId);
+    if (invoice.getInvoiceStatus() != InvoiceStatus.DRAFT) {
+        throw new IllegalStateException("Only DRAFT invoices can be sent");
+    }
+    invoice.setInvoiceStatus(InvoiceStatus.SENT);
+    return invoiceRepository.save(invoice);
+
+    }
+    @Override
+    @Transactional
+    public Invoice voidInvoice(long invoiceId, long companyId) {
+    Invoice invoice = getInvoiceById(invoiceId, companyId);
+    if (invoice.getInvoiceStatus() == InvoiceStatus.PAID) {
+        throw new IllegalStateException("Paid invoices cannot be voided");
+    }
+    invoice.setInvoiceStatus(InvoiceStatus.VOID);
+    return invoiceRepository.save(invoice);
+    }
+
+    @Override
+    @Transactional
+    public Invoice markInvoicePaid(long invoiceId, long companyId) {
+    Invoice invoice = getInvoiceById(invoiceId, companyId);
+    if (invoice.getInvoiceStatus() == InvoiceStatus.VOID) {
+        throw new IllegalStateException("Voided invoices cannot be paid");
+    }
+    invoice.setInvoiceStatus(InvoiceStatus.PAID);
+    return invoiceRepository.save(invoice);
+}
+
+
+
+
+    
+    @Override
+    @Transactional
+    public void deactivateInvoice(long invoiceId, long companyId) {
         Invoice invoice = getInvoiceById(invoiceId, companyId);
         invoice.setActive(false);
         invoiceRepository.save(invoice);

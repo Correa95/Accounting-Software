@@ -5,9 +5,9 @@ import java.util.List;
 import com.project.backend.entity.Payment;
 
 public interface PaymentService {
-    List<Payment> getAllPayments(Long companyId);
-    Payment getPayment(Long paymentId, Long companyId);
-    Payment createPayment(Payment payment, Long companyId);
-    Payment updatePayment(Long paymentId, Long companyId, Payment payment);
-    void deactivatePayment(Long paymentId, Long companyId);
+    List<Payment> getAllPayments(long companyId);
+    Payment getPayment(long paymentId, long companyId);
+    Payment createPayment(long companyId, long invoiceId, Payment payment);
+    Payment updatePayment(long paymentId, long companyId, Payment payment);
+    void deactivatePayment(long paymentId, long companyId);
 }

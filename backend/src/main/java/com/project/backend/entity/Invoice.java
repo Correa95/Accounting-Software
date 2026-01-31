@@ -4,15 +4,18 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.project.backend.common.enums.InvoiceStatus;
+import com.project.backend.enums.InvoiceStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -24,14 +27,22 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "invoices")
+@Table(
+    name = "invoices",
+    indexes = {
+        @Index(name = "idx_invoice_number", columnList = "invoiceNumber"),
+        @Index(name = "idx_invoice_company", columnList = "company_id"),
+        @Index(name = "idx_invoice_customer", columnList = "customer_id")
+    }
+)
+
 public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, length = 10)
     private String invoiceNumber;
     
     @Column(nullable = false)
@@ -40,8 +51,13 @@ public class Invoice {
     @Column(nullable = false)
     private LocalDate invoiceDueDate;
     
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private InvoiceStatus invoiceStatus;
+
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal remainingAmount;
+
 
     @Column(nullable = false)
     private boolean active = true;

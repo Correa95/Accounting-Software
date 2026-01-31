@@ -3,7 +3,7 @@ package com.project.backend.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.project.backend.common.enums.TransactionType;
+import com.project.backend.enums.TransactionType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,14 +38,15 @@ public class BankTransaction {
     @Column(name="transaction_amount", nullable=false)
     private BigDecimal transactionAmount;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType; 
     
     @Column(nullable=false)
     private String description;
     
-    @Column(unique = true)
-    private String referenceNumber; // payment ID, invoice number, check number
+    @Column(unique = true, nullable = false)
+    private String referenceNumber;
     
     @Column(nullable=false)
     private boolean active = true;

@@ -1,4 +1,4 @@
-package com.project.backend.common.enums;
+package com.project.backend.enums;
 
 public enum AccountType {
     ASSET,

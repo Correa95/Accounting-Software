@@ -5,9 +5,18 @@ import java.util.List;
 import com.project.backend.entity.Invoice;
 
 public interface InvoiceService {
-    List<Invoice> getAllInvoices(Long companyId);
-    Invoice getInvoiceById(Long invoiceId, Long companyId);
-    Invoice createInvoice(Invoice invoice, Long companyId, long customerId);
-    Invoice updateInvoice(Long invoiceId, Long companyId, Invoice invoice);
-    void deactivateInvoice(Long invoiceId, Long companyId);
+
+    List<Invoice> getAllInvoices(long companyId);
+    Invoice getInvoiceById(long invoiceId, long companyId);
+
+    Invoice createInvoice(long companyId, long customerId, Invoice invoice);
+    Invoice updateInvoice(long invoiceId, long companyId, Invoice invoice);
+
+    Invoice sendInvoice(long invoiceId, long companyId);
+    Invoice voidInvoice(long invoiceId, long companyId);
+    Invoice markInvoicePaid(long invoiceId, long companyId);
+
+    void deactivateInvoice(long invoiceId, long companyId);
 }
+
+

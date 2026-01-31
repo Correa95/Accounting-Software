@@ -2,8 +2,8 @@ package com.project.backend.entity;
 
 import java.math.BigDecimal;
 
-import com.project.backend.common.enums.AccountSubType;
-import com.project.backend.common.enums.AccountType;
+import com.project.backend.enums.AccountSubType;
+import com.project.backend.enums.AccountType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,12 +39,11 @@ public class Account {
 
      @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AccountType accountType;  // ASSET, LIABILITY
+    private AccountType accountType;  
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AccountSubType accountSubType; 
-    // ACCOUNTS_RECEIVABLE, ACCOUNTS_PAYABLE
 
     @Column(nullable = false)
     private boolean active = true;

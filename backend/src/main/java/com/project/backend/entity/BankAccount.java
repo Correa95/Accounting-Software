@@ -1,6 +1,6 @@
 package com.project.backend.entity;
 
-import com.project.backend.common.enums.AccountType;
+import com.project.backend.enums.AccountType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -34,7 +34,7 @@ public class BankAccount {
     private String bankName;
 
     @Enumerated(EnumType.STRING)
-    private AccountType accountType; // enum: CHECKING / SAVINGS
+    private AccountType accountType; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)

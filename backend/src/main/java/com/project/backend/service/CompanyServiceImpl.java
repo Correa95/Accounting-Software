@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.project.backend.common.enums.BusinessType;
 import com.project.backend.entity.Company;
+import com.project.backend.enums.BusinessType;
 import com.project.backend.repository.CompanyRepository;
 
 import lombok.RequiredArgsConstructor;

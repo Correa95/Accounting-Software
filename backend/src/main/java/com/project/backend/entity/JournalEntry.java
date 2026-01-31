@@ -3,7 +3,7 @@ package com.project.backend.entity;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.project.backend.common.enums.JournalEntryStatus;
+import com.project.backend.enums.JournalEntryStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -70,7 +70,6 @@ public class JournalEntry {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-// One-to-many relationship with JournalEntryLine
     @OneToMany(mappedBy = "journalEntry", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JournalEntryLine> lines;
 }

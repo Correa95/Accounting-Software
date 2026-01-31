@@ -2,7 +2,7 @@ package com.project.backend.entity;
 
 import java.math.BigDecimal;
 
-import com.project.backend.common.enums.ProductType;
+import com.project.backend.enums.ProductType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

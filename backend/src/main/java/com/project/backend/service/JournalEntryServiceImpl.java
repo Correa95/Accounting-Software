@@ -7,8 +7,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.backend.common.enums.JournalEntryStatus;
 import com.project.backend.entity.JournalEntry;
+import com.project.backend.enums.JournalEntryStatus;
 import com.project.backend.repository.JournalEntryRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,13 +21,15 @@ public class JournalEntryServiceImpl implements JournalEntryService{
 
     @Override
     public List<JournalEntry> getAllJournalEntries(long companyId){
-        return journalEntryRepository.findByCompanyIdAndDeletedFalse(companyId);
+        return journalEntryRepository.findByCompany_IdAndDeletedFalse(companyId);
     }
 
     @Override 
     public JournalEntry getJournalEntryById(long journalEntryId, long companyId){
-        return journalEntryRepository.findByIdAndCompanyIdAndDeletedFalse(journalEntryId, companyId).orElseThrow(()-> new RuntimeException("Journal entry not found"));
+        return journalEntryRepository.findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId)
+            .orElseThrow(() -> new RuntimeException("Journal entry not found"));
     }
+
 
     @Override
     public JournalEntry createJournalEntry(JournalEntry journalEntry, long companyId){

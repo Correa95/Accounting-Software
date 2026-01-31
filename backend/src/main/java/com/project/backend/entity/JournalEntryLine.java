@@ -1,6 +1,7 @@
 package com.project.backend.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +33,14 @@ public class JournalEntryLine {
 
     @Column(precision = 19, scale = 4)
     private BigDecimal credit;
+
+    @Column(nullable = false)
+    private LocalDate entryDate; 
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "journal_entry_id")

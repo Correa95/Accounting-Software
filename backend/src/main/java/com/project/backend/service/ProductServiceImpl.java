@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.project.backend.common.enums.ProductType;
 import com.project.backend.entity.Company;
 import com.project.backend.entity.Product;
+import com.project.backend.enums.ProductType;
 import com.project.backend.repository.CompanyRepository;
 import com.project.backend.repository.ProductRepository;
 
