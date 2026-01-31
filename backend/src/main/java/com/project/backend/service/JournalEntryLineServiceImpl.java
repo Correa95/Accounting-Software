@@ -32,26 +32,26 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
     public JournalEntryLine addJournalEntryLine(
             long journalEntryId, long companyId, JournalEntryLine journalEntryLine) {
 
-        JournalEntry entry = journalEntryRepository
+        JournalEntry journalEntry = journalEntryRepository
                 .findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId)
                 .orElseThrow(() -> new RuntimeException("Journal entry not found"));
 
-        if (entry.getStatus() == JournalEntryStatus.POSTED) {
+        if (journalEntry.getStatus() == JournalEntryStatus.POSTED) {
             throw new IllegalStateException("Cannot add lines to POSTED journal entry");
         }
 
         validateLine(journalEntryLine);
 
-        journalEntryLine.setJournalEntry(entry);
-        journalEntryLine.setCompany(entry.getCompany());
+        journalEntryLine.setJournalEntry(journalEntry);
+        journalEntryLine.setCompany(journalEntry.getCompany());
 
         return journalEntryLineRepository.save(journalEntryLine);
     }
 
     @Transactional
     @Override
-    public void deleteJournalEntryLine(long lineId, long companyId) {
-        JournalEntryLine journalEntryLine = journalEntryLineRepository.findById(lineId)
+    public void deleteJournalEntryLine(long journalEntryLineId, long companyId) {
+        JournalEntryLine journalEntryLine = journalEntryLineRepository.findById(journalEntryLineId)
                 .orElseThrow(() -> new RuntimeException("Line not found"));
 
         JournalEntry entry = journalEntryLine.getJournalEntry();
