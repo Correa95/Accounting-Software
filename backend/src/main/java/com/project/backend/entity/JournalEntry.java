@@ -62,19 +62,14 @@ public class JournalEntry {
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
-
     @Column(nullable = false)
     private boolean deleted = false;
     private LocalDate deletedAt;
-
-
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    // @OneToMany(mappedBy = "journalEntry", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private List<JournalEntryLine> journalEntryLine;
     @OneToMany(mappedBy = "journalEntry",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JournalEntryLine> lines = new ArrayList<>();
      @PrePersist
