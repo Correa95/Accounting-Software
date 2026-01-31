@@ -71,5 +71,5 @@ public class JournalEntry {
     private Company company;
 
     @OneToMany(mappedBy = "journalEntry", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JournalEntryLine> lines;
+    private List<JournalEntryLine> journalEntryLine;
 }
