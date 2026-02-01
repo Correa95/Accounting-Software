@@ -20,7 +20,7 @@ public class TrialBalanceController {
 
     private final TrialBalanceService trialBalanceService;
 
-    @GetMapping
+    @GetMapping("/trialBalance")
     public ResponseEntity<List<TrialBalanceDTO>> getTrialBalance(
             @PathVariable Long companyId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
