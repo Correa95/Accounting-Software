@@ -23,35 +23,54 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
 
     @Override
     public List<JournalEntryLine> getAllJournalEntryLines(long journalEntryId, long companyId) {
-        return journalEntryLineRepository
-                .findByJournalEntry_IdAndCompany_Id(journalEntryId, companyId);
+        return journalEntryLineRepository.findByJournalEntry_IdAndCompany_Id(journalEntryId, companyId);
     }
 
     @Transactional
     @Override
-    public JournalEntryLine addJournalEntryLine(
-            long journalEntryId, long companyId, JournalEntryLine journalEntryLine) {
-
-        JournalEntry journalEntry = journalEntryRepository
-                .findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId)
-                .orElseThrow(() -> new RuntimeException("Journal entry not found"));
-
+    public JournalEntryLine addJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine journalEntryLine) {
+        JournalEntry journalEntry = journalEntryRepository.findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId).orElseThrow(() -> new RuntimeException("Journal entry not found"));
         if (journalEntry.getStatus() == JournalEntryStatus.POSTED) {
             throw new IllegalStateException("Cannot add lines to POSTED journal entry");
         }
-
         validateLine(journalEntryLine);
-
         journalEntryLine.setJournalEntry(journalEntry);
         journalEntryLine.setCompany(journalEntry.getCompany());
-
         return journalEntryLineRepository.save(journalEntryLine);
     }
 
     @Transactional
     @Override
-    public void deleteJournalEntryLine(long journalEntryLineId, long companyId) {
-        JournalEntryLine journalEntryLine = journalEntryLineRepository.findById(journalEntryLineId)
+    public JournalEntryLine updateJournalEntryLine(long journalEntryLineId, long companyId,JournalEntryLine journalEntryLine) {
+        JournalEntryLine existingJournalEntryLine = journalEntryLineRepository.findById(journalEntryLineId).orElseThrow(() -> new RuntimeException("Journal entry line not found"));
+        JournalEntry entry = existingJournalEntryLine.getJournalEntry();
+
+        if (!entry.getCompany().getId().equals(companyId)) {
+            throw new RuntimeException("Unauthorized access");
+        }
+
+        if (entry.getStatus() == JournalEntryStatus.POSTED) {
+            throw new IllegalStateException("Cannot update lines of POSTED journal entry");
+        }
+
+        validateLine(journalEntryLine);
+
+        existingJournalEntryLine.setAccount(journalEntryLine.getAccount());
+        existingJournalEntryLine.setDebit(journalEntryLine.getDebit());
+        existingJournalEntryLine.setCredit(journalEntryLine.getCredit());
+        existingJournalEntryLine.setMemo(journalEntryLine.getMemo());
+
+        return journalEntryLineRepository.save(existingJournalEntryLine);
+    }
+
+    @Transactional
+    @Override
+    public void deleteJournalEntryLine(
+            long journalEntryLineId,
+            long companyId
+    ) {
+        JournalEntryLine journalEntryLine = journalEntryLineRepository
+                .findById(journalEntryLineId)
                 .orElseThrow(() -> new RuntimeException("Line not found"));
 
         JournalEntry entry = journalEntryLine.getJournalEntry();

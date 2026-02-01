@@ -1,6 +1,11 @@
 package com.project.backend.enums;
 
 public enum PaymentMethod {
-    CASH, BANK_TRANSFER, CHECK, CREDIT_CARD
+    CASH,
+    CHECK,
+    CREDIT_CARD,
+    BANK_TRANSFER,
+    ACH,
+    ZELLE,
+    PAYPAL
 }
-

@@ -33,7 +33,7 @@ public class InvoiceController {
     private final CustomerService customerService;
 
 
-    @GetMapping
+    @GetMapping("/invoice")
     public ResponseEntity<List<Invoice>> getAllInvoices(@PathVariable long companyId) {
         return new ResponseEntity<>(invoiceService.getAllInvoices(companyId), HttpStatus.OK);
     }

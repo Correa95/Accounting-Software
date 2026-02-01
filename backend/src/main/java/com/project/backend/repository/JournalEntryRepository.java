@@ -13,6 +13,5 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long
 
     List<JournalEntry> findByCompany_IdAndDeletedFalse(long companyId);
 
-    Optional<JournalEntry> findByIdAndCompany_IdAndDeletedFalse(
-            long journalEntryId, long companyId);
+    Optional<JournalEntry> findByIdAndCompany_IdAndDeletedFalse(long journalEntryId,long companyId);
 }
