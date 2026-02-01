@@ -29,7 +29,7 @@ public class VendorController {
     private final VendorService vendorService;
 
     // Get all Vendors for a company
-    @GetMapping("/vendor")
+    @GetMapping("/vendors")
     public ResponseEntity<List<Vendor>> getAllVendors(@PathVariable long companyId){
         return new ResponseEntity<>(vendorService.getAllVendors(companyId), HttpStatus.OK); 
     }

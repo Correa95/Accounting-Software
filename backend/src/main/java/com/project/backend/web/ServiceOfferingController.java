@@ -30,7 +30,7 @@ public class ServiceOfferingController {
     private final  ServiceOfferingService serviceOfferingService;
     
     // Get all customers for a company
-    @GetMapping
+    @GetMapping("/serviceOfferings")
     public ResponseEntity<List<ServiceOffering>> getServiceOfferings(@PathVariable long companyId){
         return new ResponseEntity<>(serviceOfferingService.getServiceOfferings(companyId), HttpStatus.OK);
     }
