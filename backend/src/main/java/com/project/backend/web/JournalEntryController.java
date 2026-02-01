@@ -53,18 +53,14 @@ public class JournalEntryController {
         ResponseEntity.noContent().build();
     }
 
-    // POST journal entry (lock it)
     @PostMapping("/{journalEntryId}/post")
     public ResponseEntity<JournalEntry> postJournalEntry(@PathVariable long companyId, @PathVariable long journalEntryId) {
         return new ResponseEntity<>(journalEntryService.postJournalEntry(journalEntryId, companyId), HttpStatus.OK);
     }
 
-    // REVERSE journal entry
     @PostMapping("/{journalEntryId}/reverse")
     public ResponseEntity<JournalEntry> reverseJournalEntry(@PathVariable long companyId, @PathVariable long journalEntryId,@RequestBody String reason) {
     return new ResponseEntity<>(journalEntryService.reverseJournalEntry(journalEntryId, companyId, reason), HttpStatus.OK);
 }
-
-    
     
 }
