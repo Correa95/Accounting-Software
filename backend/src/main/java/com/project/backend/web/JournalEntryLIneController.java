@@ -34,11 +34,10 @@ public class JournalEntryLineController {
         return new ResponseEntity<>(journalEntryLineService.addJournalEntryLine(journalEntryId, companyId, journalEntryLine), HttpStatus.CREATED);
     }
 
-    // ---------------- UPDATE LINE ----------------
     @PutMapping("/{journalEntryLineId}")
     public ResponseEntity<JournalEntryLine> updateJournalEntryLine(
             @PathVariable long companyId,
-            @PathVariable long journalEntryId, // optional, can ignore inside service
+            @PathVariable long journalEntryId, 
             @PathVariable long journalEntryLineId,
             @RequestBody JournalEntryLine journalEntryLine) {
         return new ResponseEntity<>(journalEntryLineService.updateJournalEntryLine(journalEntryLineId, companyId, journalEntryLine), HttpStatus.OK);
