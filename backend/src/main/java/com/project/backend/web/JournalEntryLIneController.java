@@ -43,11 +43,10 @@ public class JournalEntryLineController {
         return new ResponseEntity<>(journalEntryLineService.updateJournalEntryLine(journalEntryLineId, companyId, journalEntryLine), HttpStatus.OK);
     }
 
-    // ---------------- DELETE LINE ----------------
     @DeleteMapping("/{journalEntryLineId}")
     public ResponseEntity<Void> deleteJournalEntryLine(
             @PathVariable long companyId,
-            @PathVariable long journalEntryId, // optional, can ignore inside service
+            @PathVariable long journalEntryId, 
             @PathVariable long journalEntryLineId) {
         journalEntryLineService.deleteJournalEntryLine(journalEntryLineId, companyId);
         return ResponseEntity.noContent().build();
