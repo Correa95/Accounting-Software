@@ -20,7 +20,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
 
-    @GetMapping
+    @GetMapping("/payments")
     public ResponseEntity<List<Payment>> getAllPayments(@PathVariable long companyId, @PathVariable long invoiceId) {
         return new ResponseEntity<>(paymentService.getAllPayments(companyId), HttpStatus.OK);
     }
