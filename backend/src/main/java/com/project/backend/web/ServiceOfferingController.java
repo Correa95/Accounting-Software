@@ -29,39 +29,31 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class ServiceOfferingController {
     private final  ServiceOfferingService serviceOfferingService;
     
-    // Get all customers for a company
+
     @GetMapping("/serviceOfferings")
     public ResponseEntity<List<ServiceOffering>> getServiceOfferings(@PathVariable long companyId){
         return new ResponseEntity<>(serviceOfferingService.getServiceOfferings(companyId), HttpStatus.OK);
     }
 
-    // Get a single customer
     @GetMapping("/{serviceOfferingId}")
     public ResponseEntity<ServiceOffering> getServiceOffering(@PathVariable long serviceOfferingId, @PathVariable long companyId) {
         return new ResponseEntity<>(serviceOfferingService.getServiceOffering(serviceOfferingId, companyId), HttpStatus.OK);
     }
 
-    // Creating Service Offering
     @PostMapping
     public ResponseEntity<ServiceOffering> createServiceOffering(@RequestBody ServiceOffering serviceOffering, @PathVariable long companyId) {
         return new ResponseEntity<>(serviceOfferingService.createServiceOffering(serviceOffering, companyId), HttpStatus.CREATED);
     }
 
-    // Updating a Service Offering
     @PutMapping("/{serviceOfferingId}")
     public ResponseEntity<ServiceOffering> updateServiceOffering(@PathVariable long serviceOfferingId, @PathVariable long companyId, @RequestBody ServiceOffering serviceOffering) {
         return new ResponseEntity<>(serviceOfferingService.updateServiceOffering(serviceOfferingId, companyId, serviceOffering), HttpStatus.OK);
     }
 
-    // Deleting a Service Offering
     @DeleteMapping("/{serviceOfferingId}")
     public ResponseEntity<Void> deleteServiceOffering(@PathVariable long serviceOfferingId, @PathVariable long companyId){
         serviceOfferingService.deleteServiceOffering(serviceOfferingId, companyId);
         return  ResponseEntity.noContent().build();
     }
-    
-
-
-    
     
 }
