@@ -18,15 +18,14 @@ public class JournalEntryLineController {
 
     private final JournalEntryLineService journalEntryLineService;
 
-    // ---------------- GET ALL LINES ----------------
-    @GetMapping
+    @GetMapping("journalEntryLines")
     public ResponseEntity<List<JournalEntryLine>> getAllJournalEntryLines(
             @PathVariable long companyId,
             @PathVariable long journalEntryId) {
         return new ResponseEntity<>(journalEntryLineService.getAllJournalEntryLines(journalEntryId, companyId), HttpStatus.OK);
     }
 
-    // ---------------- ADD NEW LINE ----------------
+
     @PostMapping
     public ResponseEntity<JournalEntryLine> addJournalEntryLine(
             @PathVariable long companyId,
