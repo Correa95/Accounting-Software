@@ -25,7 +25,7 @@ public class StripeService {
     private final PaymentOrderRepository paymentOrderRepository;
 
     @Transactional
-    public PaymentResponse createPayment(PaymentRequest paymentRequest){
+    public PaymentResponse createPaymentIntent(PaymentRequest paymentRequest){
         try { 
             log.info("Creating payment intent for customer:{}",paymentRequest.getCustomerEmail()); 
             // Create or retrieve customer in Stripe
