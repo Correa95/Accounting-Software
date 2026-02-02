@@ -1,7 +1,6 @@
 package com.project.backend.entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.project.backend.enums.JournalEntryStatus;
@@ -71,7 +70,7 @@ public class JournalEntry {
     private Company company;
 
     @OneToMany(mappedBy = "journalEntry",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JournalEntryLine> lines = new ArrayList<>();
+    private List<JournalEntryLine> journalEntryLines;
      @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDate.now();

@@ -2,8 +2,10 @@ package com.project.backend.service;
 
 import java.util.List;
 
-import com.project.backend.entity.Invoice;
+import org.springframework.stereotype.Service;
 
+import com.project.backend.entity.Invoice;
+@Service
 public interface InvoiceService {
 
     List<Invoice> getAllInvoices(long companyId);
