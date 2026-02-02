@@ -2,6 +2,7 @@ package com.project.backend.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.project.backend.enums.InvoiceStatus;
@@ -19,6 +20,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,9 +57,10 @@ public class Invoice {
     @Column(nullable = false)
     private InvoiceStatus invoiceStatus;
 
+    private LocalDateTime paidAt;
+
     @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal remainingAmount;
-
 
     @Column(nullable = false)
     private boolean active = true;
@@ -79,5 +82,9 @@ public class Invoice {
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JournalEntryLine> journalEntryLines;
+
+    @OneToOne
+    @JoinColumn(name = "payment_order_id")
+    private PaymentOrder paymentOrder;
 
 }

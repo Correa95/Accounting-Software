@@ -2,12 +2,10 @@ package com.project.backend.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.project.backend.entity.PaymentOrder;
 import com.project.backend.enums.PaymentStatus;
 import com.project.backend.repository.PaymentOrderRepository;
 import com.stripe.model.PaymentIntent;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,7 +30,7 @@ public class PaymentOrderService {
         Invoice invoice = invoiceService.markInvoicePaid(order);
 
         // 2️⃣ Post accounting entries
-        accountingService.postPayment(invoice, order);
+        accountService.postPayment(invoice, order);
     }
 
     public void handlePaymentFailed(PaymentIntent intent) {
