@@ -33,7 +33,7 @@ public class PaymentOrder {
     @Column(nullable = false)
     private String customerEmail;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 19, scale = 4 )
     private BigDecimal amount;
 
     @Column(nullable = false, length = 3)
