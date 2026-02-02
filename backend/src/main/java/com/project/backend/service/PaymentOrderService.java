@@ -1,18 +1,23 @@
 package com.project.backend.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.backend.entity.PaymentOrder;
 import com.project.backend.enums.PaymentStatus;
 import com.project.backend.repository.PaymentOrderRepository;
 import com.stripe.model.PaymentIntent;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
+@Transactional
 
 public class PaymentOrderService {
     private final PaymentOrderRepository paymentOrderRepository;
     private final InvoiceService invoiceService;
-    private final AccountingService accountingService;
+    private final AccountService accountService;
 
     public void handlePaymentSucceeded(PaymentIntent intent) {
 
