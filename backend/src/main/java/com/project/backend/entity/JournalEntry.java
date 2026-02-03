@@ -1,6 +1,6 @@
 package com.project.backend.entity;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.project.backend.enums.JournalEntryStatus;
@@ -29,16 +29,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "journal_entries", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"company_id", "entryNumber"})
-    })
+@Table(
+    name = "journal_entries",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"company_id", "entry_number"})
+)
 public class JournalEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "entry_number", nullable = false)
     private String entryNumber;
 
     @Column(nullable = false)
@@ -47,37 +48,44 @@ public class JournalEntry {
     @Column(nullable = false)
     private String description;
 
-    @Column(name = "posting_date")
     private LocalDate postingDate;
-
-    @Column(name = "posted_by")
-    private String postedBy; // or User entity later
+    private String postedBy;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private JournalEntryStatus status;
 
     @Column(nullable = false)
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     @Column(nullable = false)
     private boolean deleted = false;
-    private LocalDate deletedAt;
+
+    private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @OneToMany(mappedBy = "journalEntry",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JournalEntryLine> journalEntryLines;
-     @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDate.now();
+    @OneToMany(
+        mappedBy = "journalEntry",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "journalEntryLine_id", nullable = false)
+    private List<JournalEntryLine> journalEntryLines = new ArrayList<>();
+
+
+    @PrePersist
+    void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDate.now();
+    void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }

@@ -11,6 +11,7 @@ import com.stripe.model.PaymentIntent;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,11 +31,16 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
                 .orElseThrow(() ->
                         new IllegalStateException("PaymentOrder not found"));
 
-        order.setPaymentStatus(PaymentStatus.SUCCEEDED);
+        if (order.getPaymentStatus() == PaymentStatus.SUCCESSFUL) {
+            return; // idempotency guard
+        }
+
+        order.setPaymentStatus(PaymentStatus.SUCCESSFUL);
         paymentOrderRepository.save(order);
 
         Invoice invoice = invoiceService.markInvoicePaid(order);
-        accountingService.postPayment(invoice, order);
+
+        accountService.postPayment(invoice, order);
     }
 
     @Override

@@ -9,31 +9,48 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+@Entity
+@Table(
+    name = "payment_orders",
+    indexes = {
+        @Index(name = "idx_payment_intent", columnList = "stripe_payment_intent_id")
+    }
+)
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "payment_orders")
 public class PaymentOrder {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Stripe PaymentIntent ID (source of truth) */
+    @Column(nullable = false, unique = true)
+    private String stripePaymentIntentId;
+
+    /** Stripe Customer ID */
+    @Column(nullable = false)
+    private String stripeCustomerId;
+
     @Column(nullable = false)
     private String customerEmail;
 
-    @Column(nullable = false, precision = 19, scale = 4 )
+    @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;
 
     @Column(nullable = false, length = 3)
@@ -42,53 +59,29 @@ public class PaymentOrder {
     @Column(nullable = false)
     private String description;
 
-    
-    @Column(nullable = false)
-    private String stripeCustomer;
-    
-    /** Stripe payment intent ID */
-    @Column(unique = true)
-    private String stripePaymentIntentId;
-    
-    /** Stripe customer ID */
-    @Column(unique = true)
-    private String stripeCustomerId;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
+    /** Link to invoice being paid */
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "invoice_id", nullable = false)
+    private Invoice invoice;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = this.createdAt;
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
-
-    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    // @JoinColumn(name = "company_id", nullable = false)
-    // private Company company;
-
-    //  @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "vendor_id")
-    // private Vendor vendor;
-
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "customer_id")
-    // private Customer customer;
-
-    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    // @JoinColumn(name = "invoice_id", nullable = false)
-    // private Invoice invoice;
 }
-

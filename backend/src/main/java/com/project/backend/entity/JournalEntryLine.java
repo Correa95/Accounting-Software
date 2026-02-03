@@ -1,7 +1,5 @@
 package com.project.backend.entity;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,7 +20,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class JournalEntryLine {
-     @Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -35,15 +34,11 @@ public class JournalEntryLine {
     private BigDecimal credit;
 
     @Column(nullable = false)
-    private LocalDate entryDate; 
-
-    @Column(nullable = false)
     private boolean active = true;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id")
     private Company company;
-
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "journal_entry_id")
@@ -56,8 +51,4 @@ public class JournalEntryLine {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
-
-
-
-
 }

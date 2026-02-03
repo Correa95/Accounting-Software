@@ -5,5 +5,5 @@ import com.project.backend.enums.AccountSubType;
 
 public interface AccountService {
 
-    Account getAccountType(Long companyId, AccountSubType subType);
+    Account getAccountBySubType(Long companyId, AccountSubType subType);
 }

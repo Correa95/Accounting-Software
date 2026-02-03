@@ -16,34 +16,39 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "accounts")
+@Table(
+    name = "accounts",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"company_id", "account_sub_type"})
+    }
+)
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; 
+    private Long id;
 
     @Column(nullable = false)
     private String accountName;
 
-     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AccountType accountType;  
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AccountSubType accountSubType; 
+    private AccountType accountType; 
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_sub_type", nullable = false)
+    private AccountSubType accountSubType;
 
     @Column(nullable = false)
     private boolean active = true;
@@ -51,9 +56,7 @@ public class Account {
     @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal balance = BigDecimal.ZERO;
 
-
-     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
-    
 }

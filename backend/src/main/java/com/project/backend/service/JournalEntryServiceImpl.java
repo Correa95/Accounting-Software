@@ -1,5 +1,6 @@
 package com.project.backend.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class JournalEntryServiceImpl implements JournalEntryService {
     private final JournalEntryRepository journalEntryRepository;
     private final JournalEntryLineRepository journalEntryLineRepository;
 
+    // ----------------------------
+    // READ
+    // ----------------------------
+
     @Override
     public List<JournalEntry> getAllJournalEntries(long companyId) {
         return journalEntryRepository.findByCompany_IdAndDeletedFalse(companyId);
@@ -28,51 +33,85 @@ public class JournalEntryServiceImpl implements JournalEntryService {
 
     @Override
     public JournalEntry getJournalEntryById(long journalEntryId, long companyId) {
-        return journalEntryRepository.findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId).orElseThrow(() -> new RuntimeException("Journal entry not found"));
+        return journalEntryRepository
+                .findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId)
+                .orElseThrow(() -> new RuntimeException("Journal entry not found"));
     }
+
+    // ----------------------------
+    // CREATE (DRAFT)
+    // ----------------------------
 
     @Transactional
     @Override
-    public JournalEntry createJournalEntry(JournalEntry journalEntry,long companyId) {
+    public JournalEntry createJournalEntry(JournalEntry journalEntry, long companyId) {
         journalEntry.setStatus(JournalEntryStatus.DRAFT);
         journalEntry.setEntryDate(LocalDate.now());
+        journalEntry.setEntryNumber(generateEntryNumber());
+
+        // ⚠️ company must already be set (controller or Stripe service)
         return journalEntryRepository.save(journalEntry);
     }
 
+    // ----------------------------
+    // UPDATE (DRAFT ONLY)
+    // ----------------------------
 
     @Transactional
     @Override
-    public JournalEntry updateJournalEntry(long journalEntryId,long companyId,JournalEntry journalEntry) {
-        JournalEntry existingJournalEntry = getJournalEntryById(journalEntryId, companyId);
+    public JournalEntry updateJournalEntry(
+            long journalEntryId,
+            long companyId,
+            JournalEntry journalEntry
+    ) {
+        JournalEntry existing = getJournalEntryById(journalEntryId, companyId);
 
-        if (existingJournalEntry.getStatus() != JournalEntryStatus.DRAFT) {
+        if (existing.getStatus() != JournalEntryStatus.DRAFT) {
             throw new IllegalStateException("Only DRAFT entries can be updated");
         }
-        existingJournalEntry.setDescription(journalEntry.getDescription());
-        existingJournalEntry.setEntryDate(journalEntry.getEntryDate());
-        return journalEntryRepository.save(existingJournalEntry);
+
+        existing.setDescription(journalEntry.getDescription());
+        existing.setEntryDate(journalEntry.getEntryDate());
+
+        return journalEntryRepository.save(existing);
     }
 
+    // ----------------------------
+    // POST (LOCK ENTRY)
+    // ----------------------------
 
     @Transactional
     @Override
-    public JournalEntry postJournalEntry(long journalEntryId,long companyId) {
-        JournalEntry journalEntry = getJournalEntryById(journalEntryId, companyId);
+    public JournalEntry postJournalEntry(long journalEntryId, long companyId) {
+        JournalEntry entry = getJournalEntryById(journalEntryId, companyId);
 
-        if (journalEntry.getStatus() != JournalEntryStatus.DRAFT) {
+        if (entry.getStatus() != JournalEntryStatus.DRAFT) {
             throw new IllegalStateException("Only DRAFT entries can be posted");
         }
-        if (journalEntry.getLines().isEmpty()) {
-            throw new IllegalStateException("Journal entry must have lines before posting");
+
+        if (entry.getJournalEntryLines() == null || entry.getJournalEntryLines().isEmpty()) {
+            throw new IllegalStateException("Journal entry must have at least one line");
         }
-        journalEntry.setStatus(JournalEntryStatus.POSTED);
-        journalEntry.setPostingDate(LocalDate.now());
-        return journalEntryRepository.save(journalEntry);
+
+        validateBalanced(entry);
+
+        entry.setStatus(JournalEntryStatus.POSTED);
+        entry.setPostingDate(LocalDate.now());
+
+        return journalEntryRepository.save(entry);
     }
+
+    // ----------------------------
+    // REVERSE (GAAP COMPLIANT)
+    // ----------------------------
 
     @Transactional
     @Override
-    public JournalEntry reverseJournalEntry(long journalEntryId,long companyId, String reason) {
+    public JournalEntry reverseJournalEntry(
+            long journalEntryId,
+            long companyId,
+            String reason
+    ) {
         JournalEntry original = getJournalEntryById(journalEntryId, companyId);
 
         if (original.getStatus() != JournalEntryStatus.POSTED) {
@@ -82,15 +121,14 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         JournalEntry reversal = new JournalEntry();
         reversal.setCompany(original.getCompany());
         reversal.setEntryDate(LocalDate.now());
-        reversal.setDescription(
-                "Reversal of JE " + original.getEntryNumber() + ": " + reason
-        );
+        reversal.setEntryNumber(original.getEntryNumber() + "-R");
+        reversal.setDescription("Reversal of JE " + original.getEntryNumber() + ": " + reason);
         reversal.setStatus(JournalEntryStatus.POSTED);
         reversal.setPostingDate(LocalDate.now());
 
         journalEntryRepository.save(reversal);
 
-        for (JournalEntryLine line : original.getLines()) {
+        for (JournalEntryLine line : original.getJournalEntryLines()) {
             JournalEntryLine reversedLine = new JournalEntryLine();
             reversedLine.setJournalEntry(reversal);
             reversedLine.setCompany(original.getCompany());
@@ -108,12 +146,46 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         return reversal;
     }
 
-        @Transactional
+    // ----------------------------
+    // SOFT DELETE
+    // ----------------------------
+
+    @Transactional
     @Override
-    public void deactivateJournalEntry(long journalEntryId,long companyId) {
-        JournalEntry journalEntry = getJournalEntryById(journalEntryId, companyId);
-        journalEntry.setDeleted(true);
-        journalEntry.setDeletedAt(LocalDate.now());
-        journalEntryRepository.save(journalEntry);
+    public void deactivateJournalEntry(long journalEntryId, long companyId) {
+        JournalEntry entry = getJournalEntryById(journalEntryId, companyId);
+        entry.setDeleted(true);
+        entry.setDeletedAt(LocalDate.now());
+        journalEntryRepository.save(entry);
+    }
+
+    // ----------------------------
+    // VALIDATION
+    // ----------------------------
+
+    private void validateBalanced(JournalEntry entry) {
+        BigDecimal totalDebit = BigDecimal.ZERO;
+        BigDecimal totalCredit = BigDecimal.ZERO;
+
+        for (JournalEntryLine line : entry.getJournalEntryLines()) {
+            if (line.getDebit() != null) {
+                totalDebit = totalDebit.add(line.getDebit());
+            }
+            if (line.getCredit() != null) {
+                totalCredit = totalCredit.add(line.getCredit());
+            }
+        }
+
+        if (totalDebit.compareTo(totalCredit) != 0) {
+            throw new IllegalStateException("Journal entry is not balanced");
+        }
+    }
+
+    // ----------------------------
+    // INTERNAL HELPERS
+    // ----------------------------
+
+    private String generateEntryNumber() {
+        return "JE-" + System.currentTimeMillis();
     }
 }

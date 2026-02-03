@@ -13,5 +13,4 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             Long companyId,
             AccountSubType accountSubType
     );
-
 }

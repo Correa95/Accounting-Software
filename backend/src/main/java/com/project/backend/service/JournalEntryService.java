@@ -14,11 +14,7 @@ public interface JournalEntryService {
     JournalEntry createJournalEntry(JournalEntry journalEntry, long companyId);
 
     // Only allowed if status == DRAFT
-    JournalEntry updateJournalEntry(
-            long journalEntryId,
-            long companyId,
-            JournalEntry journalEntry
-    );
+    JournalEntry updateJournalEntry(long journalEntryId,long companyId,JournalEntry journalEntry);
 
     // Soft delete
     void deactivateJournalEntry(long journalEntryId, long companyId);
@@ -27,9 +23,6 @@ public interface JournalEntryService {
     JournalEntry postJournalEntry(long journalEntryId, long companyId);
 
     // GAAP-compliant reversal
-    JournalEntry reverseJournalEntry(
-            long journalEntryId,
-            long companyId,
-            String reason
+    JournalEntry reverseJournalEntry(long journalEntryId,long companyId, String reason
     );
 }

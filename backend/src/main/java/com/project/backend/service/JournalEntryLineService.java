@@ -4,13 +4,27 @@ import java.util.List;
 
 import com.project.backend.entity.JournalEntryLine;
 
-public interface  JournalEntryLineService {
-    List<JournalEntryLine> getAllJournalEntryLines(long journalEntryId, long companyId);
+public interface JournalEntryLineService {
 
-    JournalEntryLine addJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine journalEntryLine);
+    List<JournalEntryLine> getAllJournalEntryLines(
+            long journalEntryId,
+            long companyId
+    );
 
-    JournalEntryLine updateJournalEntryLine(long journalEntryLinesId, long companyId, JournalEntryLine journalEntryLine);
+    JournalEntryLine addJournalEntryLine(
+            long journalEntryId,
+            long companyId,
+            JournalEntryLine journalEntryLine
+    );
 
-    void deleteJournalEntryLine(long journalEntryLineId, long companyId);
+    JournalEntryLine updateJournalEntryLine(
+            long journalEntryLineId,
+            long companyId,
+            JournalEntryLine journalEntryLine
+    );
 
+    void deleteJournalEntryLine(
+            long journalEntryLineId,
+            long companyId
+    );
 }
