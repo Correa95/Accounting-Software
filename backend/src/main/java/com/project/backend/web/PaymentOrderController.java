@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.backend.service.StripeService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/payments")
+@Slf4j
 @RequiredArgsConstructor
 public class PaymentOrderController {
     private final StripeService stripeService;
@@ -29,7 +31,7 @@ public class PaymentOrderController {
     public ResponseEntity<PaymentResponse> createPaymentIntent(@Valid @RequestBody PaymentResponse paymentRequest){
 
         PaymentResponse paymentResponse = stripeService.createPayment(paymentRequest);
-        
+
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentResponse);
     }
 }
