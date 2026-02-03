@@ -52,7 +52,7 @@ public class InvoiceController {
     Customer customer = customerService.getCustomerById(customerId, companyId);
     invoice.setCustomer(customer);
 
-    Account accountReceivable = accountService.getAccountType(companyId, AccountSubType.ACCOUNTS_RECEIVABLE);
+    Account accountReceivable = accountService.getAccountBySubType(companyId, AccountSubType.ACCOUNTS_RECEIVABLE);
     invoice.setAccount(accountReceivable);
     return new ResponseEntity<>(invoiceService.createInvoice(companyId, customerId, invoice), HttpStatus.CREATED);
     }
