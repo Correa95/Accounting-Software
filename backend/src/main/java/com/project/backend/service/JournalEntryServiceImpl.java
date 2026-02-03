@@ -2,6 +2,7 @@ package com.project.backend.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -48,7 +49,6 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         journalEntry.setStatus(JournalEntryStatus.DRAFT);
         journalEntry.setEntryDate(LocalDate.now());
         journalEntry.setEntryNumber(generateEntryNumber());
-
         // ⚠️ company must already be set (controller or Stripe service)
         return journalEntryRepository.save(journalEntry);
     }
@@ -107,31 +107,27 @@ public class JournalEntryServiceImpl implements JournalEntryService {
 
     @Transactional
     @Override
-    public JournalEntry reverseJournalEntry(
-            long journalEntryId,
-            long companyId,
-            String reason
-    ) {
-        JournalEntry original = getJournalEntryById(journalEntryId, companyId);
+    public JournalEntry reverseJournalEntry(long journalEntryId,long companyId, String reason) {
+        JournalEntry journalEntry = getJournalEntryById(journalEntryId, companyId);
 
-        if (original.getStatus() != JournalEntryStatus.POSTED) {
+        if (journalEntry.getStatus() != JournalEntryStatus.POSTED) {
             throw new IllegalStateException("Only POSTED entries can be reversed");
         }
 
-        JournalEntry reversal = new JournalEntry();
-        reversal.setCompany(original.getCompany());
-        reversal.setEntryDate(LocalDate.now());
-        reversal.setEntryNumber(original.getEntryNumber() + "-R");
-        reversal.setDescription("Reversal of JE " + original.getEntryNumber() + ": " + reason);
-        reversal.setStatus(JournalEntryStatus.POSTED);
-        reversal.setPostingDate(LocalDate.now());
+        JournalEntry entry = new JournalEntry();
+        entry.setCompany(journalEntry.getCompany());
+        entry.setEntryDate(LocalDate.now());
+        entry.setEntryNumber(journalEntry.getEntryNumber() + "-R");
+        entry.setDescription("Reversal of JE " + journalEntry.getEntryNumber() + ": " + reason);
+        entry.setStatus(JournalEntryStatus.POSTED);
+        entry.setPostingDate(LocalDate.now());
 
-        journalEntryRepository.save(reversal);
+        journalEntryRepository.save(entry);
 
-        for (JournalEntryLine line : original.getJournalEntryLines()) {
+        for (JournalEntryLine line : journalEntry.getJournalEntryLines()) {
             JournalEntryLine reversedLine = new JournalEntryLine();
-            reversedLine.setJournalEntry(reversal);
-            reversedLine.setCompany(original.getCompany());
+            reversedLine.setJournalEntry(entry);
+            reversedLine.setCompany(journalEntry.getCompany());
             reversedLine.setAccount(line.getAccount());
             reversedLine.setDebit(line.getCredit());
             reversedLine.setCredit(line.getDebit());
@@ -140,10 +136,10 @@ public class JournalEntryServiceImpl implements JournalEntryService {
             journalEntryLineRepository.save(reversedLine);
         }
 
-        original.setStatus(JournalEntryStatus.REVERSED);
-        journalEntryRepository.save(original);
+        journalEntry.setStatus(JournalEntryStatus.REVERSED);
+        journalEntryRepository.save(journalEntry);
 
-        return reversal;
+        return entry;
     }
 
     // ----------------------------
@@ -155,7 +151,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
     public void deactivateJournalEntry(long journalEntryId, long companyId) {
         JournalEntry entry = getJournalEntryById(journalEntryId, companyId);
         entry.setDeleted(true);
-        entry.setDeletedAt(LocalDate.now());
+        entry.setDeletedAt(LocalDateTime.now());
         journalEntryRepository.save(entry);
     }
 
