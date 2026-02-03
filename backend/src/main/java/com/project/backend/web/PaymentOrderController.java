@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 public class PaymentOrderController {
     private final StripeService stripeService;
 
-    @RateLimiter(name = "payment")
+    // @RateLimiter(name = "payment")
     @PostMapping("/create-intent")
     public ResponseEntity<PaymentResponse> createPaymentIntent(@Valid @RequestBody PaymentResponse paymentRequest){
         PaymentResponse paymentResponse = stripeService.createPayment(paymentRequest);
