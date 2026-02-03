@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.project.backend.dto.PaymentRequest;
 import com.project.backend.dto.PaymentResponse;
 import com.project.backend.enums.PaymentStatus;
-import com.project.backend.service.JournalService;
+import com.project.backend.service.JournalEntryService;
 import com.project.backend.service.StripeService;
 import com.stripe.Stripe;
 import com.stripe.model.Event;
@@ -23,38 +23,25 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class StripeServiceImpl implements StripeService {
-
-    @Value("${stripe.secret-key}")
-    private String stripeSecretKey;
-
-    @Value("${stripe.webhook-secret}")
-    private String webhookSecret;
-
-    private final JournalService journalService;
-
-    @PostConstruct
-    void init() {
-        Stripe.apiKey = stripeSecretKey;
-    }
-
+    private final JournalEntryService journalEntryService;
     @Override
-    public PaymentResponse createPayment(PaymentRequest request) {
+    public PaymentResponse createPayment(PaymentRequest paymentRequest) {
 
-        PaymentIntentCreateParams params =
-            PaymentIntentCreateParams.builder()
-                .setAmount(request.getAmount().multiply(BigDecimal.valueOf(100)).longValue())
-                .setCurrency(request.getCurrency())
-                .setReceiptEmail(request.getCustomerEmail())
-                .build();
+        PaymentIntentCreateParams params =PaymentIntentCreateParams
+            .builder()
+            .setAmount(paymentRequest.getAmount().multiply(BigDecimal.valueOf(100)).longValue())
+            .setCurrency(paymentRequest.getCurrency())
+            .setReceiptEmail(paymentRequest.getCustomerEmail())
+            .build();
 
         try {
-            PaymentIntent intent = PaymentIntent.create(params);
+            PaymentIntent paymentIntent = PaymentIntent.create(params);
 
             return PaymentResponse.builder()
-                .paymentIntentId(intent.getId())
-                .clientSecret(intent.getClientSecret())
-                .amount(request.getAmount())
-                .currency(request.getCurrency())
+                .paymentIntentId(paymentIntent.getId())
+                .clientSecret(paymentIntent.getClientSecret())
+                .amount(paymentRequest.getAmount())
+                .currency(paymentRequest.getCurrency())
                 .paymentStatus(PaymentStatus.PENDING)
                 .message("Payment intent created")
                 .build();
@@ -70,11 +57,11 @@ public class StripeServiceImpl implements StripeService {
             Event event = Webhook.constructEvent(payload, sigHeader, webhookSecret);
 
             if ("payment_intent.succeeded".equals(event.getType())) {
-                PaymentIntent intent = (PaymentIntent) event.getDataObjectDeserializer()
+                PaymentIntent paymentIntent = (PaymentIntent) event.getDataObjectDeserializer()
                         .getObject().orElseThrow();
 
                 // 🔑 Accounting happens here
-                journalService.recordStripePayment(intent);
+                journalEntryService.recordStripePayment(paymentIntent);
             }
 
         } catch (Exception e) {

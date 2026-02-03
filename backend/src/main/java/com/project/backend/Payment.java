@@ -1,8 +1,12 @@
-package com.project.backend.entity;
-import com.project.backend.enums.PaymentMethod;
-
+package com.project.backend;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import com.project.backend.entity.Company;
+import com.project.backend.entity.Customer;
+import com.project.backend.entity.Invoice;
+import com.project.backend.entity.Vendor;
+import com.project.backend.enums.PaymentMethod;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

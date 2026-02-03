@@ -2,7 +2,9 @@ package com.project.backend.config;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
+
 import com.stripe.Stripe;
+
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 
@@ -21,4 +23,17 @@ public class StripeConfig {
     public void init(){
         Stripe.apiKey = apiKey;
     }
+
+    // @Value("${stripe.secret-key}")
+    // private String stripeSecretKey;
+
+    // @Value("${stripe.webhook-secret}")
+    // private String webhookSecret;
+
+    // private final JournalService journalService;
+
+    // @PostConstruct
+    // void init() {
+    //     Stripe.apiKey = stripeSecretKey;
+    // }
 }

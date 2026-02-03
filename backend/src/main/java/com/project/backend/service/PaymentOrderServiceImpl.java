@@ -4,9 +4,9 @@ import com.project.backend.entity.Invoice;
 import com.project.backend.entity.PaymentOrder;
 import com.project.backend.enums.PaymentStatus;
 import com.project.backend.repository.PaymentOrderRepository;
-import com.project.backend.service.AccountService;
-import com.project.backend.service.InvoiceService;
-import com.project.backend.service.PaymentOrderService;
+// import com.project.backend.service.AccountService;
+// import com.project.backend.service.InvoiceService;
+// import com.project.backend.service.PaymentOrderService;
 import com.stripe.model.PaymentIntent;
 
 import jakarta.transaction.Transactional;
@@ -24,34 +24,26 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
     private final AccountService accountService;
 
     @Override
-    public void handlePaymentSucceeded(PaymentIntent intent) {
-
-        PaymentOrder order = paymentOrderRepository
-                .findByStripePaymentIntentId(intent.getId())
-                .orElseThrow(() ->
-                        new IllegalStateException("PaymentOrder not found"));
-
-        if (order.getPaymentStatus() == PaymentStatus.SUCCESSFUL) {
+    public void handlePaymentSucceeded(PaymentIntent paymentIntent) {
+        PaymentOrder paymentOrder = paymentOrderRepository.findByStripePaymentIntentId(paymentIntent.getId()).orElseThrow(() ->new IllegalStateException("PaymentOrder not found"));
+        if (paymentOrder.getPaymentStatus() == PaymentStatus.SUCCESSFUL) {
             return; // idempotency guard
         }
 
-        order.setPaymentStatus(PaymentStatus.SUCCESSFUL);
-        paymentOrderRepository.save(order);
+        paymentOrder.setPaymentStatus(PaymentStatus.SUCCESSFUL);
+        paymentOrderRepository.save(paymentOrder);
 
-        Invoice invoice = invoiceService.markInvoicePaid(order);
+        Invoice invoice = invoiceService.markInvoicePaid(paymentOrder);
 
-        accountService.postPayment(invoice, order);
+        accountService.postPayment(invoice, paymentOrder);
     }
 
     @Override
-    public void handlePaymentFailed(PaymentIntent intent) {
+    public void handlePaymentFailed(PaymentIntent paymentIntent) {
 
-        PaymentOrder order = paymentOrderRepository
-                .findByStripePaymentIntentId(intent.getId())
-                .orElseThrow(() ->
-                        new IllegalStateException("PaymentOrder not found"));
+        PaymentOrder paymentOrder = paymentOrderRepository.findByStripePaymentIntentId(paymentIntent.getId()).orElseThrow(() ->new IllegalStateException("PaymentOrder not found"));
 
-        order.setPaymentStatus(PaymentStatus.FAILED);
-        paymentOrderRepository.save(order);
+        paymentOrder.setPaymentStatus(PaymentStatus.FAILED);
+        paymentOrderRepository.save(paymentOrder);
     }
 }

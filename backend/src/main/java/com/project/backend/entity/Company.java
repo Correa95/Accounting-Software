@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.project.backend.Payment;
 import com.project.backend.enums.BusinessType;
 
 import jakarta.persistence.Column;
