@@ -6,6 +6,6 @@ import com.project.backend.enums.AccountSubType;
 
 public interface AccountService {
 
-    Account getAccountBySubType(Long companyId, AccountSubType subType);
-    Account postAccount(Invoice invoice);
+    Account getAccountBySubType(long companyId, AccountSubType subType);
+    Account postAccount(long companyId, Invoice invoice);
 }

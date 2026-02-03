@@ -6,11 +6,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.backend.Payment;
-import com.project.backend.PaymentRepository;
 import com.project.backend.entity.Company;
 import com.project.backend.entity.Invoice;
 import com.project.backend.enums.InvoiceStatus;
+import com.project.backend.extra.Payment;
+import com.project.backend.extra.PaymentRepository;
+import com.project.backend.extra.PaymentService;
 import com.project.backend.repository.CompanyRepository;
 import com.project.backend.repository.InvoiceRepository;
 

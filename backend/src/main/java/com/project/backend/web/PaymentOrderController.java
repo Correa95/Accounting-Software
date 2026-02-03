@@ -25,8 +25,11 @@ public class PaymentOrderController {
 
     // @RateLimiter(name = "payment")
     @PostMapping("/create-intent")
+
     public ResponseEntity<PaymentResponse> createPaymentIntent(@Valid @RequestBody PaymentResponse paymentRequest){
+
         PaymentResponse paymentResponse = stripeService.createPayment(paymentRequest);
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentResponse);
     }
 }

@@ -79,6 +79,7 @@ public class JournalEntry {
     private List<JournalEntryLine> journalEntryLines = new ArrayList<>();
 
 
+
     @PrePersist
     void onCreate() {
         createdAt = LocalDateTime.now();

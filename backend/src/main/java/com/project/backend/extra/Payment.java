@@ -1,4 +1,4 @@
-package com.project.backend;
+package com.project.backend.extra;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 

@@ -1,8 +1,6 @@
-package com.project.backend.service;
+package com.project.backend.extra;
 
 import java.util.List;
-
-import com.project.backend.Payment;
 
 public interface PaymentService {
     List<Payment> getAllPayments(long companyId);

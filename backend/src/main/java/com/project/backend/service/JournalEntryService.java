@@ -23,6 +23,7 @@ public interface JournalEntryService {
     JournalEntry postJournalEntry(long journalEntryId, long companyId);
 
     // GAAP-compliant reversal
-    JournalEntry reverseJournalEntry(long journalEntryId,long companyId, String reason
-    );
+    JournalEntry reverseJournalEntry(long journalEntryId,long companyId, String reason);
+
+    // journalEntry recordStripePayment(PaymentOrder paymentOrder);
 }

@@ -9,8 +9,5 @@ import com.project.backend.enums.AccountSubType;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    Optional<Account> findByCompanyIdAndAccountSubTypeAndActiveTrue(
-            Long companyId,
-            AccountSubType accountSubType
-    );
+    Optional<Account> findByCompanyIdAndAccountSubTypeAndActiveTrue(Long companyId,AccountSubType accountSubType);
 }
