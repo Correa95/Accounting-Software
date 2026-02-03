@@ -45,25 +45,16 @@ public class InvoiceController {
     }
 
     @PostMapping("/customers/{customerId}")
-    public ResponseEntity<Invoice> createInvoice(
-        @PathVariable Long companyId,
-        @PathVariable Long customerId,
-        @RequestBody Invoice invoice) {
-
+    public ResponseEntity<Invoice> createInvoice(@PathVariable Long companyId,@PathVariable Long customerId,@RequestBody Invoice invoice) {
     Customer customer = customerService.getCustomerById(customerId, companyId);
     invoice.setCustomer(customer);
-
     Account accountReceivable = accountService.getAccountBySubType(companyId, AccountSubType.ACCOUNTS_RECEIVABLE);
     invoice.setAccount(accountReceivable);
     return new ResponseEntity<>(invoiceService.createInvoice(companyId, customerId, invoice), HttpStatus.CREATED);
     }
 
     @PutMapping("/{invoiceId}")
-    public ResponseEntity<Invoice> updateInvoice(
-        @PathVariable Long companyId,
-        @PathVariable Long invoiceId,
-        @RequestBody Invoice invoice) {
-
+    public ResponseEntity<Invoice> updateInvoice(@PathVariable Long companyId,@PathVariable Long invoiceId,@RequestBody Invoice invoice) {
     Invoice updatedInvoice = invoiceService.updateInvoice(invoiceId, companyId, invoice);
     return new ResponseEntity<>(updatedInvoice, HttpStatus.OK);
     }
@@ -74,9 +65,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/{invoiceId}/void")
-    public ResponseEntity<Invoice> voidInvoice(
-            @PathVariable Long companyId,
-            @PathVariable Long invoiceId) {
+    public ResponseEntity<Invoice> voidInvoice(@PathVariable Long companyId,@PathVariable Long invoiceId) {
             return new ResponseEntity<>(invoiceService.voidInvoice(invoiceId, companyId), HttpStatus.OK);
     }
 

@@ -1,4 +1,4 @@
-package com.project.backend.web;
+package com.project.backend;
 
 
 import java.util.List;
