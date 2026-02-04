@@ -76,8 +76,8 @@ public class PaymentOrder {
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = this.createdAt;
+        createdAt = LocalDateTime.now();
+        updatedAt = Lo;
     }
 
     @PreUpdate
