@@ -39,6 +39,18 @@ public class PaymentOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String customerEmail;
+    
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal amount;
+
+    @Column(nullable = false, length = 3)
+    private String currency;
+    
+    @Column(nullable = false)
+    private String description;
+
     /** Stripe PaymentIntent ID (source of truth) */
     @Column(nullable = false, unique = true)
     private String stripePaymentIntentId;
@@ -46,18 +58,6 @@ public class PaymentOrder {
     /** Stripe Customer ID */
     @Column(nullable = false)
     private String stripeCustomerId;
-
-    @Column(nullable = false)
-    private String customerEmail;
-
-    @Column(nullable = false, precision = 19, scale = 4)
-    private BigDecimal amount;
-
-    @Column(nullable = false, length = 3)
-    private String currency;
-
-    @Column(nullable = false)
-    private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -77,7 +77,7 @@ public class PaymentOrder {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updatedAt = Lo;
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate

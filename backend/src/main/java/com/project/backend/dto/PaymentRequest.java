@@ -31,7 +31,8 @@ public class PaymentRequest {
     @Email(message = "Invalid email format")
     private String customerEmail;
 
-    // @NotBlank(message = "Invoice number is required")
-    // private Invoice invoice;
-    
+    @NotBlank(message = "Invoice number is required")
+    @Email(message = "Invalid invoice number")
+    private String invoiceNumber;
+
 }

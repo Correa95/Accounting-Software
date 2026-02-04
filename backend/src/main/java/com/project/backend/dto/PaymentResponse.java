@@ -14,12 +14,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentResponse {
-    private Long orderId;
+    private Long invoiceId;
     private String paymentIntentId;
     private String clientSecret;
     private BigDecimal amount;
     private String currency;
     private PaymentStatus paymentStatus;
     private String message;
-    
 }
