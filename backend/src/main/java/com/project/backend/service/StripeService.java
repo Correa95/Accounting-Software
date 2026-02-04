@@ -4,14 +4,16 @@ import java.math.BigDecimal;
 
 import org.springframework.transaction.annotation.Transactional;
 import com.project.backend.entity;
-
+import com.stripe.model.PaymentIntent;
 import com.project.backend.dto.PaymentRequest;
 import com.project.backend.dto.PaymentResponse;
 import com.project.backend.repository.PaymentOrderRepository;
 import com.stripe.param.PaymentIntentCreateParams;
+import com.project.backend.entity;
 
 public class StripeService {
     private final PaymentOrderRepository paymentOrderRepository;
+    private final PaymentOrder paymentOrder;
     @Transactional
     public PaymentResponse createPaymentIntent(PaymentRequest paymentRequest){
         try {
@@ -35,12 +37,16 @@ public class StripeService {
                 .setCustomer(customer.getId())
                 .setInvoice(paymentRequest.getInvoiceNumber())
                 .build();
+
+            // Create the payment Intent
+            PaymentIntent paymentIntent = PaymentIntent.create(params);
+
+            // Save order to database
+            PaymentOrder paymentOrder = paymentOrder.builder().customerEmail(paymentRequest.getCustomerEmail()).amount(paymentRequest.getAmount()).currency(paymentRequest.getCurrency()).stripePaymentIntentId(paymentIntent.getId()).stripeCustomerId(customer.getId()).status(PaymentStatus.PENDING)
+
         } catch (Exception e) {
             
         }
     }
 
-    // PaymentResponse createPayment(PaymentRequest paymentRequest);
-
-    // void handleWebhook(String payload, String sigHeader);
 }
