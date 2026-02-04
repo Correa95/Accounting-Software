@@ -17,7 +17,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
 
     @Override
-    public Account getAccountBySubType(long companyId, AccountSubType subType) {
-        return accountRepository.findByCompanyIdAndAccountSubTypeAndActiveTrue(companyId, subType).orElseThrow(() ->new IllegalStateException("Active account not found: " + subType + " for company " + companyId));
+    public Account getAccountBySubType(long companyId, AccountSubType accountSubType) {
+        return accountRepository.findByCompanyIdAndAccountSubTypeAndActiveTrue(companyId, accountSubType).orElseThrow(() ->new IllegalStateException("Active account not found: " + accountSubType + " for company " + companyId));
     }
 }

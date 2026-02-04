@@ -1,56 +1,37 @@
 package com.project.backend.extra;
 
+import java.util.Map;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
+
 
 @RestController
-@AllArgsConstructor
-@RequestMapping("companies/{companyId}/invoices/{invoiceId}/payments")
+@RequestMapping("/payments")
+@Slf4j
 public class PaymentController {
-
-    private final PaymentService paymentService;
-
-
-    @GetMapping("/payments")
-    public ResponseEntity<List<Payment>> getAllPayments(@PathVariable long companyId, @PathVariable long invoiceId) {
-        return new ResponseEntity<>(paymentService.getAllPayments(companyId), HttpStatus.OK);
-    }
-
-
-    @GetMapping("/{paymentId}")
-    public ResponseEntity<Payment> getPayment(@PathVariable long companyId, @PathVariable long invoiceId,@PathVariable long paymentId) {
-    return new ResponseEntity<>(paymentService.getPayment(paymentId, companyId), HttpStatus.OK);
-
-    }
-
-
     @PostMapping
-    public ResponseEntity<Payment> createPayment(@PathVariable long companyId, @PathVariable long invoiceId, @RequestBody Payment payment) {
-        return new ResponseEntity<>(paymentService.createPayment(companyId, invoiceId, payment), HttpStatus.CREATED);
-    }
+    public Map<String, Object> createPayment(@RequestBody Map<String, Object> request) {
+        Long amount = Long.valueOf(request.get("amount").toString());
+        String currency = request.get("currency").toString();
+        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+        .setAmount(amount)
+        .setCurrency(currency)
+        .build();
 
-
-    @PutMapping("/{paymentId}")
-    public ResponseEntity<Payment> updatePayment(@PathVariable long companyId, @PathVariable long invoiceId, @PathVariable long paymentId, @RequestBody Payment payment) {
-        return new ResponseEntity<>(paymentService.updatePayment(paymentId, companyId, payment), HttpStatus.OK);
+        PaymentIntent intent = PaymentIntent.create(params);
+        log.info("Payment intent Created...");
+        return Map.of("clientSecret", intent.getClientSecret());
     }
+    
+    
 
-    @DeleteMapping("/{paymentId}")
-    public ResponseEntity<Void> deactivatePayment(@PathVariable long companyId,  @PathVariable long invoiceId, @PathVariable long paymentId) {
-        paymentService.deactivatePayment(paymentId, companyId);
-        return ResponseEntity.noContent().build();
-    }
 }
