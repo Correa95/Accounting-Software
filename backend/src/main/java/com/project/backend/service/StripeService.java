@@ -9,9 +9,9 @@ import com.project.backend.dto.PaymentRequest;
 import com.project.backend.dto.PaymentResponse;
 import com.project.backend.repository.PaymentOrderRepository;
 import com.stripe.param.PaymentIntentCreateParams;
-import com.project.backend.entity;
 
-public class StripeService {
+
+\9877public class StripeService {
     private final PaymentOrderRepository paymentOrderRepository;
     private final PaymentOrder paymentOrder;
     @Transactional
@@ -42,7 +42,13 @@ public class StripeService {
             PaymentIntent paymentIntent = PaymentIntent.create(params);
 
             // Save order to database
-            PaymentOrder paymentOrder = paymentOrder.builder().customerEmail(paymentRequest.getCustomerEmail()).amount(paymentRequest.getAmount()).currency(paymentRequest.getCurrency()).stripePaymentIntentId(paymentIntent.getId()).stripeCustomerId(customer.getId()).status(PaymentStatus.PENDING)
+            PaymentOrder paymentOrder = paymentOrder.builder()
+            .customerEmail(paymentRequest.getCustomerEmail())
+            .amount(paymentRequest.getAmount())
+            .currency(paymentRequest.getCurrency())
+            .stripePaymentIntentId(paymentIntent.getId())
+            .stripeCustomerId(customer.getId())
+            .paymentStatus(PaymentStatus.PENDING);
 
         } catch (Exception e) {
             
