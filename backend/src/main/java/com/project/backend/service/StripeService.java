@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.stripe.model.PaymentIntent;
 import com.project.backend.dto.PaymentRequest;
 import com.project.backend.dto.PaymentResponse;
+import com.project.backend.entity.Customer;
+import com.project.backend.entity.PaymentOrder;
+import com.project.backend.enums.PaymentStatus;
 import com.project.backend.repository.PaymentOrderRepository;
 import com.stripe.param.PaymentIntentCreateParams;
 
@@ -21,8 +24,9 @@ public class StripeService {
                 paymentRequest.getCustomerEmail());
 
             // Creating or retrieve customer in Stripe
-            Customer customer = createOrRetrieveCustomer(
-                paymentRequest.getCustomerEmail());
+             Customer customer = createOrRetrieveCustomer(
+                paymentRequest.getCustomerEmail()
+            );
 
             // Convert amount to cents (Stripe uses smallest unit)
             long amountInCents = paymentRequest.getAmount()
@@ -42,13 +46,13 @@ public class StripeService {
             PaymentIntent paymentIntent = PaymentIntent.create(params);
 
             // Save order to database
-            PaymentOrder paymentOrder = paymentOrder.builder()
-            .customerEmail(paymentRequest.getCustomerEmail())
-            .amount(paymentRequest.getAmount())
-            .currency(paymentRequest.getCurrency())
-            .stripePaymentIntentId(paymentIntent.getId())
-            .stripeCustomerId(customer.getId())
-            .paymentStatus(PaymentStatus.PENDING);
+            PaymentOrder paymentOrder = PaymentOrder.builder()
+            // .customerEmail(paymentRequest.getCustomerEmail())
+            // .amount(paymentRequest.getAmount())
+            // .currency(paymentRequest.getCurrency())
+            // .stripePaymentIntentId(paymentIntent.getId())
+            // .stripeCustomerId(customer.getId())
+            // .paymentStatus(PaymentStatus.PENDING);
 
         } catch (Exception e) {
             
