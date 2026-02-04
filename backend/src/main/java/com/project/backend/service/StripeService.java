@@ -11,7 +11,8 @@ public class StripeService {
     @Transactional
     public PaymentResponse createPaymentIntent(PaymentRequest paymentRequest){
         try {
-            
+            log.info("Creating payment intent for customer: {}",
+                paymentRequest.getCustomerEmail())
         } catch (Exception e) {
             
         }
