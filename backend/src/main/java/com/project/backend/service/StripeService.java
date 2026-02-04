@@ -47,12 +47,12 @@ public class StripeService {
 
             // Save order to database
             PaymentOrder paymentOrder = PaymentOrder.builder()
-            // .customerEmail(paymentRequest.getCustomerEmail())
-            // .amount(paymentRequest.getAmount())
-            // .currency(paymentRequest.getCurrency())
-            // .stripePaymentIntentId(paymentIntent.getId())
-            // .stripeCustomerId(customer.getId())
-            // .paymentStatus(PaymentStatus.PENDING);
+            .customerEmail(paymentRequest.getCustomerEmail())
+            .amount(paymentRequest.getAmount())
+            .currency(paymentRequest.getCurrency())
+            .stripePaymentIntentId(paymentIntent.getId())
+            .stripeCustomerId(customer.getId())
+            .paymentStatus(PaymentStatus.PENDING);
 
         } catch (Exception e) {
             
