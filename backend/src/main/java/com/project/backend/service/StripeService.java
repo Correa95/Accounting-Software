@@ -12,7 +12,11 @@ public class StripeService {
     public PaymentResponse createPaymentIntent(PaymentRequest paymentRequest){
         try {
             log.info("Creating payment intent for customer: {}",
-                paymentRequest.getCustomerEmail())
+                paymentRequest.getCustomerEmail());
+
+            // Creating or retrieve customer in Stripe
+            Customer customer = createOrRetrieveCustomer(
+                paymentRequest.getCustomerEmail());
         } catch (Exception e) {
             
         }
