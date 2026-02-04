@@ -3,7 +3,7 @@ package com.project.backend.service;
 import java.math.BigDecimal;
 
 import org.springframework.transaction.annotation.Transactional;
-import com.project.backend.entity;
+
 import com.stripe.model.PaymentIntent;
 import com.project.backend.dto.PaymentRequest;
 import com.project.backend.dto.PaymentResponse;
@@ -11,7 +11,7 @@ import com.project.backend.repository.PaymentOrderRepository;
 import com.stripe.param.PaymentIntentCreateParams;
 
 
-\9877public class StripeService {
+public class StripeService {
     private final PaymentOrderRepository paymentOrderRepository;
     private final PaymentOrder paymentOrder;
     @Transactional
