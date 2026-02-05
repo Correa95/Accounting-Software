@@ -13,7 +13,8 @@ import com.project.backend.entity.Customer;
 import com.project.backend.entity.Invoice;
 import com.project.backend.entity.PaymentOrder;
 import com.project.backend.enums.PaymentStatus;
-import com.project.backend.exception.PaymentException;
+impor
+// import com.project.backend.exception.RuntimeException;
 import com.project.backend.repository.CustomerRepository;
 import com.project.backend.repository.InvoiceRepository;
 import com.project.backend.repository.PaymentOrderRepository;
@@ -40,15 +41,15 @@ public class StripeService {
         try {
             // 1️⃣ Load customer
             Customer customer = customerRepository.findById(request.getCustomerId())
-                    .orElseThrow(() -> new PaymentException("Customer not found"));
+                    .orElseThrow(() -> new RuntimeException("Customer not found"));
 
             // 2️⃣ Load invoice
             Invoice invoice = invoiceRepository.findById(request.getInvoiceId())
-                    .orElseThrow(() -> new PaymentException("Invoice not found"));
+                    .orElseThrow(() -> new RuntimeException("Invoice not found"));
 
             // Make sure customer do not overpay
             if (request.getAmount().compareTo(invoice.getOutstandingBalance()) > 0) {
-                throw new PaymentException("Payment exceeds outstanding invoice balance");
+                throw new RuntimeException("Payment exceeds outstanding invoice balance");
             }
 
             // 3️⃣ Create Stripe customer if missing
@@ -102,7 +103,7 @@ public class StripeService {
 
         } catch (StripeException e) {
             log.error("Stripe error", e);
-            throw new PaymentException("Failed to create payment intent", e);
+            throw new RuntimeException("Failed to create payment intent", e);
         }
     }
 

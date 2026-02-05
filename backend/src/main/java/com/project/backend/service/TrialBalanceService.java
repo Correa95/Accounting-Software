@@ -26,7 +26,7 @@ public class TrialBalanceService {
 
         if (startDate != null && endDate != null) {
             journalEntryLines = journalEntryLineRepository
-                    .findByCompany_IdAndActiveTrueAndEntryDateBetween(companyId, startDate, endDate);
+            .findByCompany_IdAndActiveTrueAndEntryDateBetween(companyId, startDate, endDate);
         } else {
             journalEntryLines = journalEntryLineRepository.findByCompany_IdAndActiveTrue(companyId);
         }
