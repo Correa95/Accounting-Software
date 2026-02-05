@@ -106,8 +106,8 @@ public class Invoice {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
 
         if (this.outstandingBalance == null) {
             this.outstandingBalance = this.invoiceAmount;
