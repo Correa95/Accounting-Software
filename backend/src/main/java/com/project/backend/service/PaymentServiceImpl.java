@@ -57,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalArgumentException("Payment exceeds invoice remaining balance");
         }
 
-        invoice.setRemainingAmount(remaining);
+        invoice.setOutstandingBalance(remaining);
 
         if (remaining.compareTo(BigDecimal.ZERO) == 0) {
             invoice.setInvoiceStatus(InvoiceStatus.PAID);
