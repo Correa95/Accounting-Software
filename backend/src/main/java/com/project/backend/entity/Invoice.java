@@ -65,7 +65,8 @@ public class Invoice {
     private BigDecimal invoiceAmount;
 
     @Column(nullable = false, precision = 19, scale = 4)
-    private BigDecimal remainingAmount;
+    private BigDecimal outstandingBalance;
+
 
     @Column(nullable = false)
     private boolean active = true;

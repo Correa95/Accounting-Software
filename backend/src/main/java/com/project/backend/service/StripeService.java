@@ -46,6 +46,11 @@ public class StripeService {
             Invoice invoice = invoiceRepository.findById(request.getInvoiceId())
                     .orElseThrow(() -> new PaymentException("Invoice not found"));
 
+            // Make sure customer do not overpay
+            if (request.getAmount().compareTo(invoice.getOutstandingBalance()) > 0) {
+                throw new PaymentException("Payment exceeds outstanding invoice balance");
+            }
+
             // 3️⃣ Create Stripe customer if missing
         if (customer.getStripeCustomerId() == null) {
                 com.stripe.model.Customer stripeCustomer = com.stripe.model.Customer.create(
