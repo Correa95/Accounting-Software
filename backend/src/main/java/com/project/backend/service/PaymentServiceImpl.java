@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalStateException("Cannot pay a voided invoice");
         }
 
-        BigDecimal remaining = invoice.getRemainingAmount().subtract(payment.getAmount());
+        BigDecimal remaining = invoice.getOutstandingBalance().subtract(payment.getAmount());
         if (remaining.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Payment exceeds invoice remaining balance");
         }
