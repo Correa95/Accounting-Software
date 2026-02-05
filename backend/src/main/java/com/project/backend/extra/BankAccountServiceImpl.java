@@ -1,9 +1,8 @@
-package com.project.backend.service;
+package com.project.backend.extra;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.project.backend.entity.BankAccount;
 import com.project.backend.repository.BankAccountRepository;
 
 import lombok.RequiredArgsConstructor;

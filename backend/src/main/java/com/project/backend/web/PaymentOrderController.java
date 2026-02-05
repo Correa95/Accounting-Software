@@ -1,37 +1,48 @@
-package com.project.backend.web;
+package com.project.backend.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import com.project.backend.dto.PaymentRequest;
+import com.project.backend.dto.PaymentResponse;
+import com.project.backend.entity.Customer;
+import com.project.backend.entity.Invoice;
+import com.project.backend.entity.PaymentOrder;
+import com.project.backend.enums.PaymentStatus;
+import com.project.backend.repository.CustomerRepository;
+import com.project.backend.repository.InvoiceRepository;
+import com.project.backend.service.PaymentOrderService;
 import com.project.backend.service.StripeService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.project.backend.dto.PaymentResponse;
-
-import jakarta.validation.Valid;
-
 
 @RestController
-@RequestMapping("/payments")
-@Slf4j
+@RequestMapping("/api/payments")
 @RequiredArgsConstructor
+@Validated
 public class PaymentOrderController {
+
+    private final CustomerRepository customerRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final PaymentOrderService paymentOrderService;
     private final StripeService stripeService;
 
-    // @RateLimiter(name = "payment")
-    @PostMapping("/create-intent")
+    @PostMapping("/create")
+    public ResponseEntity<PaymentResponse> createPaymentIntent(
+            @RequestBody @Validated PaymentRequest request) {
 
-    public ResponseEntity<PaymentResponse> createPaymentIntent(@Valid @RequestBody PaymentResponse paymentRequest){
+        // 1️⃣ Load customer & invoice
+        Customer customer = customerRepository.findById(request.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        PaymentResponse paymentResponse = stripeService.createPayment(paymentRequest);
+        Invoice invoice = invoiceRepository.findById(request.getInvoiceId())
+                .orElseThrow(() -> new RuntimeException("Invoice not found"));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(paymentResponse);
+        // 2️⃣ Call StripeService to create PaymentIntent
+        PaymentResponse stripeResponse = stripeService.createPaymentIntent(request, customer, invoice);
+
+        return new ResponseEntity<>(stripeResponse, HttpStatus.CREATED);
     }
 }

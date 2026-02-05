@@ -21,29 +21,19 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
     private final JournalEntryLineRepository journalEntryLineRepository;
     private final JournalEntryRepository journalEntryRepository;
 
-    // ----------------------------
-    // READ
-    // ----------------------------
-
     @Override
-    public List<JournalEntryLine> getAllJournalEntryLines(long journalEntryId,long companyId) {
-        return journalEntryLineRepository.findByJournalEntry_IdAndCompany_Id(journalEntryId, companyId);}
-
-
+    public List<JournalEntryLine> getAllJournalEntryLines(long journalEntryId, long companyId) {
+        return journalEntryLineRepository.findByJournalEntry_IdAndCompany_Id(journalEntryId, companyId);
+    }
 
     @Transactional
     @Override
-    public JournalEntryLine addJournalEntryLine(long journalEntryId,long companyId,
-            JournalEntryLine journalEntryLine
-    ) {
-        JournalEntry journalEntry = journalEntryRepository
-                .findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId)
+    public JournalEntryLine addJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine journalEntryLine) {
+        JournalEntry journalEntry = journalEntryRepository.findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId)
                 .orElseThrow(() -> new RuntimeException("Journal entry not found"));
 
         if (journalEntry.getStatus() == JournalEntryStatus.POSTED) {
-            throw new IllegalStateException(
-                    "Cannot add lines to a POSTED journal entry"
-            );
+            throw new IllegalStateException("Cannot add lines to a POSTED journal entry");
         }
 
         validateLine(journalEntryLine);
@@ -54,19 +44,10 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
         return journalEntryLineRepository.save(journalEntryLine);
     }
 
-    // ----------------------------
-    // UPDATE (DRAFT ONLY)
-    // ----------------------------
-
     @Transactional
     @Override
-    public JournalEntryLine updateJournalEntryLine(
-            long journalEntryLineId,
-            long companyId,
-            JournalEntryLine journalEntryLine
-    ) {
-        JournalEntryLine existing = journalEntryLineRepository
-                .findById(journalEntryLineId)
+    public JournalEntryLine updateJournalEntryLine(long journalEntryLineId, long companyId, JournalEntryLine journalEntryLine) {
+        JournalEntryLine existing = journalEntryLineRepository.findById(journalEntryLineId)
                 .orElseThrow(() -> new RuntimeException("Journal entry line not found"));
 
         JournalEntry entry = existing.getJournalEntry();
@@ -76,9 +57,7 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
         }
 
         if (entry.getStatus() == JournalEntryStatus.POSTED) {
-            throw new IllegalStateException(
-                    "Cannot update lines of a POSTED journal entry"
-            );
+            throw new IllegalStateException("Cannot update lines of a POSTED journal entry");
         }
 
         validateLine(journalEntryLine);
@@ -92,59 +71,42 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
         return journalEntryLineRepository.save(existing);
     }
 
-    // ----------------------------
-    // DELETE (DRAFT ONLY)
-    // ----------------------------
-
     @Transactional
     @Override
-    public void deleteJournalEntryLine(long journalEntryLineId,long companyId) {
-        JournalEntryLine journalEntryLine = journalEntryLineRepository.findById(journalEntryLineId)
+    public void deleteJournalEntryLine(long journalEntryLineId, long companyId) {
+        JournalEntryLine line = journalEntryLineRepository.findById(journalEntryLineId)
                 .orElseThrow(() -> new RuntimeException("Journal entry line not found"));
 
-        JournalEntry journalEntry = journalEntryLine.getJournalEntry();
+        JournalEntry entry = line.getJournalEntry();
 
-        if (!journalEntry.getCompany().getId().equals(companyId)) {
+        if (!entry.getCompany().getId().equals(companyId)) {
             throw new RuntimeException("Unauthorized access");
         }
 
-        if (journalEntry.getStatus() == JournalEntryStatus.POSTED) {
-            throw new IllegalStateException(
-                    "Cannot delete lines from a POSTED journal entry"
-            );
+        if (entry.getStatus() == JournalEntryStatus.POSTED) {
+            throw new IllegalStateException("Cannot delete lines from a POSTED journal entry");
         }
 
-        journalEntryLineRepository.delete(journalEntryLine);
+        journalEntryLineRepository.delete(line);
     }
 
-    // ----------------------------
-    // VALIDATION
-    // ----------------------------
-
-    private void validateLine(JournalEntryLine journalEntryLine) {
-        BigDecimal debit = journalEntryLine.getDebit();
-        BigDecimal credit = journalEntryLine.getCredit();
+    private void validateLine(JournalEntryLine line) {
+        BigDecimal debit = line.getDebit();
+        BigDecimal credit = line.getCredit();
 
         boolean hasDebit = debit != null && debit.signum() > 0;
         boolean hasCredit = credit != null && credit.signum() > 0;
 
         if (!hasDebit && !hasCredit) {
-            throw new IllegalStateException(
-                    "Journal entry line must have either a debit or a credit"
-            );
+            throw new IllegalStateException("Journal entry line must have either a debit or a credit");
         }
 
         if (hasDebit && hasCredit) {
-            throw new IllegalStateException(
-                    "Journal entry line cannot have both debit and credit"
-            );
+            throw new IllegalStateException("Journal entry line cannot have both debit and credit");
         }
 
-        if ((debit != null && debit.signum() < 0)
-                || (credit != null && credit.signum() < 0)) {
-            throw new IllegalStateException(
-                    "Debit or credit amounts cannot be negative"
-            );
+        if ((debit != null && debit.signum() < 0) || (credit != null && credit.signum() < 0)) {
+            throw new IllegalStateException("Debit or credit amounts cannot be negative");
         }
     }
 }

@@ -48,6 +48,9 @@ public class Customer {
     @Column(nullable=false)
     private String taxId;
 
+    @Column(name = "stripe_customer_id")
+    private String stripeCustomerId;
+
     @Column(nullable=false)
     private Integer paymentTerm;
 

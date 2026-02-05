@@ -27,7 +27,9 @@ import lombok.Setter;
 @Table(
     name = "payment_orders",
     indexes = {
-        @Index(name = "idx_payment_intent", columnList = "stripe_payment_intent_id")
+        @Index(name = "idx_payment_intent", columnList = "stripe_payment_intent_id"),
+        @Index(name = "idx_payment_status", columnList = "payment_status"),
+        @Index(name = "idx_invoice_id", columnList = "invoice_id")
     }
 )
 @Getter
@@ -39,34 +41,45 @@ public class PaymentOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String customerEmail;
-    
+    /** Business customer (source of truth) */
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
+    /** Amount paid */
     @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;
 
+    /** ISO currency code (USD, EUR, etc.) */
     @Column(nullable = false, length = 3)
     private String currency;
-    
+
+    /** Human-readable description */
     @Column(nullable = false)
     private String description;
 
-    /** Stripe PaymentIntent ID (source of truth) */
+    /** Stripe PaymentIntent ID (external reference) */
     @Column(nullable = false, unique = true)
     private String stripePaymentIntentId;
-
-    /** Stripe Customer ID */
-    @Column(nullable = false)
-    private String stripeCustomerId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
-    /** Link to invoice being paid */
+    /** Invoice being settled */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "invoice_id", nullable = false)
     private Invoice invoice;
+
+    /** When Stripe begins processing */
+    private LocalDateTime processedAt;
+
+    /** Final state timestamp (success / fail / cancel) */
+    private LocalDateTime completedAt;
+
+    /** Failure reason if payment fails */
+    @Column(length = 500)
+    private String failureReason;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -77,7 +90,7 @@ public class PaymentOrder {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        updatedAt = createdAt;
     }
 
     @PreUpdate

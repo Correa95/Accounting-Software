@@ -1,6 +1,7 @@
 package com.project.backend.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.project.backend.enums.JournalEntryStatus;
@@ -78,6 +79,9 @@ public class JournalEntry {
     @JoinColumn(name = "journalEntryLine_id", nullable = false)
     private List<JournalEntryLine> journalEntryLines = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_order_id")
+    private PaymentOrder paymentOrder;
 
 
     @PrePersist

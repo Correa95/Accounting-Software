@@ -1,11 +1,19 @@
 package com.project.backend.service;
 
-import com.stripe.model.PaymentIntent;
+import java.util.Optional;
+
+import com.project.backend.entity.PaymentOrder;
 
 public interface PaymentOrderService {
 
-    void handlePaymentSucceeded(PaymentIntent paymentIntent);
+    Optional<PaymentOrder> findByStripePaymentIntentId(String paymentIntentId);
+    PaymentOrder createPayment(PaymentOrder paymentOrder);
 
-    void handlePaymentFailed(PaymentIntent paymentIntent);
+    void markSuccessful(String paymentIntentId);
+
+    void markFailed(String paymentIntentId, String reason);
+
+    void markCanceled(String paymentIntentId);
+
+    void markProcessing(String paymentIntentId);
 }
-

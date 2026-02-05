@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.project.backend.enums.TransactionType;
+import com.project.backend.extra.BankAccount;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

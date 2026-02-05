@@ -1,5 +1,6 @@
-package com.project.backend.entity;
+package com.project.backend.extra;
 
+import com.project.backend.entity.Company;
 import com.project.backend.enums.AccountType;
 
 import jakarta.persistence.Entity;

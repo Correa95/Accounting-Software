@@ -2,61 +2,113 @@ package com.project.backend.service;
 
 import java.math.BigDecimal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.stripe.model.PaymentIntent;
 import com.project.backend.dto.PaymentRequest;
 import com.project.backend.dto.PaymentResponse;
 import com.project.backend.entity.Customer;
+import com.project.backend.entity.Invoice;
 import com.project.backend.entity.PaymentOrder;
 import com.project.backend.enums.PaymentStatus;
+import com.project.backend.exception.PaymentException;
+import com.project.backend.repository.CustomerRepository;
+import com.project.backend.repository.InvoiceRepository;
 import com.project.backend.repository.PaymentOrderRepository;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.PaymentIntentCreateParams;
 
+import lombok.RequiredArgsConstructor;
 
+@Service
+@RequiredArgsConstructor
 public class StripeService {
+
+    private static final Logger log = LoggerFactory.getLogger(StripeService.class);
+
+    private final CustomerRepository customerRepository;
+    private final InvoiceRepository invoiceRepository;
     private final PaymentOrderRepository paymentOrderRepository;
-    private final PaymentOrder paymentOrder;
+
     @Transactional
-    public PaymentResponse createPaymentIntent(PaymentRequest paymentRequest){
+    public PaymentResponse createPaymentIntent(PaymentRequest request) {
         try {
-            log.info("Creating payment intent for customer: {}",
-                paymentRequest.getCustomerEmail());
+            // 1️⃣ Load customer
+            Customer customer = customerRepository.findById(request.getCustomerId())
+                    .orElseThrow(() -> new PaymentException("Customer not found"));
 
-            // Creating or retrieve customer in Stripe
-             Customer customer = createOrRetrieveCustomer(
-                paymentRequest.getCustomerEmail()
-            );
+            // 2️⃣ Load invoice
+            Invoice invoice = invoiceRepository.findById(request.getInvoiceId())
+                    .orElseThrow(() -> new PaymentException("Invoice not found"));
 
-            // Convert amount to cents (Stripe uses smallest unit)
-            long amountInCents = paymentRequest.getAmount()
+            // 3️⃣ Create Stripe customer if missing
+        if (customer.getStripeCustomerId() == null) {
+                com.stripe.model.Customer stripeCustomer = com.stripe.model.Customer.create(
+                CustomerCreateParams.builder().setEmail(customer.getEmail()).build());
+
+                customer.setStripeCustomerId(stripeCustomer.getId());
+                customerRepository.save(customer);
+            }
+
+            // 4️⃣ Amount in cents
+        long amountInCents = request.getAmount()
                 .multiply(BigDecimal.valueOf(100))
-                .longValue();
+                .longValueExact();
 
-              // Create Payment Intent parameters
-            PaymentIntentCreateParams params =
+            // 5️⃣ Create Stripe PaymentIntent
+        PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
                 .setAmount(amountInCents)
-                .setCurrency(paymentRequest.getCurrency().toLowerCase())
-                .setCustomer(customer.getId())
-                .setInvoice(paymentRequest.getInvoiceNumber())
+                .setCurrency(request.getCurrency().toLowerCase())
+                .setCustomer(customer.getStripeCustomerId())
+                .setDescription(request.getDescription())
                 .build();
 
-            // Create the payment Intent
             PaymentIntent paymentIntent = PaymentIntent.create(params);
 
-            // Save order to database
+            // 6️⃣ Save PaymentOrder
             PaymentOrder paymentOrder = PaymentOrder.builder()
-            .customerEmail(paymentRequest.getCustomerEmail())
-            .amount(paymentRequest.getAmount())
-            .currency(paymentRequest.getCurrency())
-            .stripePaymentIntentId(paymentIntent.getId())
-            .stripeCustomerId(customer.getId())
-            .paymentStatus(PaymentStatus.PENDING);
+                    .customer(customer)
+                    .invoice(invoice)
+                    .amount(request.getAmount())
+                    .currency(request.getCurrency())
+                    .description(request.getDescription())
+                    .stripePaymentIntentId(paymentIntent.getId())
+                    .paymentStatus(PaymentStatus.PENDING)
+                    .build();
 
-        } catch (Exception e) {
-            
+            paymentOrderRepository.save(paymentOrder);
+
+            // 7️⃣ Return response
+            return PaymentResponse.builder()
+                    .invoiceId(invoice.getId())
+                    .paymentIntentId(paymentIntent.getId())
+                    .clientSecret(paymentIntent.getClientSecret())
+                    .amount(request.getAmount())
+                    .currency(request.getCurrency())
+                    .paymentStatus(PaymentStatus.PENDING)
+                    .message("Payment intent created successfully")
+                    .build();
+
+        } catch (StripeException e) {
+            log.error("Stripe error", e);
+            throw new PaymentException("Failed to create payment intent", e);
         }
     }
 
+    public PaymentStatus mapStripePaymentStatus(String stripeStatus) {
+        return switch (stripeStatus) {
+            case "requires_payment_method",
+                 "requires_confirmation",
+                 "requires_action" -> PaymentStatus.PENDING;
+            case "processing" -> PaymentStatus.PROCESSING;
+            case "succeeded" -> PaymentStatus.SUCCESSFUL;
+            case "canceled" -> PaymentStatus.CANCELED;
+            default -> PaymentStatus.FAILED;
+        };
+    }
 }
