@@ -24,8 +24,8 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -109,8 +109,8 @@ public class Invoice {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
 
-        if (this.remainingAmount == null) {
-            this.remainingAmount = this.invoiceAmount;
+        if (this.outstandingBalance == null) {
+            this.outstandingBalance = this.invoiceAmount;
         }
     }
 
