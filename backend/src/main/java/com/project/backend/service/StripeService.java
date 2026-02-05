@@ -22,8 +22,9 @@ import com.stripe.model.PaymentIntent;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.PaymentIntentCreateParams;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-
+@Builder
 @Service
 @RequiredArgsConstructor
 public class StripeService {
