@@ -8,9 +8,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.backend.entity.Account;
 import com.project.backend.entity.JournalEntry;
 import com.project.backend.entity.JournalEntryLine;
 import com.project.backend.entity.PaymentOrder;
+import com.project.backend.enums.AccountSubType;
 import com.project.backend.enums.JournalEntryStatus;
 import com.project.backend.repository.JournalEntryLineRepository;
 import com.project.backend.repository.JournalEntryRepository;
@@ -23,6 +25,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
 
     private final JournalEntryRepository journalEntryRepository;
     private final JournalEntryLineRepository journalEntryLineRepository;
+    private final AccountService accountService;
 
     @Override
     public List<JournalEntry> getAllJournalEntries(long companyId) {
@@ -116,45 +119,54 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         journalEntryRepository.save(entry);
     }
 
-    @Transactional
+   @Transactional
     @Override
     public JournalEntry recordStripePayment(PaymentOrder paymentOrder) {
-        JournalEntry entry = new JournalEntry();
-        entry.setCompany(paymentOrder.getInvoice().getCompany());
-        entry.setEntryDate(paymentOrder.getCreatedAt().toLocalDate());
-        entry.setEntryNumber("JE-" + System.currentTimeMillis());
-        entry.setDescription("Stripe payment received for Invoice #" + paymentOrder.getInvoice().getId());
-        entry.setStatus(JournalEntryStatus.POSTED);
-        entry.setPostingDate(LocalDate.now());
-        entry.setPaymentOrder(paymentOrder);
-        entry = journalEntryRepository.save(entry);
+    JournalEntry entry = new JournalEntry();
+    entry.setCompany(paymentOrder.getInvoice().getCompany());
+    entry.setEntryDate(paymentOrder.getCreatedAt().toLocalDate());
+    entry.setEntryNumber("JE-" + System.currentTimeMillis());
+    entry.setDescription("Stripe payment received for Invoice #" + paymentOrder.getInvoice().getId());
+    entry.setStatus(JournalEntryStatus.POSTED);
+    entry.setPostingDate(LocalDate.now());
+    entry.setPaymentOrder(paymentOrder);
+    entry = journalEntryRepository.save(entry);
 
-        // Create debit line (Bank/Cash)
-        JournalEntryLine debitLine = new JournalEntryLine();
-        debitLine.setJournalEntry(entry);
-        debitLine.setCompany(entry.getCompany());
-        // debitLine.setAccount(paymentOrder.getInvoice().getCompany().getAccount());
-        debitLine.setAccount(paymentOrder.getInvoice().getCompany().getAccount());
-        debitLine.setDebit(paymentOrder.getAmount());
-        debitLine.setCredit(null);
-        debitLine.setMemo("Payment received via Stripe");
-        debitLine.setInvoice(paymentOrder.getInvoice());
+    // Use AccountService to fetch accounts
+    Account bankAccount = accountService.getOrCreateAccountBySubType(
+            paymentOrder.getInvoice().getCompany().getId(),AccountSubType.BANK
+    );
 
-        // Create credit line (Accounts Receivable)
-        JournalEntryLine creditLine = new JournalEntryLine();
-        creditLine.setJournalEntry(entry);
-        creditLine.setCompany(entry.getCompany());
-        creditLine.setAccount(paymentOrder.getInvoice().getArAccount());
-        creditLine.setDebit(null);
-        creditLine.setCredit(paymentOrder.getAmount());
-        creditLine.setMemo("Invoice #" + paymentOrder.getInvoice().getId());
-        creditLine.setInvoice(paymentOrder.getInvoice());
+    Account arAccount = accountService.getOrCreateAccountBySubType(
+            paymentOrder.getInvoice().getCompany().getId(),AccountSubType.ACCOUNTS_RECEIVABLE
+    );
 
-        journalEntryLineRepository.save(debitLine);
-        journalEntryLineRepository.save(creditLine);
+    // Debit line (Bank/Cash)
+    JournalEntryLine debitLine = new JournalEntryLine();
+    debitLine.setJournalEntry(entry);
+    debitLine.setCompany(entry.getCompany());
+    debitLine.setAccount(bankAccount);
+    debitLine.setDebit(paymentOrder.getAmount());
+    debitLine.setCredit(null);
+    debitLine.setMemo("Payment received via Stripe");
+    debitLine.setInvoice(paymentOrder.getInvoice());
 
-        return entry;
+    // Credit line (Accounts Receivable)
+    JournalEntryLine creditLine = new JournalEntryLine();
+    creditLine.setJournalEntry(entry);
+    creditLine.setCompany(entry.getCompany());
+    creditLine.setAccount(arAccount);
+    creditLine.setDebit(null);
+    creditLine.setCredit(paymentOrder.getAmount());
+    creditLine.setMemo("Invoice #" + paymentOrder.getInvoice().getId());
+    creditLine.setInvoice(paymentOrder.getInvoice());
+
+    journalEntryLineRepository.save(debitLine);
+    journalEntryLineRepository.save(creditLine);
+
+    return entry;
     }
+
 
     // ----------------------------
     // INTERNAL HELPERS

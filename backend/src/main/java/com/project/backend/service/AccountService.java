@@ -9,6 +9,8 @@ public interface AccountService {
 
     Account getAccountBySubType(long companyId, AccountSubType subType);
 
+    Account getOrCreateAccountBySubType(long companyId, AccountSubType subType);
+
     List<Account> getAllAccounts(long companyId);
 
     Account createAccount(long companyId, Account account);

@@ -6,14 +6,16 @@ import com.project.backend.entity.PaymentOrder;
 
 public interface PaymentOrderService {
 
-    Optional<PaymentOrder> findByStripePaymentIntentId(String paymentIntentId);
     PaymentOrder createPayment(PaymentOrder paymentOrder);
 
-    void markSuccessful(String paymentIntentId);
+    void markProcessing(String stripePaymentIntentId);
 
-    void markFailed(String paymentIntentId, String reason);
+    void markSuccessful(String stripePaymentIntentId);
 
-    void markCanceled(String paymentIntentId);
+    void markFailed(String stripePaymentIntentId, String reason);
 
-    void markProcessing(String paymentIntentId);
+    void markCanceled(String stripePaymentIntentId);
+
+    Optional<PaymentOrder> findByStripePaymentIntentId(String stripePaymentIntentId);
 }
+

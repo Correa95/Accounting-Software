@@ -5,8 +5,10 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.backend.entity.Invoice;
 import com.project.backend.entity.PaymentOrder;
 import com.project.backend.enums.PaymentStatus;
+import com.project.backend.repository.InvoiceRepository;
 import com.project.backend.repository.PaymentOrderRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -16,8 +18,12 @@ import lombok.RequiredArgsConstructor;
 public class PaymentOrderServiceImpl implements PaymentOrderService {
 
     private final PaymentOrderRepository paymentOrderRepository;
+    private final InvoiceRepository invoiceRepository;
     private final JournalEntryService journalEntryService;
 
+    // ----------------------------
+    // CREATE
+    // ----------------------------
     @Override
     @Transactional
     public PaymentOrder createPayment(PaymentOrder paymentOrder) {
@@ -25,44 +31,59 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         return paymentOrderRepository.save(paymentOrder);
     }
 
+    // ----------------------------
+    // STATUS TRANSITIONS
+    // ----------------------------
     @Override
     @Transactional
-    public PaymentOrder markProcessing(String stripePaymentIntentId) {
-        PaymentOrder order = getPaymentOrder(stripePaymentIntentId);
+    public void markProcessing(String stripePaymentIntentId) {
+        PaymentOrder order = getOrder(stripePaymentIntentId);
         order.setPaymentStatus(PaymentStatus.PROCESSING);
-        return paymentOrderRepository.save(order);
+        paymentOrderRepository.save(order);
     }
 
     @Override
     @Transactional
-    public PaymentOrder markSuccessful(String stripePaymentIntentId) {
-        PaymentOrder order = getPaymentOrder(stripePaymentIntentId);
+    public void markSuccessful(String stripePaymentIntentId) {
+        PaymentOrder order = getOrder(stripePaymentIntentId);
+
+        if (order.getPaymentStatus() == PaymentStatus.SUCCESSFUL) {
+            return; 
+        }
+
         order.setPaymentStatus(PaymentStatus.SUCCESSFUL);
-        PaymentOrder savedOrder = paymentOrderRepository.save(order);
 
-        // Record journal entry for successful payment
-        journalEntryService.recordStripePayment(savedOrder);
+        // Update invoice balance
+        Invoice invoice = order.getInvoice();
+        invoice.setOutstandingBalance(invoice.getOutstandingBalance().subtract(order.getAmount()));
 
-        return savedOrder;
+        paymentOrderRepository.save(order);
+        invoiceRepository.save(invoice);
+
+        // Record accounting entry
+        journalEntryService.recordStripePayment(order);
     }
 
     @Override
     @Transactional
-    public PaymentOrder markFailed(String stripePaymentIntentId, String reason) {
-        PaymentOrder order = getPaymentOrder(stripePaymentIntentId);
+    public void markFailed(String stripePaymentIntentId, String reason) {
+        PaymentOrder order = getOrder(stripePaymentIntentId);
         order.setPaymentStatus(PaymentStatus.FAILED);
         order.setFailureReason(reason);
-        return paymentOrderRepository.save(order);
+        paymentOrderRepository.save(order);
     }
 
     @Override
     @Transactional
-    public PaymentOrder markCanceled(String stripePaymentIntentId) {
-        PaymentOrder order = getPaymentOrder(stripePaymentIntentId);
+    public void markCanceled(String stripePaymentIntentId) {
+        PaymentOrder order = getOrder(stripePaymentIntentId);
         order.setPaymentStatus(PaymentStatus.CANCELED);
-        return paymentOrderRepository.save(order);
+        paymentOrderRepository.save(order);
     }
 
+    // ----------------------------
+    // QUERIES
+    // ----------------------------
     @Override
     public Optional<PaymentOrder> findByStripePaymentIntentId(String stripePaymentIntentId) {
         return paymentOrderRepository.findByStripePaymentIntentId(stripePaymentIntentId);
@@ -71,8 +92,8 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
     // ----------------------------
     // INTERNAL HELPER
     // ----------------------------
-    private PaymentOrder getPaymentOrder(String stripePaymentIntentId) {
-        return paymentOrderRepository.findByStripePaymentIntentId(stripePaymentIntentId)
-                .orElseThrow(() -> new RuntimeException("PaymentOrder not found for ID: " + stripePaymentIntentId));
+    private PaymentOrder getOrder(String stripePaymentIntentId) {
+        return paymentOrderRepository.findByStripePaymentIntentId(stripePaymentIntentId).orElseThrow(() ->
+            new RuntimeException("PaymentOrder not found for Stripe ID: " + stripePaymentIntentId));
     }
 }

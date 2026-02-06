@@ -104,6 +104,55 @@ public class Invoice {
 
     // === Lifecycle ===
 
+//     public void markAsPaid() {
+//         this.invoiceStatus = InvoiceStatus.PAID;
+//         this.outstandingBalance = BigDecimal.ZERO;
+//     }
+
+//     public void applyPayment(BigDecimal amount) {
+//     if (paidAmount == null) {
+//         paidAmount = BigDecimal.ZERO;
+//     }
+
+//     paidAmount = paidAmount.add(amount);
+//     outstandingBalance = totalAmount.subtract(paidAmount);
+
+//     if (outstandingBalance.compareTo(BigDecimal.ZERO) <= 0) {
+//         markAsPaid();
+//     }
+// }
+
+// ==========================
+// Domain behavior
+// ==========================
+
+    public void applyPayment(BigDecimal amount) {
+    if (amount == null || amount.signum() <= 0) {
+        throw new IllegalArgumentException("Payment amount must be positive");
+    }
+
+    if (outstandingBalance == null) {
+        outstandingBalance = invoiceAmount;
+    }
+
+    if (amount.compareTo(outstandingBalance) > 0) {
+        throw new IllegalArgumentException("Payment exceeds outstanding balance");
+    }
+    outstandingBalance = outstandingBalance.subtract(amount);
+    if (outstandingBalance.compareTo(BigDecimal.ZERO) == 0) {
+        markAsPaid();
+    }
+    }
+
+    public void markAsPaid() {
+        this.invoiceStatus = InvoiceStatus.PAID;
+        this.outstandingBalance = BigDecimal.ZERO;
+        this.paidAt = LocalDateTime.now();
+    }
+
+
+
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

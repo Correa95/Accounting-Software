@@ -26,7 +26,7 @@ public class TrialBalanceService {
 
         if (startDate != null && endDate != null) {
             journalEntryLines = journalEntryLineRepository
-            .findByCompany_IdAndActiveTrueAndEntryDateBetween(companyId, startDate, endDate);
+                .findByCompany_IdAndActiveTrueAndJournalEntry_EntryDateBetween(companyId, startDate, endDate);
         } else {
             journalEntryLines = journalEntryLineRepository.findByCompany_IdAndActiveTrue(companyId);
         }
@@ -35,7 +35,7 @@ public class TrialBalanceService {
         Map<String, BigDecimal> creditMap = new HashMap<>();
 
         for (JournalEntryLine line : journalEntryLines) {
-            String accountName = line.getAccount().getAccountName();
+            String accountName = line.getAccount().getName(); // fixed from getAccountName()
 
             debitMap.put(accountName, debitMap.getOrDefault(accountName, BigDecimal.ZERO)
                     .add(line.getDebit() != null ? line.getDebit() : BigDecimal.ZERO));

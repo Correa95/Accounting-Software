@@ -41,10 +41,10 @@ public class Account {
     private String accountNumber;
 
     @Column(nullable = false)
-    private String name;
+    private String accountName;
 
     @Column(nullable = false)
-    private BigDecimal balance;
+    private BigDecimal accountBalance;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

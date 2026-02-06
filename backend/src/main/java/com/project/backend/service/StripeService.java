@@ -41,7 +41,7 @@ public class StripeService {
         try {
             // 1️⃣ Load customer
             Customer customer = customerRepository.findById(request.getCustomerId())
-                    .orElseThrow(() -> new RuntimeException("Customer not found"));
+            .orElseThrow(() -> new RuntimeException("Customer not found"));
 
             // 2️⃣ Load invoice
             Invoice invoice = invoiceRepository.findById(request.getInvoiceId())
@@ -53,7 +53,7 @@ public class StripeService {
             }
 
             // 3️⃣ Create Stripe customer if missing
-        if (customer.getStripeCustomerId() == null) {
+            if (customer.getStripeCustomerId() == null) {
                 com.stripe.model.Customer stripeCustomer = com.stripe.model.Customer.create(
                 CustomerCreateParams.builder().setEmail(customer.getEmail()).build());
 

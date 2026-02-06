@@ -40,14 +40,18 @@ public class BillServiceImpl implements BillService {
     @Override
     public Bill createBill(Bill bill, Long companyId) {
         // Validate company
-        Company company = companyRepository.findById(companyId).orElseThrow(() -> new EntityNotFoundException("Company not found"));
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new EntityNotFoundException("Company not found"));
         bill.setCompany(company);
 
-        Vendor vendor = vendorRepository.findById(bill.getVendor().getId()).filter(v -> v.getCompany().getId().equals(companyId)).orElseThrow(() -> new EntityNotFoundException("Vendor not found or does not belong to company"));
+        // Validate vendor belongs to the company
+        Vendor vendor = vendorRepository.findById(bill.getVendor().getId())
+                .filter(v -> v.getCompany().getId().equals(companyId))
+                .orElseThrow(() -> new EntityNotFoundException("Vendor not found or does not belong to company"));
         bill.setVendor(vendor);
 
-        // Assign Accounts Payable
-        Account accountsPayable = accountService.getAccountType(companyId, AccountSubType.ACCOUNTS_PAYABLE);
+        // Assign Accounts Payable account
+        Account accountsPayable = accountService.getAccountBySubType(companyId, AccountSubType.ACCOUNTS_PAYABLE);
         bill.setAccount(accountsPayable);
 
         // Set defaults
@@ -59,7 +63,6 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Bill updateBill(Long billId, Long companyId, Bill bill) {
-
         Bill existingBill = getBillById(billId, companyId);
 
         if (existingBill.getBillStatus() != BillStatus.DRAFT) {
@@ -70,7 +73,6 @@ public class BillServiceImpl implements BillService {
         if (bill.getBillDate() != null) existingBill.setBillDate(bill.getBillDate());
         if (bill.getBillDueDate() != null) existingBill.setBillDueDate(bill.getBillDueDate());
         if (bill.getTotalAmount() != null) existingBill.setTotalAmount(bill.getTotalAmount());
-
 
         return billRepository.save(existingBill);
     }
