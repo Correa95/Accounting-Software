@@ -50,7 +50,7 @@ public class Bill {
 
 
     @Column(nullable = false, precision = 19, scale= 4)
-    private BigDecimal totalAmount;
+    private BigDecimal billAmount;
 
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

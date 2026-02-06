@@ -21,7 +21,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,10 +29,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(
-    name = "journal_entries",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"company_id", "entry_number"})
-)
+@Table(name = "journal_entries")
 public class JournalEntry {
 
     @Id
@@ -54,11 +50,12 @@ public class JournalEntry {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private JournalEntryStatus status;
+    private JournalEntryStatus journalEntryStatus;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
-
+    
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
@@ -70,19 +67,14 @@ public class JournalEntry {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @OneToMany(
-        mappedBy = "journalEntry",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "journalEntry",cascade = CascadeType.ALL,orphanRemoval = true)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "journalEntryLine_id", nullable = false)
     private List<JournalEntryLine> journalEntryLines = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_order_id")
-    private Payment paymentOrder;
-
+    private Payment payments;
 
     @PrePersist
     void onCreate() {

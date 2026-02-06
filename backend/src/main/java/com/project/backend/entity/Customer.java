@@ -1,7 +1,5 @@
 package com.project.backend.entity;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,15 +45,6 @@ public class Customer {
 
     @Column(nullable=false)
     private String taxId;
-
-    @Column(name = "stripe_customer_id")
-    private String stripeCustomerId;
-
-    @Column(nullable=false)
-    private Integer paymentTerm;
-
-    @Column(nullable=false)
-    private BigDecimal creditLimit;
 
     @Column(nullable=false)
     private boolean active = true;
