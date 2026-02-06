@@ -3,7 +3,7 @@ package com.project.backend.service;
 import java.util.List;
 
 import com.project.backend.entity.Invoice;
-import com.project.backend.entity.PaymentOrder;
+import com.project.backend.entity.Payment;
 
 public interface InvoiceService {
 
@@ -22,7 +22,7 @@ public interface InvoiceService {
     /**
      * Called ONLY from Stripe webhook flow
      */
-    Invoice markInvoicePaid(PaymentOrder paymentOrder);
+    Invoice markInvoicePaid(Payment paymentOrder);
 
     void deactivateInvoice(long invoiceId, long companyId);
 }

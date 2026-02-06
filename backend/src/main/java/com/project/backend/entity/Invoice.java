@@ -100,7 +100,7 @@ public class Invoice {
     /** Current Stripe payment (can evolve to OneToMany later) */
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_order_id")
-    private PaymentOrder paymentOrder;
+    private Payment paymentOrder;
 
     // === Lifecycle ===
 

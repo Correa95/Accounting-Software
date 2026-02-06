@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.project.backend.entity.Invoice;
-import com.project.backend.entity.PaymentOrder;
+import com.project.backend.entity.Payment;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
@@ -14,5 +14,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     Optional<Invoice> findByIdAndCompanyIdAndActiveTrue(Long invoiceId, Long companyId);
 
-    Optional<Invoice> findByPaymentOrder(PaymentOrder paymentOrder);
+    Optional<Invoice> findByPaymentOrder(Payment paymentOrder);
 }

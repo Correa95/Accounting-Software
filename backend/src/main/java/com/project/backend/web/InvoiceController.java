@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.backend.entity.Account;
 import com.project.backend.entity.Customer;
 import com.project.backend.entity.Invoice;
-import com.project.backend.entity.PaymentOrder;
+import com.project.backend.entity.Payment;
 import com.project.backend.enums.AccountSubType;
 import com.project.backend.service.AccountService;
 import com.project.backend.service.CustomerService;
@@ -70,7 +70,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/{invoiceId}/pay")
-    public ResponseEntity<Invoice> markPaid( PaymentOrder paymentOrder) {
+    public ResponseEntity<Invoice> markPaid( Payment paymentOrder) {
         return new ResponseEntity<>(invoiceService.markInvoicePaid(paymentOrder), HttpStatus.OK);
     }
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.backend.entity.Invoice;
-import com.project.backend.entity.PaymentOrder;
+import com.project.backend.entity.Payment;
 import com.project.backend.enums.PaymentStatus;
 import com.project.backend.repository.InvoiceRepository;
 import com.project.backend.repository.PaymentOrderRepository;
@@ -42,7 +42,7 @@ public class StripeWebhookService {
     }
 
     private void handleSuccess(PaymentIntent intent) {
-        PaymentOrder order = findPaymentOrder(intent.getId());
+        Payment order = findPaymentOrder(intent.getId());
         if (order.getPaymentStatus() == PaymentStatus.SUCCESSFUL) return;
         order.setPaymentStatus(PaymentStatus.SUCCESSFUL);
         applyPaymentToInvoice(order);
@@ -50,18 +50,18 @@ public class StripeWebhookService {
     }
 
     private void handleFailure(PaymentIntent intent) {
-        PaymentOrder order = findPaymentOrder(intent.getId());
+        Payment order = findPaymentOrder(intent.getId());
         order.setPaymentStatus(PaymentStatus.FAILED);
         paymentOrderRepository.save(order);
     }
 
     private void handleCanceled(PaymentIntent intent) {
-        PaymentOrder order = findPaymentOrder(intent.getId());
+        Payment order = findPaymentOrder(intent.getId());
         order.setPaymentStatus(PaymentStatus.CANCELED);
         paymentOrderRepository.save(order);
     }
 
-    private PaymentOrder findPaymentOrder(String paymentIntentId) {
+    private Payment findPaymentOrder(String paymentIntentId) {
         return paymentOrderRepository.findByStripePaymentIntentId(paymentIntentId)
         .orElseThrow(() -> new RuntimeException("PaymentOrder not found for PaymentIntent " + paymentIntentId));
     }
@@ -75,7 +75,7 @@ public class StripeWebhookService {
     //     }
     //     invoiceRepository.save(invoice);
     // }
-    private void applyPaymentToInvoice(PaymentOrder order) {
+    private void applyPaymentToInvoice(Payment order) {
     Invoice invoice = order.getInvoice();
     invoice.applyPayment(order.getAmount());
     invoiceRepository.save(invoice);

@@ -2,11 +2,11 @@ package com.project.backend.service;
 
 import java.util.Optional;
 
-import com.project.backend.entity.PaymentOrder;
+import com.project.backend.entity.Payment;
 
 public interface PaymentOrderService {
 
-    PaymentOrder createPayment(PaymentOrder paymentOrder);
+    Payment createPayment(Payment paymentOrder);
 
     void markProcessing(String stripePaymentIntentId);
 
@@ -16,6 +16,6 @@ public interface PaymentOrderService {
 
     void markCanceled(String stripePaymentIntentId);
 
-    Optional<PaymentOrder> findByStripePaymentIntentId(String stripePaymentIntentId);
+    Optional<Payment> findByStripePaymentIntentId(String stripePaymentIntentId);
 }
 

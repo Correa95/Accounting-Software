@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.backend.entity.Account;
 import com.project.backend.entity.JournalEntry;
 import com.project.backend.entity.JournalEntryLine;
-import com.project.backend.entity.PaymentOrder;
+import com.project.backend.entity.Payment;
 import com.project.backend.enums.AccountSubType;
 import com.project.backend.enums.JournalEntryStatus;
 import com.project.backend.repository.JournalEntryLineRepository;
@@ -121,7 +121,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
 
    @Transactional
     @Override
-    public JournalEntry recordStripePayment(PaymentOrder paymentOrder) {
+    public JournalEntry recordStripePayment(Payment paymentOrder) {
     JournalEntry entry = new JournalEntry();
     entry.setCompany(paymentOrder.getInvoice().getCompany());
     entry.setEntryDate(paymentOrder.getCreatedAt().toLocalDate());

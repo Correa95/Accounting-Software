@@ -11,7 +11,7 @@ import com.project.backend.dto.PaymentRequest;
 import com.project.backend.dto.PaymentResponse;
 import com.project.backend.entity.Customer;
 import com.project.backend.entity.Invoice;
-import com.project.backend.entity.PaymentOrder;
+import com.project.backend.entity.Payment;
 import com.project.backend.enums.PaymentStatus;
 
 // import com.project.backend.exception.RuntimeException;
@@ -78,7 +78,7 @@ public class StripeService {
             PaymentIntent paymentIntent = PaymentIntent.create(params);
 
             // 6️⃣ Save PaymentOrder
-            PaymentOrder paymentOrder = PaymentOrder.builder()
+            Payment paymentOrder = Payment.builder()
                     .customer(customer)
                     .invoice(invoice)
                     .amount(request.getAmount())

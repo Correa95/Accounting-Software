@@ -81,7 +81,7 @@ public class JournalEntry {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_order_id")
-    private PaymentOrder paymentOrder;
+    private Payment paymentOrder;
 
 
     @PrePersist

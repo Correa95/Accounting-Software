@@ -97,7 +97,7 @@ public class Company {
     private List<Payment> payments;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
-    private List<BankTransaction> bankTransactions;
+    private List<Bank> banks;
 
 
 
