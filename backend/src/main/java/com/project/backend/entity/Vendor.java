@@ -13,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,13 +22,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(
-    name = "vendors",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"company_id", "vendorNumber"}),
-        @UniqueConstraint(columnNames = {"company_id", "email"})
-    }
-)
+@Table(name = "vendors")
 @Entity
 public class Vendor {
     @Id
@@ -57,7 +50,6 @@ public class Vendor {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentTerms paymentTerms;
-
 
     @Column(nullable = false)
     private boolean active = true;
