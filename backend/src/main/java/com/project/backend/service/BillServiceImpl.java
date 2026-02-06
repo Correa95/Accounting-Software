@@ -72,7 +72,7 @@ public class BillServiceImpl implements BillService {
         if (bill.getBillNumber() != null) existingBill.setBillNumber(bill.getBillNumber());
         if (bill.getBillDate() != null) existingBill.setBillDate(bill.getBillDate());
         if (bill.getBillDueDate() != null) existingBill.setBillDueDate(bill.getBillDueDate());
-        if (bill.getTotalAmount() != null) existingBill.setTotalAmount(bill.getTotalAmount());
+        if (bill.getBillAmount() != null) existingBill.setBillAmount(bill.getBillAmount());
 
         return billRepository.save(existingBill);
     }

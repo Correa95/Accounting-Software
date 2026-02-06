@@ -12,11 +12,10 @@ import com.project.backend.enums.PaymentStatus;
 @Repository
 public interface PaymentOrderRepository extends JpaRepository<Payment, Long> {
 
-    // Stripe → Webhook lookups (CRITICAL)
-    Optional<Payment> findByStripePaymentIntentId(String stripePaymentIntentId);
+   
 
     // Customer payment history
-    List<Payment> findByCustomer_Id(Long customerId);
+    List<Payment> findByCustomerId(Long customerId);
 
     // Accounting & reporting
     List<Payment> findByPaymentStatus(PaymentStatus status);

@@ -10,7 +10,7 @@ import com.project.backend.entity.JournalEntry;
 @Repository
 public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long> {
 
-    List<JournalEntry> findByCompany_IdAndDeletedFalse(long companyId);
+    List<JournalEntry> findByCompanyIdAndDeletedFalse(long companyId);
 
-    Optional<JournalEntry> findByIdAndCompany_IdAndDeletedFalse(long journalEntryId, long companyId);
+    Optional<JournalEntry> findByIdAndCompanyIdAndDeletedFalse(long journalEntryId, long companyId);
 }

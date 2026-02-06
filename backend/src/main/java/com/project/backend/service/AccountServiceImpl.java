@@ -24,9 +24,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional(readOnly = true)
     public Account getAccountBySubType(long companyId, AccountSubType subType) {
-        return accountRepository.findByCompanyIdAndAccountSubTypeAndActiveTrue(companyId, subType)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Active account not found: " + subType + " for company " + companyId));
+        return accountRepository.findByCompanyIdAndAccountSubTypeAndActiveTrue(companyId, subType).orElseThrow(() -> new IllegalStateException("Active account not found: " + subType + " for company " + companyId));
     }
 
     @Override
@@ -38,7 +36,7 @@ public class AccountServiceImpl implements AccountService {
                     account.setCompany(company);
                     account.setAccountSubType(subType);
                     account.setAccountType(mapSubTypeToType(subType));
-                    account.setName(subType.name().replace("_", " "));
+                    account.setAccountName(subType.name().replace("_", " "));
                     account.setActive(true);
                     return accountRepository.save(account);
                 });
@@ -62,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account updateAccount(long accountId, Account account) {
         Account existing = accountRepository.findById(accountId).orElseThrow(() -> new RuntimeException("Account not found"));
-        existing.setName(account.getName());
+        existing.setAccountName(account.getAccountName());
         existing.setAccountNumber(account.getAccountNumber());
         existing.setAccountType(account.getAccountType());
         existing.setAccountSubType(account.getAccountSubType());
