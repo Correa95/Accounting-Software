@@ -23,16 +23,16 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
 
     @Override
     public List<JournalEntryLine> getAllJournalEntryLines(long journalEntryId, long companyId) {
-        return journalEntryLineRepository.findByJournalEntry_IdAndCompany_Id(journalEntryId, companyId);
+        return journalEntryLineRepository.findByJournalEntryIdAndCompanyId(journalEntryId, companyId);
     }
 
     @Transactional
     @Override
     public JournalEntryLine addJournalEntryLine(long journalEntryId, long companyId, JournalEntryLine journalEntryLine) {
-        JournalEntry journalEntry = journalEntryRepository.findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId)
+        JournalEntry journalEntry = journalEntryRepository.findByIdAndCompanyIdAndDeletedFalse(journalEntryId, companyId)
                 .orElseThrow(() -> new RuntimeException("Journal entry not found"));
 
-        if (journalEntry.getStatus() == JournalEntryStatus.POSTED) {
+        if (journalEntry.getJournalEntryStatus() == JournalEntryStatus.POSTED) {
             throw new IllegalStateException("Cannot add lines to a POSTED journal entry");
         }
 
@@ -56,7 +56,7 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
             throw new RuntimeException("Unauthorized access");
         }
 
-        if (entry.getStatus() == JournalEntryStatus.POSTED) {
+        if (entry.getJournalEntryStatus() == JournalEntryStatus.POSTED) {
             throw new IllegalStateException("Cannot update lines of a POSTED journal entry");
         }
 
@@ -83,7 +83,7 @@ public class JournalEntryLineServiceImpl implements JournalEntryLineService {
             throw new RuntimeException("Unauthorized access");
         }
 
-        if (entry.getStatus() == JournalEntryStatus.POSTED) {
+        if (entry.getJournalEntryStatus() == JournalEntryStatus.POSTED) {
             throw new IllegalStateException("Cannot delete lines from a POSTED journal entry");
         }
 

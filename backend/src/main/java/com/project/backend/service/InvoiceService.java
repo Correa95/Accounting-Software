@@ -15,14 +15,13 @@ public interface InvoiceService {
 
     Invoice updateInvoice(long invoiceId, long companyId, Invoice invoice);
 
+    void deactivateInvoice(long invoiceId, long companyId);
+    
     Invoice sendInvoice(long invoiceId, long companyId);
 
     Invoice voidInvoice(long invoiceId, long companyId);
 
-    /**
-     * Called ONLY from Stripe webhook flow
-     */
-    Invoice markInvoicePaid(Payment paymentOrder);
 
-    void deactivateInvoice(long invoiceId, long companyId);
+    Invoice markInvoicePaid(Payment payment);
+
 }

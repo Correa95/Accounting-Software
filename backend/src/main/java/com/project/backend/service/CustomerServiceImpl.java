@@ -20,15 +20,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Customer> getAllCustomers(long companyId) {
-        // This find the customer associated with the company
         return customerRepository.findByCompanyId(companyId);
     }
 
     @Override
     public Customer getCustomerById(long customerId, long companyId) {
-        // find the customer that is only associated with this company
-        return customerRepository
-                .findByIdAndCompanyId(customerId, companyId)
+        return customerRepository.findByIdAndCompanyId(customerId, companyId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
     }
 
@@ -51,8 +48,6 @@ public class CustomerServiceImpl implements CustomerService {
         existingCustomer.setEmail(customer.getEmail());
         existingCustomer.setBillingAddress(customer.getBillingAddress());
         existingCustomer.setShippingAddress(customer.getShippingAddress());
-        existingCustomer.setPaymentTerm(customer.getPaymentTerm());
-        existingCustomer.setCreditLimit(customer.getCreditLimit());
 
         return customerRepository.save(existingCustomer);
     }

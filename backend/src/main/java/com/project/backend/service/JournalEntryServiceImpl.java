@@ -29,19 +29,19 @@ public class JournalEntryServiceImpl implements JournalEntryService {
 
     @Override
     public List<JournalEntry> getAllJournalEntries(long companyId) {
-        return journalEntryRepository.findByCompany_IdAndDeletedFalse(companyId);
+        return journalEntryRepository.findByCompanyIdAndDeletedFalse(companyId);
     }
 
     @Override
     public JournalEntry getJournalEntryById(long journalEntryId, long companyId) {
-        return journalEntryRepository.findByIdAndCompany_IdAndDeletedFalse(journalEntryId, companyId)
+        return journalEntryRepository.findByIdAndCompanyIdAndDeletedFalse(journalEntryId, companyId)
         .orElseThrow(() -> new RuntimeException("Journal entry not found"));
     }
 
     @Transactional
     @Override
     public JournalEntry createJournalEntry(JournalEntry journalEntry, long companyId) {
-        journalEntry.setStatus(JournalEntryStatus.DRAFT);
+        journalEntry.setJournalEntryStatus(JournalEntryStatus.DRAFT);
         journalEntry.setEntryDate(LocalDate.now());
         journalEntry.setEntryNumber(generateEntryNumber());
         return journalEntryRepository.save(journalEntry);
@@ -51,7 +51,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
     @Override
     public JournalEntry updateJournalEntry(long journalEntryId, long companyId, JournalEntry journalEntry) {
         JournalEntry existing = getJournalEntryById(journalEntryId, companyId);
-        if (existing.getStatus() != JournalEntryStatus.DRAFT) {
+        if (existing.getJournalEntryStatus() != JournalEntryStatus.DRAFT) {
             throw new IllegalStateException("Only DRAFT entries can be updated");
         }
         existing.setDescription(journalEntry.getDescription());
@@ -63,14 +63,14 @@ public class JournalEntryServiceImpl implements JournalEntryService {
     @Override
     public JournalEntry postJournalEntry(long journalEntryId, long companyId) {
         JournalEntry entry = getJournalEntryById(journalEntryId, companyId);
-        if (entry.getStatus() != JournalEntryStatus.DRAFT) {
+        if (entry.getJournalEntryStatus() != JournalEntryStatus.DRAFT) {
             throw new IllegalStateException("Only DRAFT entries can be posted");
         }
         if (entry.getJournalEntryLines() == null || entry.getJournalEntryLines().isEmpty()) {
             throw new IllegalStateException("Journal entry must have at least one line");
         }
         validateBalanced(entry);
-        entry.setStatus(JournalEntryStatus.POSTED);
+        entry.setJournalEntryStatus(JournalEntryStatus.POSTED);
         entry.setPostingDate(LocalDate.now());
         return journalEntryRepository.save(entry);
     }
@@ -80,7 +80,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
     public JournalEntry reverseJournalEntry(long journalEntryId, long companyId, String reason) {
         JournalEntry journalEntry = getJournalEntryById(journalEntryId, companyId);
 
-        if (journalEntry.getStatus() != JournalEntryStatus.POSTED) {
+        if (journalEntry.getJournalEntryStatus() != JournalEntryStatus.POSTED) {
             throw new IllegalStateException("Only POSTED entries can be reversed");
         }
 
@@ -89,7 +89,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         entry.setEntryDate(LocalDate.now());
         entry.setEntryNumber(journalEntry.getEntryNumber() + "-R");
         entry.setDescription("Reversal of JE " + journalEntry.getEntryNumber() + ": " + reason);
-        entry.setStatus(JournalEntryStatus.POSTED);
+        entry.setJournalEntryStatus(JournalEntryStatus.POSTED);
         entry.setPostingDate(LocalDate.now());
         entry = journalEntryRepository.save(entry);
 
@@ -104,7 +104,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
             journalEntryLineRepository.save(reversedLine);
         }
 
-        journalEntry.setStatus(JournalEntryStatus.REVERSED);
+        journalEntry.setJournalEntryStatus(JournalEntryStatus.REVERSED);
         journalEntryRepository.save(journalEntry);
 
         return entry;
@@ -127,12 +127,11 @@ public class JournalEntryServiceImpl implements JournalEntryService {
     entry.setEntryDate(paymentOrder.getCreatedAt().toLocalDate());
     entry.setEntryNumber("JE-" + System.currentTimeMillis());
     entry.setDescription("Stripe payment received for Invoice #" + paymentOrder.getInvoice().getId());
-    entry.setStatus(JournalEntryStatus.POSTED);
+    entry.setJournalEntryStatus(JournalEntryStatus.POSTED);
     entry.setPostingDate(LocalDate.now());
-    entry.setPaymentOrder(paymentOrder);
+    entry.setPayment(payment);
     entry = journalEntryRepository.save(entry);
 
-    // Use AccountService to fetch accounts
     Account bankAccount = accountService.getOrCreateAccountBySubType(
             paymentOrder.getInvoice().getCompany().getId(),AccountSubType.BANK
     );
@@ -141,7 +140,6 @@ public class JournalEntryServiceImpl implements JournalEntryService {
             paymentOrder.getInvoice().getCompany().getId(),AccountSubType.ACCOUNTS_RECEIVABLE
     );
 
-    // Debit line (Bank/Cash)
     JournalEntryLine debitLine = new JournalEntryLine();
     debitLine.setJournalEntry(entry);
     debitLine.setCompany(entry.getCompany());

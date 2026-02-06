@@ -39,22 +39,20 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Bill createBill(Bill bill, Long companyId) {
-        // Validate company
+
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new EntityNotFoundException("Company not found"));
         bill.setCompany(company);
 
-        // Validate vendor belongs to the company
         Vendor vendor = vendorRepository.findById(bill.getVendor().getId())
                 .filter(v -> v.getCompany().getId().equals(companyId))
                 .orElseThrow(() -> new EntityNotFoundException("Vendor not found or does not belong to company"));
         bill.setVendor(vendor);
 
-        // Assign Accounts Payable account
+
         Account accountsPayable = accountService.getAccountBySubType(companyId, AccountSubType.ACCOUNTS_PAYABLE);
         bill.setAccount(accountsPayable);
 
-        // Set defaults
         bill.setActive(true);
         bill.setBillStatus(BillStatus.DRAFT);
 

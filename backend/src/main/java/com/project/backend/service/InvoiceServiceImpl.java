@@ -85,14 +85,21 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional
-    public Invoice sendInvoice(long invoiceId, long companyId) {
+    public void deactivateInvoice(long invoiceId, long companyId) {
 
         Invoice invoice = getInvoiceById(invoiceId, companyId);
+        invoice.setActive(false);
+        invoiceRepository.save(invoice);
+    }
 
+
+    @Override
+    @Transactional
+    public Invoice sendInvoice(long invoiceId, long companyId) {
+        Invoice invoice = getInvoiceById(invoiceId, companyId);
         if (invoice.getInvoiceStatus() != InvoiceStatus.DRAFT) {
             throw new IllegalStateException("Only DRAFT invoices can be sent");
         }
-
         invoice.setInvoiceStatus(InvoiceStatus.SENT);
         return invoiceRepository.save(invoice);
     }
@@ -116,12 +123,10 @@ public class InvoiceServiceImpl implements InvoiceService {
      */
     @Override
     @Transactional
-    public Invoice markInvoicePaid(Payment paymentOrder) {
+    public Invoice markInvoicePaid(Payment payment) {
 
-        Invoice invoice = invoiceRepository
-                .findByPaymentOrder(paymentOrder)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Invoice not found for payment"));
+        Invoice invoice = invoiceRepository.findByPayment(payment)
+                .orElseThrow(() -> new EntityNotFoundException("Invoice not found for payment"));
 
         if (invoice.getInvoiceStatus() == InvoiceStatus.VOID) {
             throw new IllegalStateException("Voided invoices cannot be paid");
@@ -133,12 +138,5 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.save(invoice);
     }
 
-    @Override
-    @Transactional
-    public void deactivateInvoice(long invoiceId, long companyId) {
 
-        Invoice invoice = getInvoiceById(invoiceId, companyId);
-        invoice.setActive(false);
-        invoiceRepository.save(invoice);
-    }
 }
