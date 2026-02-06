@@ -30,12 +30,10 @@ public class Bank {
     @Column(nullable= false)
     private String bankName;
 
+    @Column(nullable= false)
+    private String routineNumber;
 
     @OneToMany(fetch=FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable=false)
     private List<Account> account;
-
-
-
-    
 }

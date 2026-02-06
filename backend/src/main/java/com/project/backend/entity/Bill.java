@@ -45,7 +45,7 @@ public class Bill {
     @Column(updatable = false)
     private LocalDate createdAt;
 
-    @Column
+    @Column(nullable=false)
     private LocalDate updatedAt;
 
 
