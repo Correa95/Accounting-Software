@@ -34,6 +34,6 @@ public class PaymentRequest {
     @Size(min = 3, max = 3, message = "Currency must be 3 characters")
     private String currency;
 
-    @NotBlank(message = "Description is required")
-    private String description;
+    @NotBlank(message = "Message is required")
+    private String message;
 }

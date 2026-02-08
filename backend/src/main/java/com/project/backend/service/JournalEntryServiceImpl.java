@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.backend.entity.Account;
 import com.project.backend.entity.JournalEntry;
 import com.project.backend.entity.JournalEntryLine;
-import com.project.backend.entity.Payment;
+import com.project.backend.entity.PaymentOrder;
 import com.project.backend.enums.AccountSubType;
 import com.project.backend.enums.JournalEntryStatus;
 import com.project.backend.repository.JournalEntryLineRepository;
@@ -121,33 +121,33 @@ public class JournalEntryServiceImpl implements JournalEntryService {
 
    @Transactional
     @Override
-    public JournalEntry recordStripePayment(Payment paymentOrder) {
+    public JournalEntry recordPayment(PaymentOrder payment) {
     JournalEntry entry = new JournalEntry();
-    entry.setCompany(paymentOrder.getInvoice().getCompany());
-    entry.setEntryDate(paymentOrder.getCreatedAt().toLocalDate());
+    entry.setCompany(payment.getInvoice().getCompany());
+    entry.setEntryDate(payment.getCreatedAt().toLocalDate());
     entry.setEntryNumber("JE-" + System.currentTimeMillis());
-    entry.setDescription("Stripe payment received for Invoice #" + paymentOrder.getInvoice().getId());
+    entry.setDescription("Stripe payment received for Invoice #" + payment.getInvoice().getId());
     entry.setJournalEntryStatus(JournalEntryStatus.POSTED);
     entry.setPostingDate(LocalDate.now());
-    entry.setPayment(payment);
+    entry.setPayments(payment);
     entry = journalEntryRepository.save(entry);
 
     Account bankAccount = accountService.getOrCreateAccountBySubType(
-            paymentOrder.getInvoice().getCompany().getId(),AccountSubType.BANK
+            payment.getInvoice().getCompany().getId(),AccountSubType.BANK
     );
 
     Account arAccount = accountService.getOrCreateAccountBySubType(
-            paymentOrder.getInvoice().getCompany().getId(),AccountSubType.ACCOUNTS_RECEIVABLE
+            payment.getInvoice().getCompany().getId(),AccountSubType.ACCOUNTS_RECEIVABLE
     );
 
     JournalEntryLine debitLine = new JournalEntryLine();
     debitLine.setJournalEntry(entry);
     debitLine.setCompany(entry.getCompany());
     debitLine.setAccount(bankAccount);
-    debitLine.setDebit(paymentOrder.getAmount());
+    debitLine.setDebit(payment.getAmount());
     debitLine.setCredit(null);
     debitLine.setMemo("Payment received via Stripe");
-    debitLine.setInvoice(paymentOrder.getInvoice());
+    debitLine.setInvoice(payment.getInvoice());
 
     // Credit line (Accounts Receivable)
     JournalEntryLine creditLine = new JournalEntryLine();
@@ -155,9 +155,9 @@ public class JournalEntryServiceImpl implements JournalEntryService {
     creditLine.setCompany(entry.getCompany());
     creditLine.setAccount(arAccount);
     creditLine.setDebit(null);
-    creditLine.setCredit(paymentOrder.getAmount());
-    creditLine.setMemo("Invoice #" + paymentOrder.getInvoice().getId());
-    creditLine.setInvoice(paymentOrder.getInvoice());
+    creditLine.setCredit(payment.getAmount());
+    creditLine.setMemo("Invoice #" + payment.getInvoice().getId());
+    creditLine.setInvoice(payment.getInvoice());
 
     journalEntryLineRepository.save(debitLine);
     journalEntryLineRepository.save(creditLine);

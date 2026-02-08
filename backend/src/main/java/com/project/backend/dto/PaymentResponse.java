@@ -16,11 +16,9 @@ import lombok.NoArgsConstructor;
 public class PaymentResponse {
 
     private Long invoiceId;
+    private Long customerId;
 
-    private String paymentIntentId;
 
-    /** Stripe client secret (frontend confirmation) */
-    private String clientSecret;
 
     private BigDecimal amount;
 

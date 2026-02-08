@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.project.backend.entity.Company;
 import com.project.backend.entity.Invoice;
-import com.project.backend.entity.Payment;
+import com.project.backend.entity.PaymentOrder;
 import com.project.backend.enums.InvoiceStatus;
 import com.project.backend.repository.CompanyRepository;
 import com.project.backend.repository.InvoiceRepository;
@@ -123,7 +123,7 @@ public class InvoiceServiceImpl implements InvoiceService {
      */
     @Override
     @Transactional
-    public Invoice markInvoicePaid(Payment payment) {
+    public Invoice markInvoicePaid(PaymentOrder payment) {
 
         Invoice invoice = invoiceRepository.findByPayment(payment)
                 .orElseThrow(() -> new EntityNotFoundException("Invoice not found for payment"));

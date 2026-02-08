@@ -87,7 +87,7 @@ public class Invoice {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id")
-    private Payment payments;
+    private PaymentOrder payments;
 
     // === Lifecycle ===
 

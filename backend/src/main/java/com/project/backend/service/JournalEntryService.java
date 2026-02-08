@@ -3,7 +3,7 @@ package com.project.backend.service;
 import java.util.List;
 
 import com.project.backend.entity.JournalEntry;
-import com.project.backend.entity.Payment;
+import com.project.backend.entity.PaymentOrder;
 
 public interface JournalEntryService {
 
@@ -22,5 +22,5 @@ public interface JournalEntryService {
     JournalEntry reverseJournalEntry(long journalEntryId, long companyId, String reason);
 
     // Stripe payment integration
-    JournalEntry recordStripePayment(Payment paymentOrder);
+    JournalEntry recordStripePayment(PaymentOrder paymentOrder);
 }

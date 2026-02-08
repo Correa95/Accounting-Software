@@ -3,7 +3,7 @@ package com.project.backend.service;
 import java.util.List;
 
 import com.project.backend.entity.Invoice;
-import com.project.backend.entity.Payment;
+import com.project.backend.entity.PaymentOrder;
 
 public interface InvoiceService {
 
@@ -22,6 +22,6 @@ public interface InvoiceService {
     Invoice voidInvoice(long invoiceId, long companyId);
 
 
-    Invoice markInvoicePaid(Payment payment);
+    Invoice markInvoicePaid(PaymentOrder payment);
 
 }
