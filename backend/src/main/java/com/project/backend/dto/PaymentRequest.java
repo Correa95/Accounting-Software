@@ -18,13 +18,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PaymentRequest {
 
-    @NotNull(message = "Customer ID is required")
-    @Positive(message = "Customer ID must be valid")
-    private Long customerId;
+    // @NotNull(message = "Customer ID is required")
+    // @Positive(message = "Customer ID must be valid")
+    // private Long customerId;
 
-    @NotNull(message = "Invoice ID is required")
-    @Positive(message = "Invoice ID must be valid")
-    private Long invoiceId;
+    // @NotNull(message = "Invoice ID is required")
+    // @Positive(message = "Invoice ID must be valid")
+    // private Long invoiceId;
 
     @NotNull(message = "Amount is required")
     @DecimalMin(value = "0.50", message = "Minimum amount is 0.50")
@@ -34,6 +34,6 @@ public class PaymentRequest {
     @Size(min = 3, max = 3, message = "Currency must be 3 characters")
     private String currency;
 
-    @NotBlank(message = "Message is required")
-    private String message;
+    @NotBlank(message = "Description is required")
+    private String description;
 }

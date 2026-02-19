@@ -15,8 +15,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PaymentResponse {
 
-    private Long invoiceId;
-    private Long customerId;
+
+    private Long id;
+    // private Long invoiceId;
+    // private Long customerId;
 
 
 
@@ -26,5 +28,5 @@ public class PaymentResponse {
 
     private PaymentStatus paymentStatus;
 
-    private String message;
+    private String description;
 }
