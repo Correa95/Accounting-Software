@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.project.backend.dto.PaymentRequest;
 import com.project.backend.dto.PaymentResponse;
 import com.project.backend.service.PaymentService;
-import com.project.backend.service.StripeService;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,11 +20,8 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    /**
-     * Create a Stripe PaymentIntent and save a PaymentOrder
-     */
     @PostMapping("/create")
-    public ResponseEntity<PaymentResponse> createPaymentIntent(
+    public ResponseEntity<PaymentIntentResponse> createPayment(
             @RequestBody @Validated PaymentRequest request) {
 
         // Delegate everything to StripeService
