@@ -1,19 +1,19 @@
 package com.project.backend.service;
 
-import java.util.List;
-import java.util.Optional;
+import org.springframework.stereotype.Service;
 
-import com.project.backend.entity.Payment;
+import com.project.backend.dto.PaymentRequest;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 
+@Service
 public interface PaymentService {
-
-    public PatmentIntent createPayment(CreatePaymentRequest request) throws Exception{
+    // public PaymentIntent createPayment(CreatePaymentRequest request) throws Exception{
+    public PaymentIntent createPayment(PaymentRequest paymentRequest)throws Exception{
         PaymentIntentCreateParams params = PaymentIntentCreateParams.Builder()
-        .setAmount(request.getAmount())
-        .setCurrency(request.getCurrency())
-        .setDescription(request.getDescription())
+        .setAmount(paymentRequest.getAmount())
+        .setCurrency(paymentRequest.getCurrency())
+        .setDescription(paymentRequest.getDescription())
         .setAutomaticPaymentMethods(PaymentIntentCreateParams.AutomaticPaymentMethods
             .builder()
             .setEnabled(true)
