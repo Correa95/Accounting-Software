@@ -20,7 +20,7 @@ public class PaymentResponse {
     // private Long invoiceId;
     // private Long customerId;
 
-
+    private String clientSecret;
 
     private BigDecimal amount;
 
