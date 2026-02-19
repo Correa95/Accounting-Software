@@ -2,7 +2,11 @@ package com.project.backend.config;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.util.pattern.PathPattern;
 
 import com.stripe.Stripe;
 
@@ -14,20 +18,20 @@ public class StripeConfig {
         Stripe.apiKey = secretKey;
     }
 
-    // @Bean
-    // public WebMvcConfigurer corsConfigure(@Value("${app.frontend.url:http://localhost:3000}") String frontendUrl){
-    //     return new WebMvcConfigurer() {
-    //         @Override
-    //         public void addCorsMappings(CorsRegistry registry){
-    //             registry.addMapping(pathPattern"/""")
-    //             .allowedOrigins(frontendUrl)
-    //             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-    //             .allowedHeader("*")
-    //             .allowedCredentials(true)
-    //             .maxAge(3600);
-    //         }
-    //     };
-    // }
+    @Bean
+    public WebMvcConfigurer corsConfigure(@Value("${app.frontend.url:http://localhost:3000}") String frontendUrl){
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry){
+                registry.addMapping(PathPattern"/""")
+                .allowedOrigins(frontendUrl)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeader("*")
+                .allowedCredentials(true)
+                .maxAge(3600);
+            }
+        };
+    }
 }
 
 

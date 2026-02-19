@@ -16,17 +16,13 @@ import lombok.NoArgsConstructor;
 public class PaymentResponse {
 
 
-    private Long id;
     // private Long invoiceId;
     // private Long customerId;
-
+    
+    private Long id;
     private String clientSecret;
-
     private BigDecimal amount;
-
     private String currency;
-
     private PaymentStatus paymentStatus;
-
     private String description;
 }

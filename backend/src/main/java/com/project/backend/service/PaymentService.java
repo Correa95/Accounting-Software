@@ -8,7 +8,7 @@ import com.stripe.param.PaymentIntentCreateParams;
 
 @Service
 public class PaymentService {
-    // public PaymentIntent createPayment(CreatePaymentRequest request) throws Exception{
+    
     public PaymentIntent createPayment(PaymentRequest paymentRequest)throws Exception{
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
         .setAmount(paymentRequest.getAmount())
