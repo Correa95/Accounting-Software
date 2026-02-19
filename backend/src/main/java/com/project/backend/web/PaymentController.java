@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.project.backend.dto.PaymentRequest;
 import com.project.backend.dto.PaymentResponse;
+import com.project.backend.service.PaymentService;
 import com.project.backend.service.StripeService;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 public class PaymentController {
 
-    private final StripeService stripeService;
+    private final PaymentService paymentService;
 
     /**
      * Create a Stripe PaymentIntent and save a PaymentOrder
