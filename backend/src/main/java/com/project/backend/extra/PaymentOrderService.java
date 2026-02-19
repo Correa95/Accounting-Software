@@ -1,4 +1,4 @@
-package com.project.backend.service;
+package com.project.backend.extra;
 
 import com.project.backend.dto.PaymentRequest;
 

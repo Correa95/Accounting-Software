@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
 @Validated
-public class PaymentOrderController {
+public class PaymentController {
 
     private final StripeService stripeService;
 

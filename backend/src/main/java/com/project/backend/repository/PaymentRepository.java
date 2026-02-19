@@ -6,25 +6,25 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.project.backend.entity.PaymentOrder;
+import com.project.backend.entity.Payment;
 import com.project.backend.enums.PaymentStatus;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<PaymentOrder, Long> {
+public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
    
 
     // Customer payment history
-    List<PaymentOrder> findByCustomerId(Long customerId);
+    List<Payment> findByCustomerId(Long customerId);
 
-    List<PaymentOrder> findByInvoiceId(long invoiceId);
+    List<Payment> findByInvoiceId(long invoiceId);
 
     // Accounting & reporting
-    List<PaymentOrder> findByPaymentStatus(PaymentStatus paymentStatus);
+    List<Payment> findByPaymentStatus(PaymentStatus paymentStatus);
 
     // Invoice settlement (if linked)
-    Optional<PaymentOrder> findByInvoiceId(Long invoiceId);
+    Optional<Payment> findByInvoiceId(Long invoiceId);
 
     // Reconciliation / audits
-    List<PaymentOrder> findByCurrency(String currency);
+    List<Payment> findByCurrency(String currency);
 }

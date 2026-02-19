@@ -10,9 +10,7 @@ import com.project.backend.entity.Invoice;
 import com.project.backend.entity.PaymentOrder;
 import com.project.backend.enums.PaymentStatus;
 import com.project.backend.repository.InvoiceRepository;
-import com.project.backend.repository.PaymentOrderRepository;
 import com.project.backend.service.JournalEntryService;
-import com.project.backend.service.PaymentOrderService;
 
 import lombok.RequiredArgsConstructor;
 

@@ -3,16 +3,16 @@ package com.project.backend.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.project.backend.entity.PaymentOrder;
+import com.project.backend.entity.Payment;
 
 public interface PaymentService {
 
-    List<PaymentOrder> getAllPayment(long invoiceId);
-    PaymentOrder getPayment(long invoice, long companyId);
+    List<Payment> getAllPayment(long invoiceId);
+    Payment getPayment(long invoice, long companyId);
     
-    PaymentOrder makePayment(PaymentOrder paymentOrder);
+    Payment makePayment(Payment paymentOrder);
 
     
-    Optional<PaymentOrder> findByStripePaymentIntentId(String stripePaymentIntentId);
+    Optional<Payment> findByStripePaymentIntentId(String stripePaymentIntentId);
 }
 

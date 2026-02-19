@@ -6,7 +6,7 @@ import  org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.project.backend.entity.JournalEntry;
-import com.project.backend.entity.PaymentOrder;
+import com.project.backend.entity.Payment;
 
 @Repository
 public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long> {
@@ -14,5 +14,5 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long
     List<JournalEntry> findByCompanyIdAndDeletedFalse(long companyId);
 
     Optional<JournalEntry> findByIdAndCompanyIdAndDeletedFalse(long journalEntryId, long companyId);
-    List<PaymentOrder> findByPayment(PaymentOrder payment);
+    List<Payment> findByPayment(Payment payment);
 }
