@@ -1,13 +1,13 @@
 package com.project.backend.config;
 
-import org.springframework.beans.factory.annotation.Configurable;
+
 // import org.springframework.context.annotation.Bean;
 // import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.stripe.Stripe;
 
 import lombok.Value;
-@Configurable
+@Configuration
 public class StripeConfig {
 
     public StripeConfig(@Value("${stripe.secret.key}") String secretKey){
