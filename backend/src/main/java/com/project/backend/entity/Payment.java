@@ -56,90 +56,34 @@ public class Payment {
     @Column(nullable = false)
     private String description;
 
-    /**
-     * Lifecycle:
-     *   PENDING        — PaymentIntent created, customer has not yet paid
-     *   COMPLETED      — Stripe webhook confirmed payment_intent.succeeded
-     *   CANCELLED      — Cancelled before capture (PENDING → CANCELLED)
-     *   REFUNDED       — Full refund issued (COMPLETED → REFUNDED)
-     *   PARTIAL_REFUND — Partial refund issued (COMPLETED → PARTIAL_REFUND)
-     *   FAILED         — Stripe reported payment_intent.payment_failed
-     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
-    /**
-     * Reason provided by Stripe when a payment fails.
-     * e.g. "Your card has insufficient funds."
-     * Null for non-failed payments.
-     */
     @Column(length = 500)
     private String failureReason;
 
-    // =========================================================
-    // Timestamps
-    // =========================================================
-
-    /**
-     * When the PaymentIntent was created (payment initiated).
-     */
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    /**
-     * Last time this record was modified (status change, refund, etc.)
-     */
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    /**
-     * When Stripe confirmed the payment was successfully processed.
-     * Set by handlePaymentSuccess() via the webhook.
-     * Null until the payment completes.
-     */
     @Column(nullable = true)
     private LocalDateTime processedAt;
 
-    /**
-     * When the full payment lifecycle ended — either fully refunded
-     * or confirmed complete with no further action expected.
-     * Null while the payment is still active.
-     */
     @Column(nullable = true)
     private LocalDateTime completedAt;
 
-    // =========================================================
-    // Relationships
-    // =========================================================
-
-    /**
-     * The invoice this payment is for.
-     * ManyToOne because multiple payment attempts can exist per invoice
-     * (e.g. first attempt failed, second succeeded).
-     * Only one payment per invoice should ever reach COMPLETED status.
-     */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "invoice_id", nullable = false)
     private Invoice invoice;
 
-    /**
-     * The customer making the payment.
-     * Denormalised here for fast lookup without joining through Invoice.
-     */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    // =========================================================
-    // Domain behaviour
-    // =========================================================
 
-    /**
-     * Mark this payment as successfully completed.
-     * Called by PaymentService.handlePaymentSuccess() after the
-     * Stripe webhook confirms payment_intent.succeeded.
-     */
     public void markCompleted() {
         this.paymentStatus = PaymentStatus.COMPLETED;
         this.processedAt = LocalDateTime.now();
@@ -147,35 +91,16 @@ public class Payment {
         this.failureReason = null;
     }
 
-    /**
-     * Mark this payment as failed and store the reason from Stripe.
-     * Called by PaymentService.handlePaymentFailed() via webhook.
-     *
-     * @param reason the failure message from Stripe (e.g. "Insufficient funds")
-     */
     public void markFailed(String reason) {
         this.paymentStatus = PaymentStatus.FAILED;
         this.failureReason = reason;
     }
 
-    /**
-     * Mark this payment as cancelled.
-     * Called by PaymentService.cancelPayment() after Stripe confirms cancellation.
-     */
     public void markCancelled() {
         this.paymentStatus = PaymentStatus.CANCELLED;
         this.completedAt = LocalDateTime.now();
     }
 
-    /**
-     * Apply a refund amount to this payment record.
-     * Updates refundedAmount and sets status to REFUNDED or PARTIAL_REFUND.
-     * Called by PaymentService.processRefund() after Stripe confirms the refund.
-     *
-     * @param refundAmount   the amount being refunded (dollars/euros, not cents)
-     * @param stripeRefundId the refund ID returned by Stripe
-     * @throws IllegalArgumentException if refund exceeds the refundable balance
-     */
     public void applyRefund(BigDecimal refundAmount, String stripeRefundId) {
         if (refundAmount == null || refundAmount.signum() <= 0) {
             throw new IllegalArgumentException("Refund amount must be positive.");
@@ -203,35 +128,20 @@ public class Payment {
         }
     }
 
-    /**
-     * How much can still be refunded on this payment.
-     * Convenience method used by PaymentService before calling Stripe.
-     */
     public BigDecimal getRefundableBalance() {
         BigDecimal alreadyRefunded = this.refundedAmount != null
                 ? this.refundedAmount : BigDecimal.ZERO;
         return this.amount.subtract(alreadyRefunded);
     }
 
-    /**
-     * Whether this payment can still be cancelled on Stripe.
-     * A PaymentIntent can only be cancelled while it has not been captured.
-     */
     public boolean isCancellable() {
         return this.paymentStatus == PaymentStatus.PENDING;
     }
 
-    /**
-     * Whether a refund can be issued against this payment.
-     */
     public boolean isRefundable() {
         return this.paymentStatus == PaymentStatus.COMPLETED
                 || this.paymentStatus == PaymentStatus.PARTIAL_REFUND;
     }
-
-    // =========================================================
-    // JPA lifecycle hooks
-    // =========================================================
 
     @PrePersist
     protected void onCreate() {
