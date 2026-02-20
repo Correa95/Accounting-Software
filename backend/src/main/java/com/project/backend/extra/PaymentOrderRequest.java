@@ -31,8 +31,8 @@ public class PaymentOrderRequest {
     private Long customerId;
 
     @NotBlank(message = "Customer email is required")
-    @Email(message = "Invalid email format")
-    private Long customerId;
+    @Email(message = "Invoice is not valid ")
+    private Long invoiceNumber;
     // @NotBlank(message = "Customer email is required")
     // @Email(message = "Invalid email format")
     // private String customerEmail;
