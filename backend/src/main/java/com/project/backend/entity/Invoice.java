@@ -153,14 +153,11 @@ public class Invoice {
                 : InvoiceStatus.PARTIAL_REFUND;
 
         if (isFullRefund) {
-            this.paidAt = null; // payment is no longer valid
+            this.paidAt = null; 
         }
     }
 
-    /**
-     * Cancel this invoice before any payment is collected.
-     * Throws if the invoice has already been paid.
-     */
+   
     public void cancel() {
         if (this.invoiceStatus == InvoiceStatus.PAID) {
             throw new IllegalStateException(
@@ -174,17 +171,11 @@ public class Invoice {
         this.active = false;
     }
 
-    /**
-     * Convenience check — is there still money owed?
-     */
     public boolean hasOutstandingBalance() {
         return outstandingBalance != null
                 && outstandingBalance.compareTo(BigDecimal.ZERO) > 0;
     }
 
-    /**
-     * Convenience check — can this invoice accept a payment right now?
-     */
     public boolean isPayable() {
         return (invoiceStatus == InvoiceStatus.PENDING
                 || invoiceStatus == InvoiceStatus.OVERDUE
@@ -193,26 +184,19 @@ public class Invoice {
                 && active;
     }
 
-    // =========================================================
-    // JPA lifecycle hooks
-    // =========================================================
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-
-        // Default outstanding balance to the full invoice amount
         if (this.outstandingBalance == null) {
             this.outstandingBalance = this.invoiceAmount;
         }
 
-        // Default refunded amount
         if (this.refundedAmount == null) {
             this.refundedAmount = BigDecimal.ZERO;
         }
-
-        // Default status if not explicitly set
+        
         if (this.invoiceStatus == null) {
             this.invoiceStatus = InvoiceStatus.PENDING;
         }

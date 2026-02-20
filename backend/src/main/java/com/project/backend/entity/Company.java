@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.project.backend.enums.BusinessType;
-import com.project.backend.extra.Payment;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
