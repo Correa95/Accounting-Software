@@ -6,7 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.project.backend.entity.Invoice;
-import com.project.backend.extra.Payment;
+import com.project.backend.entity.Payment;
+// import com.project.backend.Payment;
 // import com.project.backend.entity.Payment;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
