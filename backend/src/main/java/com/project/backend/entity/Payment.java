@@ -33,74 +33,28 @@ import lombok.Setter;
 @Builder
 public class Payment {
 
-    // =========================================================
-    // Identity
-    // =========================================================
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // =========================================================
-    // Stripe references
-    // =========================================================
-
-    /**
-     * Stripe PaymentIntent ID — e.g. "pi_3Oxxxxxxxxxxxxxxxx".
-     * Created when the customer initiates checkout.
-     * Used to cancel, retrieve, or look up the intent on Stripe.
-     * Unique because each PaymentIntent maps to exactly one payment attempt.
-     */
     @Column(unique = true, length = 100)
     private String stripePaymentIntentId;
 
-    /**
-     * Stripe Refund ID — e.g. "re_3Oxxxxxxxxxxxxxxxx".
-     * Populated when a refund is issued via the Stripe API.
-     * For audit purposes — cross-reference with Stripe Dashboard.
-     */
     @Column(unique = true, length = 100)
     private String stripeRefundId;
 
-    // =========================================================
-    // Financials
-    // =========================================================
-
-    /**
-     * The amount charged to the customer.
-     * Mirrors Invoice.outstandingBalance at the time of payment initiation.
-     * Stored in the unit of {@code currency} (e.g. dollars, not cents).
-     */
     @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;
 
-    /**
-     * Running total of amounts refunded on this payment record.
-     * Starts at zero; incremented by PaymentService.processRefund().
-     * Guards against over-refunding: refundedAmount must never exceed amount.
-     */
     @Column(nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal refundedAmount = BigDecimal.ZERO;
 
-    /**
-     * ISO 4217 currency code — e.g. "usd", "eur", "gbp".
-     * Must match Invoice.currency and is passed directly to Stripe.
-     */
     @Column(nullable = false, length = 3)
     private String currency;
 
-    /**
-     * Human-readable description shown on the Stripe Dashboard
-     * and on the customer's bank statement (where supported).
-     * e.g. "Payment for Invoice INV-1001"
-     */
     @Column(nullable = false)
     private String description;
-
-    // =========================================================
-    // Status
-    // =========================================================
 
     /**
      * Lifecycle:

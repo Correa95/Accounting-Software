@@ -2,10 +2,9 @@ package com.project.backend.enums;
 
 public enum PaymentStatus {
     PENDING,
-    PROCESSING,
-    SUCCESSFUL,
+    COMPLETED,
     FAILED,
-    CANCELED,
+    CANCELLED,
     REFUNDED,
     PARTIAL_REFUND
 }
