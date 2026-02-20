@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.project.backend.enums.TransactionType;
-import com.project.backend.extra.BankAccount;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,9 +55,9 @@ public class BankTransaction {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bank_account_id", nullable = false)
-    private BankAccount bankAccount; 
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "bank_account_id", nullable = false)
+    // private BankAccount bankAccount; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "journal_entry_id")
