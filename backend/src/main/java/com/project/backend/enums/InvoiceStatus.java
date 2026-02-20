@@ -5,6 +5,8 @@ public enum InvoiceStatus {
     SENT,
     PAID,
     VOID,
-    PARTIALLY_PAID
+    PARTIALLY_PAID,
+    REFUNDED,
+    PARTIAL_REFUND
 }
 
