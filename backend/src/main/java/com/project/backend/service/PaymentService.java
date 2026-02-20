@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.project.backend.dto.CancelRefundResponse;
 import com.project.backend.dto.InvoiceSummaryResponse;
-import com.project.backend.dto.PaymentIntentResponse;
+import com.project.backend.dto.PaymentResponse;
 import com.project.backend.entity.Payment;
 import com.project.backend.enums.PaymentStatus;
 import com.stripe.exception.StripeException;
@@ -16,7 +16,7 @@ public interface PaymentService {
     InvoiceSummaryResponse getInvoiceSummary(String invoiceNumber);
 
     // ── Stripe payment flow ───────────────────────────────────────────────────
-    PaymentIntentResponse initiatePayment(String invoiceNumber) throws StripeException;
+    PaymentResponse initiatePayment(String invoiceNumber) throws StripeException;
 
     CancelRefundResponse cancelPayment(String invoiceNumber) throws StripeException;
 

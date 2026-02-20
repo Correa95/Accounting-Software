@@ -11,13 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.backend.config.StripeConfig;
 import com.project.backend.dto.CancelRefundResponse;
 import com.project.backend.dto.InvoiceSummaryResponse;
-import com.project.backend.dto.PaymentIntentResponse;
+import com.project.backend.dto.PaymentResponse;
 import com.project.backend.entity.Invoice;
 import com.project.backend.entity.Payment;
 import com.project.backend.enums.PaymentStatus;
 import com.project.backend.repository.InvoiceRepository;
 import com.project.backend.repository.PaymentRepository;
-import com.project.backend.util.StripeAmountUtil;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.Refund;
@@ -71,7 +70,7 @@ public class PaymentServiceImpl implements PaymentService {
      * so the webhook can update both when Stripe confirms payment.
      */
     @Override
-    public PaymentIntentResponse initiatePayment(String invoiceNumber) throws StripeException {
+    public PaymentResponse initiatePayment(String invoiceNumber) throws StripeException {
         Invoice invoice = findInvoice(invoiceNumber);
 
         // Guard: only payable invoices may proceed
@@ -101,7 +100,10 @@ public class PaymentServiceImpl implements PaymentService {
 
         // Create PaymentIntent on Stripe
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                .setAmount(StripeAmountUtil.toCents(invoice.getOutstandingBalance()))
+                .setAmount(invoice.getOutstandingBalance()
+                        .multiply(java.math.BigDecimal.valueOf(100))
+                        .setScale(0, java.math.RoundingMode.HALF_UP)
+                        .longValueExact())
                 .setCurrency(invoice.getCurrency())
                 .setDescription("Payment for Invoice: " + invoiceNumber)
                 .putAllMetadata(metadata)
@@ -210,7 +212,7 @@ public class PaymentServiceImpl implements PaymentService {
     // =========================================================
 
     /**
-     * Called by PaymentController after Stripe fires payment_intent.succeeded.
+     * Called by StripeWebhookHandler after Stripe fires payment_intent.succeeded.
      *
      * Uses Payment.markCompleted() and Invoice.applyPayment() domain methods
      * to update both records in one transaction. The invoice's applyPayment()
@@ -239,7 +241,7 @@ public class PaymentServiceImpl implements PaymentService {
     // =========================================================
 
     /**
-     * Called by PaymentController after Stripe fires payment_intent.payment_failed.
+     * Called by StripeWebhookHandler after Stripe fires payment_intent.payment_failed.
      *
      * Stores the failure reason from Stripe on the Payment record.
      * The invoice status is left unchanged so the customer can retry.
@@ -340,7 +342,10 @@ public class PaymentServiceImpl implements PaymentService {
         // Issue refund on Stripe
         RefundCreateParams refundParams = RefundCreateParams.builder()
                 .setPaymentIntent(payment.getStripePaymentIntentId())
-                .setAmount(StripeAmountUtil.toCents(amountToRefund))
+                .setAmount(amountToRefund
+                        .multiply(java.math.BigDecimal.valueOf(100))
+                        .setScale(0, java.math.RoundingMode.HALF_UP)
+                        .longValueExact())
                 .build();
 
         Refund refund = Refund.create(refundParams);
@@ -366,7 +371,8 @@ public class PaymentServiceImpl implements PaymentService {
                 payment.getStripePaymentIntentId(),
                 payment.getPaymentStatus().name(),
                 refund.getId(),
-                StripeAmountUtil.fromCents(refund.getAmount())
+                java.math.BigDecimal.valueOf(refund.getAmount())
+                        .divide(java.math.BigDecimal.valueOf(100), 4, java.math.RoundingMode.HALF_UP)
         );
     }
 
@@ -376,14 +382,14 @@ public class PaymentServiceImpl implements PaymentService {
                     "Invoice not found: " + invoiceNumber));
     }
 
-    private PaymentIntentResponse buildIntentResponse(Invoice invoice, String clientSecret) {
-        return new PaymentIntentResponse(
-                clientSecret,
-                invoice.getInvoiceNumber(),
-                invoice.getOutstandingBalance(),
-                invoice.getInvoiceAmount(),
-                invoice.getCustomer().getName(),
-                invoice.getCurrency()
-        );
+    private PaymentResponse buildIntentResponse(Invoice invoice, String clientSecret) {
+        return PaymentResponse.builder()
+                .clientSecret(clientSecret)
+                .invoiceNumber(invoice.getInvoiceNumber())
+                .outstandingBalance(invoice.getOutstandingBalance())
+                .amount(invoice.getInvoiceAmount())
+                .customerName(invoice.getCustomer().getName())
+                .currency(invoice.getCurrency())
+                .build();
     }
 }

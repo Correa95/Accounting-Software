@@ -22,7 +22,7 @@ import com.project.backend.dto.PaymentResponse;
 import com.project.backend.dto.PaymentSummaryResponse;
 import com.project.backend.enums.PaymentStatus;
 import com.project.backend.service.PaymentService;
-import com.project.backend.stripe.StripeWebhookHandler;
+import com.project.backend.service.StripeWebhookHandler;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;

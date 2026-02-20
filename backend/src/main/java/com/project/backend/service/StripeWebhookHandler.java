@@ -1,8 +1,7 @@
-package com.project.backend.config;
+package com.project.backend.service;
 
 import org.springframework.stereotype.Component;
 
-import com.project.backend.service.PaymentService;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.PaymentIntent;

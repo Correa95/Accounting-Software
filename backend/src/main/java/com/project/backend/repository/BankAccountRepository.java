@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.project.backend.extra.BankAccount;
+import com.stripe.model.BankAccount;
+
+
 
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccount, Long> {

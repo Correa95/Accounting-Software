@@ -42,6 +42,7 @@ public class PaymentResponse {
 
     // ── Financials ────────────────────────────────────────────────────────────
     private BigDecimal amount;
+    private BigDecimal outstandingBalance;   // amount still owed on the invoice
     private BigDecimal refundedAmount;
     private BigDecimal refundableBalance;
     private String currency;
