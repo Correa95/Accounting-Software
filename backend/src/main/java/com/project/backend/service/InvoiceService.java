@@ -18,19 +18,7 @@ public interface InvoiceService {
     Invoice voidInvoice(long invoiceId, long companyId);
     void deactivateInvoice(long invoiceId, long companyId);
 
-    // ── Payment integration ───────────────────────────────────────────────────
-
-    /**
-     * Called by the Stripe webhook after payment_intent.succeeded.
-     * Delegates to Invoice.applyPayment() which handles status
-     * and paidAt automatically via domain logic.
-     */
+     
     Invoice markInvoicePaid(Payment payment);
-
-    /**
-     * Called by PaymentService after a refund is issued on Stripe.
-     * Delegates to Invoice.applyRefund() which handles status
-     * (REFUNDED vs PARTIAL_REFUND) and outstanding balance.
-     */
     Invoice applyRefund(long invoiceId, java.math.BigDecimal refundAmount);
 }
