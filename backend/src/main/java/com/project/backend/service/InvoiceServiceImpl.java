@@ -32,10 +32,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final CustomerRepository customerRepository;
     private final JdbcTemplate jdbcTemplate;
 
-    // =========================================================
-    // QUERIES
-    // =========================================================
-
     @Override
     @Transactional(readOnly = true)
     public List<Invoice> getAllInvoices(long companyId) {
@@ -45,10 +41,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional(readOnly = true)
     public Invoice getInvoiceById(long invoiceId, long companyId) {
-        return invoiceRepository
-                .findByIdAndCompanyIdAndActiveTrue(invoiceId, companyId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                    "Invoice not found with id: " + invoiceId));
+        return invoiceRepository.findByIdAndCompanyIdAndActiveTrue(invoiceId, companyId)
+                .orElseThrow(() -> new EntityNotFoundException( "Invoice not found with id: " + invoiceId));
     }
 
     @Override
