@@ -8,7 +8,6 @@ import com.project.backend.enums.InvoiceStatus;
 
 public interface InvoiceService {
 
-    // ── Queries ───────────────────────────────────────────────────────────────
     List<Invoice> getAllInvoices(long companyId);
 
     Invoice getInvoiceById(long invoiceId, long companyId);
