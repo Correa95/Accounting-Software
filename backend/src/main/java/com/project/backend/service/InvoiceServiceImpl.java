@@ -51,34 +51,16 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findByCompanyIdAndInvoiceStatusAndActiveTrue(companyId, status);
     }
 
-    // =========================================================
-    // CREATE
-    // =========================================================
+   
 
-    /**
-     * Creates a new invoice in DRAFT status.
-     *
-     * Invoice number is generated from a Postgres sequence in the format:
-     *   INV-{YEAR}-{000001}
-     * e.g. INV-2026-000001
-     *
-     * The sequence guarantees uniqueness even under concurrent requests —
-     * safer than MAX(id)+1 or UUID-based approaches for sequential numbering.
-     *
-     * outstandingBalance is set to invoiceAmount by @PrePersist on the entity
-     * if not explicitly provided.
-     */
     @Override
     public Invoice createInvoice(long companyId, long customerId, Invoice invoice) {
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                    "Company not found with id: " + companyId));
+        Company company = companyRepository.findById(companyId).orElseThrow(() -> new                   EntityNotFoundException("Company not found with id: " + companyId));
 
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new EntityNotFoundException(
                     "Customer not found with id: " + customerId));
 
-        // Generate sequential invoice number from DB sequence
         Long nextSeq = jdbcTemplate.queryForObject(
                 "SELECT nextval('invoice_number_seq')", Long.class);
 
@@ -91,18 +73,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setCustomer(customer);
         invoice.setActive(true);
 
-        // outstandingBalance defaults to invoiceAmount via @PrePersist
-        // currency defaults to "usd" via field initializer on entity
-
         log.info("Created invoice {} for company {} customer {}",
                 invoiceNumber, companyId, customerId);
 
         return invoiceRepository.save(invoice);
     }
 
-    // =========================================================
-    // UPDATE
-    // =========================================================
+    
 
     /**
      * Updates mutable fields on a DRAFT invoice.
