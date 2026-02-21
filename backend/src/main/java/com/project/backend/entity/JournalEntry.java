@@ -1,4 +1,5 @@
 package com.project.backend.entity;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class JournalEntry {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
-    
+
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
@@ -67,18 +68,18 @@ public class JournalEntry {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @OneToMany(mappedBy = "journalEntry",cascade = CascadeType.ALL,orphanRemoval = true)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "journalEntryLine_id", nullable = false)
+    // Fixed: removed the invalid @ManyToOne + @JoinColumn that was here before
+    @OneToMany(mappedBy = "journalEntry", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JournalEntryLine> journalEntryLines = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_order_id")
-    private Payment payments;
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
     @PrePersist
     void onCreate() {
         createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now(); 
     }
 
     @PreUpdate

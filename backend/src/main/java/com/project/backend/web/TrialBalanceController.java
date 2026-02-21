@@ -1,30 +1,38 @@
 package com.project.backend.web;
 
-
-import java.util.List;
 import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.project.backend.dto.TrialBalanceDTO;
 import com.project.backend.service.TrialBalanceService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("companies/{companyId}/trial-balance")
+@RequiredArgsConstructor
 public class TrialBalanceController {
 
     private final TrialBalanceService trialBalanceService;
 
-    @GetMapping("/trialBalance")
+    @GetMapping
     public ResponseEntity<List<TrialBalanceDTO>> getTrialBalance(
-            @PathVariable Long companyId,
+            @PathVariable long companyId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        return new ResponseEntity<>(trialBalanceService.getTrialBalance(companyId, startDate, endDate), HttpStatus.OK); 
+
+        return ResponseEntity.ok(trialBalanceService.getTrialBalance(companyId, startDate, endDate));
     }
 }
+
+// TrialBalance end points to test
+
+// # All time
+// GET /companies/1/trial-balance
+
+// # Date range
+// GET /companies/1/trial-balance?startDate=2025-01-01&endDate=2025-12-31

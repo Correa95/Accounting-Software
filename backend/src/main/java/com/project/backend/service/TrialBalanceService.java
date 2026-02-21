@@ -25,17 +25,19 @@ public class TrialBalanceService {
         List<JournalEntryLine> journalEntryLines;
 
         if (startDate != null && endDate != null) {
+            // Fixed: was findByCompanyIdAndActiveTrueAndJournalEntryEntryDateBetween
             journalEntryLines = journalEntryLineRepository
-                .findByCompanyIdAndActiveTrueAndJournalEntryEntryDateBetween(companyId, startDate, endDate);
+                .findByCompany_IdAndJournalEntry_EntryDateBetween(companyId, startDate, endDate);
         } else {
-            journalEntryLines = journalEntryLineRepository.findByCompany_IdAndActiveTrue(companyId);
+            // Fixed: was findByCompany_IdAndActiveTrue
+            journalEntryLines = journalEntryLineRepository.findByCompany_Id(companyId);
         }
 
         Map<String, BigDecimal> debitMap = new HashMap<>();
         Map<String, BigDecimal> creditMap = new HashMap<>();
 
         for (JournalEntryLine line : journalEntryLines) {
-            String accountName = line.getAccount().getAccountName(); // fixed from getAccountName()
+            String accountName = line.getAccount().getAccountName();
 
             debitMap.put(accountName, debitMap.getOrDefault(accountName, BigDecimal.ZERO)
                     .add(line.getDebit() != null ? line.getDebit() : BigDecimal.ZERO));
@@ -44,10 +46,7 @@ public class TrialBalanceService {
                     .add(line.getCredit() != null ? line.getCredit() : BigDecimal.ZERO));
         }
 
-        // Build DTOs
-        return debitMap.keySet().stream()
-                .map(account -> new TrialBalanceDTO(
-                        account,
+        return debitMap.keySet().stream().map(account -> new TrialBalanceDTO(account,
                         debitMap.getOrDefault(account, BigDecimal.ZERO),
                         creditMap.getOrDefault(account, BigDecimal.ZERO)
                 ))

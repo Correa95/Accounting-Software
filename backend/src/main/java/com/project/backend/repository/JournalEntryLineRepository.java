@@ -1,5 +1,6 @@
 package com.project.backend.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,13 +11,13 @@ import com.project.backend.entity.JournalEntryLine;
 @Repository
 public interface JournalEntryLineRepository extends JpaRepository<JournalEntryLine, Long> {
 
-    List<JournalEntryLine> findByCompanyIdAndActiveTrue(long companyId);
-
+    // Used by JournalEntryLineService
     List<JournalEntryLine> findByJournalEntryIdAndCompanyId(long journalEntryId, long companyId);
 
-    // Correct date-based query for Trial Balance
-    // List<JournalEntryLine> findByCompany_IdAndActiveTrueAndJournalEntry_EntryDateBetween(long companyId,
-    //         java.time.LocalDate startDate,
-    //         java.time.LocalDate endDate
-    // );
+    // Used by TrialBalanceService — all time
+    List<JournalEntryLine> findByCompany_Id(long companyId);
+
+    // Used by TrialBalanceService — date range
+    List<JournalEntryLine> findByCompany_IdAndJournalEntry_EntryDateBetween(
+            long companyId, LocalDate startDate, LocalDate endDate);
 }

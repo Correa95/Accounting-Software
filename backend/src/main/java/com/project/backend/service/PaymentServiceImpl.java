@@ -37,10 +37,6 @@ public class PaymentServiceImpl implements PaymentService {
     private final InvoiceRepository invoiceRepository;
     private final StripeConfig stripeConfig;
 
-    // =========================================================
-    // INVOICE LOOKUP — show details before customer pays
-    // =========================================================
-
     @Override
     @Transactional(readOnly = true)
     public InvoiceSummaryResponse getInvoiceSummary(String invoiceNumber) {
@@ -56,10 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
         );
     }
 
-    // =========================================================
     // INITIATE — create Stripe PaymentIntent
-    // =========================================================
-
     /**
      * Creates a Stripe PaymentIntent for the given invoice number.
      *

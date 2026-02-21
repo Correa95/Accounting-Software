@@ -139,20 +139,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.save(invoice);
     }
 
-    // =========================================================
-    // VOID
-    // =========================================================
-
-    /**
-     * Voids an invoice — marks it as permanently uncollectable.
-     * PAID invoices cannot be voided; issue a refund instead.
-     * CANCELLED invoices cannot be voided (already terminal).
-     *
-     * Uses Invoice.cancel() domain method which also sets active=false.
-     * NOTE: VOID is a business concept — we map it through InvoiceStatus.CANCELLED
-     * since Invoice.cancel() sets CANCELLED. If you want a separate VOID status,
-     * set it directly here and add VOID to InvoiceStatus enum.
-     */
     @Override
     public Invoice voidInvoice(long invoiceId, long companyId) {
         Invoice invoice = getInvoiceById(invoiceId, companyId);
@@ -172,7 +158,6 @@ public class InvoiceServiceImpl implements InvoiceService {
                 "Invoice is already cancelled.");
         }
 
-        // Use domain method — sets status + active=false
         invoice.cancel();
         invoice.setInvoiceStatus(InvoiceStatus.VOID);
 
@@ -180,19 +165,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         return invoiceRepository.save(invoice);
     }
-
-    // =========================================================
-    // SOFT DELETE
-    // =========================================================
-
     
     @Override
     public void deactivateInvoice(long invoiceId, long companyId) {
         Invoice invoice = getInvoiceById(invoiceId, companyId);
 
         if (invoice.getInvoiceStatus() == InvoiceStatus.PAID) {
-            throw new IllegalStateException(
-                "Paid invoices cannot be deactivated — they are part of the financial record.");
+            throw new IllegalStateException( "Paid invoices cannot be deactivated — they are part of the financial record.");
         }
 
         invoice.setActive(false);
@@ -201,22 +180,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         log.info("Invoice {} deactivated for company {}", invoice.getInvoiceNumber(), companyId);
     }
 
-    // =========================================================
-    // PAYMENT INTEGRATION — called by PaymentService / webhook
-    // =========================================================
-
-    /**
-     * Called by PaymentService.handlePaymentSuccess() after Stripe
-     * confirms payment_intent.succeeded via webhook.
-     *
-     * Delegates to Invoice.applyPayment() which:
-     *   - Subtracts the amount from outstandingBalance
-     *   - Calls markAsPaid() automatically when balance reaches zero
-     *   - Sets invoiceStatus = PAID and paidAt = now()
-     *
-     * Uses findByPayment() to locate the invoice from the Payment record
-     * exactly as your original implementation did.
-     */
+    
     @Override
     public Invoice markInvoicePaid(Payment payment) {
         Invoice invoice = invoiceRepository.findByPayment(payment)
@@ -233,7 +197,6 @@ public class InvoiceServiceImpl implements InvoiceService {
             return invoice;
         }
 
-        // Domain method handles: outstandingBalance, status, paidAt
         invoice.applyPayment(payment.getAmount());
 
         log.info("Invoice {} marked PAID via payment {}",
@@ -242,15 +205,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.save(invoice);
     }
 
-    /**
-     * Called by PaymentService after a refund is confirmed on Stripe.
-     *
-     * Delegates to Invoice.applyRefund() which:
-     *   - Increments refundedAmount
-     *   - Restores outstandingBalance
-     *   - Sets status to REFUNDED (full) or PARTIAL_REFUND (partial)
-     *   - Clears paidAt on full refund
-     */
     @Override
     public Invoice applyRefund(long invoiceId, BigDecimal refundAmount) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
@@ -263,7 +217,6 @@ public class InvoiceServiceImpl implements InvoiceService {
                 "Only PAID or PARTIALLY_REFUNDED invoices can have refunds applied.");
         }
 
-        // Domain method handles: refundedAmount, outstandingBalance, status
         invoice.applyRefund(refundAmount);
 
         log.info("Refund of {} applied to invoice {}", refundAmount, invoice.getInvoiceNumber());

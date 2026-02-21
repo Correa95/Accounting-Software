@@ -35,7 +35,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
     @Override
     public JournalEntry getJournalEntryById(long journalEntryId, long companyId) {
         return journalEntryRepository.findByIdAndCompanyIdAndDeletedFalse(journalEntryId, companyId)
-        .orElseThrow(() -> new RuntimeException("Journal entry not found"));
+                .orElseThrow(() -> new RuntimeException("Journal entry not found"));
     }
 
     @Transactional
@@ -84,21 +84,21 @@ public class JournalEntryServiceImpl implements JournalEntryService {
             throw new IllegalStateException("Only POSTED entries can be reversed");
         }
 
-        JournalEntry entry = new JournalEntry();
-        entry.setCompany(journalEntry.getCompany());
-        entry.setEntryDate(LocalDate.now());
-        entry.setEntryNumber(journalEntry.getEntryNumber() + "-R");
-        entry.setDescription("Reversal of JE " + journalEntry.getEntryNumber() + ": " + reason);
-        entry.setJournalEntryStatus(JournalEntryStatus.POSTED);
-        entry.setPostingDate(LocalDate.now());
-        entry = journalEntryRepository.save(entry);
+        JournalEntry reversal = new JournalEntry();
+        reversal.setCompany(journalEntry.getCompany());
+        reversal.setEntryDate(LocalDate.now());
+        reversal.setEntryNumber(journalEntry.getEntryNumber() + "-R");
+        reversal.setDescription("Reversal of JE " + journalEntry.getEntryNumber() + ": " + reason);
+        reversal.setJournalEntryStatus(JournalEntryStatus.POSTED);
+        reversal.setPostingDate(LocalDate.now());
+        reversal = journalEntryRepository.save(reversal);
 
         for (JournalEntryLine line : journalEntry.getJournalEntryLines()) {
             JournalEntryLine reversedLine = new JournalEntryLine();
-            reversedLine.setJournalEntry(entry);
+            reversedLine.setJournalEntry(reversal);
             reversedLine.setCompany(journalEntry.getCompany());
             reversedLine.setAccount(line.getAccount());
-            reversedLine.setDebit(line.getCredit());
+            reversedLine.setDebit(line.getCredit());   // swap debit <-> credit
             reversedLine.setCredit(line.getDebit());
             reversedLine.setMemo("Reversal of line " + line.getId());
             journalEntryLineRepository.save(reversedLine);
@@ -107,7 +107,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         journalEntry.setJournalEntryStatus(JournalEntryStatus.REVERSED);
         journalEntryRepository.save(journalEntry);
 
-        return entry;
+        return reversal;
     }
 
     @Transactional
@@ -119,56 +119,57 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         journalEntryRepository.save(entry);
     }
 
-   @Transactional
+    @Transactional
     @Override
-    public JournalEntry recordPayment(Payment payment) {
-    JournalEntry entry = new JournalEntry();
-    entry.setCompany(payment.getInvoice().getCompany());
-    entry.setEntryDate(payment.getCreatedAt().toLocalDate());
-    entry.setEntryNumber("JE-" + System.currentTimeMillis());
-    entry.setDescription("Stripe payment received for Invoice #" + payment.getInvoice().getId());
-    entry.setJournalEntryStatus(JournalEntryStatus.POSTED);
-    entry.setPostingDate(LocalDate.now());
-    entry.setPayments(payment);
-    entry = journalEntryRepository.save(entry);
+    public JournalEntry recordStripePayment(Payment payment) {
+        JournalEntry entry = new JournalEntry();
+        entry.setCompany(payment.getInvoice().getCompany());
+        entry.setEntryDate(payment.getCreatedAt().toLocalDate());
+        entry.setEntryNumber(generateEntryNumber());
+        entry.setDescription("Stripe payment received for Invoice #" + payment.getInvoice().getId());
+        entry.setJournalEntryStatus(JournalEntryStatus.POSTED);
+        entry.setPostingDate(LocalDate.now());
+        entry.setPayment(payment); // matches renamed field
+        entry = journalEntryRepository.save(entry);
 
-    Account bankAccount = accountService.getOrCreateAccountBySubType(
-            payment.getInvoice().getCompany().getId(),AccountSubType.BANK
-    );
+        Account bankAccount = accountService.getOrCreateAccountBySubType(
+                payment.getInvoice().getCompany().getId(), AccountSubType.BANK
+        );
 
-    Account arAccount = accountService.getOrCreateAccountBySubType(
-            payment.getInvoice().getCompany().getId(),AccountSubType.ACCOUNTS_RECEIVABLE
-    );
+        Account arAccount = accountService.getOrCreateAccountBySubType(
+                payment.getInvoice().getCompany().getId(), AccountSubType.ACCOUNTS_RECEIVABLE
+        );
 
-    JournalEntryLine debitLine = new JournalEntryLine();
-    debitLine.setJournalEntry(entry);
-    debitLine.setCompany(entry.getCompany());
-    debitLine.setAccount(bankAccount);
-    debitLine.setDebit(payment.getAmount());
-    debitLine.setCredit(null);
-    debitLine.setMemo("Payment received via Stripe");
-    debitLine.setInvoice(payment.getInvoice());
+        // Debit: Cash/Bank (asset increases)
+        JournalEntryLine debitLine = new JournalEntryLine();
+        debitLine.setJournalEntry(entry);
+        debitLine.setCompany(entry.getCompany());
+        debitLine.setAccount(bankAccount);
+        debitLine.setDebit(payment.getAmount());
+        debitLine.setCredit(null);
+        debitLine.setMemo("Payment received via Stripe");
+        debitLine.setInvoice(payment.getInvoice());
 
-    // Credit line (Accounts Receivable)
-    JournalEntryLine creditLine = new JournalEntryLine();
-    creditLine.setJournalEntry(entry);
-    creditLine.setCompany(entry.getCompany());
-    creditLine.setAccount(arAccount);
-    creditLine.setDebit(null);
-    creditLine.setCredit(payment.getAmount());
-    creditLine.setMemo("Invoice #" + payment.getInvoice().getId());
-    creditLine.setInvoice(payment.getInvoice());
+        // Credit: Accounts Receivable (asset decreases)
+        JournalEntryLine creditLine = new JournalEntryLine();
+        creditLine.setJournalEntry(entry);
+        creditLine.setCompany(entry.getCompany());
+        creditLine.setAccount(arAccount);
+        creditLine.setDebit(null);
+        creditLine.setCredit(payment.getAmount());
+        creditLine.setMemo("Invoice #" + payment.getInvoice().getId());
+        creditLine.setInvoice(payment.getInvoice());
 
-    journalEntryLineRepository.save(debitLine);
-    journalEntryLineRepository.save(creditLine);
+        journalEntryLineRepository.save(debitLine);
+        journalEntryLineRepository.save(creditLine);
 
-    return entry;
+        return entry;
     }
-
 
     // ----------------------------
     // INTERNAL HELPERS
     // ----------------------------
+
     private void validateBalanced(JournalEntry entry) {
         BigDecimal totalDebit = BigDecimal.ZERO;
         BigDecimal totalCredit = BigDecimal.ZERO;
@@ -179,7 +180,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         }
 
         if (totalDebit.compareTo(totalCredit) != 0) {
-            throw new IllegalStateException("Journal entry is not balanced");
+            throw new IllegalStateException("Journal entry is not balanced: debits=" + totalDebit + " credits=" + totalCredit);
         }
     }
 
