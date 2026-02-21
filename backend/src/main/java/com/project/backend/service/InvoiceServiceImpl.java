@@ -229,11 +229,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     // SOFT DELETE
     // =========================================================
 
-    /**
-     * Soft-deletes an invoice by setting active=false.
-     * The record is retained for audit purposes.
-     * Only DRAFT or CANCELLED/VOID invoices should be deactivated.
-     */
+    
     @Override
     public void deactivateInvoice(long invoiceId, long companyId) {
         Invoice invoice = getInvoiceById(invoiceId, companyId);
