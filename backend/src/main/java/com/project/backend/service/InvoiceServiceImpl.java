@@ -81,19 +81,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     
 
-    /**
-     * Updates mutable fields on a DRAFT invoice.
-     * Once an invoice is SENT or beyond it cannot be edited —
-     * void it and raise a new one instead.
-     */
     @Override
     public Invoice updateInvoice(long invoiceId, long companyId, Invoice invoice) {
         Invoice existing = getInvoiceById(invoiceId, companyId);
 
         if (existing.getInvoiceStatus() != InvoiceStatus.DRAFT) {
             throw new IllegalStateException(
-                "Only DRAFT invoices can be edited. Current status: "
-                + existing.getInvoiceStatus());
+                "Only DRAFT invoices can be edited. Current status: "+ existing.getInvoiceStatus());
         }
 
         if (invoice.getInvoiceDate() != null)
@@ -117,15 +111,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.save(existing);
     }
 
-    // =========================================================
-    // SEND
-    // =========================================================
-
-    /**
-     * Transitions an invoice from DRAFT → SENT.
-     * After this point the invoice amount is locked and cannot be edited.
-     * Validates that amount and due date are set before sending.
-     */
     @Override
     public Invoice sendInvoice(long invoiceId, long companyId) {
         Invoice invoice = getInvoiceById(invoiceId, companyId);
