@@ -16,7 +16,6 @@ public interface InvoiceService {
     Invoice updateInvoice(long invoiceId, long companyId, Invoice invoice);
     Invoice sendInvoice(long invoiceId, long companyId);
     Invoice voidInvoice(long invoiceId, long companyId);
-
     void deactivateInvoice(long invoiceId, long companyId);
 
     // ── Payment integration ───────────────────────────────────────────────────
