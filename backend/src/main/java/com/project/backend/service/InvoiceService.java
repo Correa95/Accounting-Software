@@ -9,16 +9,11 @@ import com.project.backend.enums.InvoiceStatus;
 public interface InvoiceService {
 
     List<Invoice> getAllInvoices(long companyId);
-
     Invoice getInvoiceById(long invoiceId, long companyId);
-
     List<Invoice> getInvoicesByStatus(long companyId, InvoiceStatus status);
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
     Invoice createInvoice(long companyId, long customerId, Invoice invoice);
-
     Invoice updateInvoice(long invoiceId, long companyId, Invoice invoice);
-
     Invoice sendInvoice(long invoiceId, long companyId);
 
     Invoice voidInvoice(long invoiceId, long companyId);
