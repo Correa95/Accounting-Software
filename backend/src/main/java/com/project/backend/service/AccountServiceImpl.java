@@ -1,5 +1,6 @@
 package com.project.backend.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
@@ -23,13 +23,24 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional(readOnly = true)
+    public Account getAccountById(long accountId) {
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found: " + accountId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Account getAccountBySubType(long companyId, AccountSubType subType) {
-        return accountRepository.findByCompanyIdAndAccountSubTypeAndActiveTrue(companyId, subType).orElseThrow(() -> new IllegalStateException("Active account not found: " + subType + " for company " + companyId));
+        return accountRepository
+                .findByCompanyIdAndAccountSubTypeAndActiveTrue(companyId, subType)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Active account not found: " + subType + " for company " + companyId));
     }
 
     @Override
     public Account getOrCreateAccountBySubType(long companyId, AccountSubType subType) {
-        return accountRepository.findByCompanyIdAndAccountSubTypeAndActiveTrue(companyId, subType)
+        return accountRepository
+                .findByCompanyIdAndAccountSubTypeAndActiveTrue(companyId, subType)
                 .orElseGet(() -> {
                     Company company = companyService.getCompanyById(companyId);
                     Account account = new Account();
@@ -37,6 +48,7 @@ public class AccountServiceImpl implements AccountService {
                     account.setAccountSubType(subType);
                     account.setAccountType(mapSubTypeToType(subType));
                     account.setAccountName(subType.name().replace("_", " "));
+                    account.setAccountNumber("ACC-" + System.currentTimeMillis());
                     account.setActive(true);
                     return accountRepository.save(account);
                 });
@@ -45,8 +57,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional(readOnly = true)
     public List<Account> getAllAccounts(long companyId) {
-        Company company = companyService.getCompanyById(companyId);
-        return company.getAccounts();
+        return accountRepository.findByCompanyIdAndActiveTrue(companyId);
     }
 
     @Override
@@ -59,7 +70,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account updateAccount(long accountId, Account account) {
-        Account existing = accountRepository.findById(accountId).orElseThrow(() -> new RuntimeException("Account not found"));
+        Account existing = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found: " + accountId));
         existing.setAccountName(account.getAccountName());
         existing.setAccountNumber(account.getAccountNumber());
         existing.setAccountType(account.getAccountType());
@@ -70,21 +82,31 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deactivateAccount(long accountId) {
-        Account existing = accountRepository.findById(accountId).orElseThrow(() -> new RuntimeException("Account not found"));
+        Account existing = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found: " + accountId));
         existing.setActive(false);
         accountRepository.save(existing);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public BigDecimal getAccountBalance(long accountId) {
+        Account account = accountRepository.findByIdWithLines(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found: " + accountId));
+        return account.getComputedBalance();
+    }
+
+    // ─────────────────────────────────────
+    // INTERNAL HELPERS
+    // ─────────────────────────────────────
+
     private AccountType mapSubTypeToType(AccountSubType subType) {
-    // Simple mapping, extend as needed
-    return switch (subType) {
-        case CASH, BANK, ACCOUNTS_RECEIVABLE, INVENTORY, FIXED_ASSETS -> AccountType.ASSET;
-        case ACCOUNTS_PAYABLE, TAX_PAYABLE -> AccountType.LIABILITY;
-        case SALES_REVENUE, SERVICE_REVENUE -> AccountType.REVENUE;
-        case OPERATING_EXPENSE, SALARY_EXPENSE -> AccountType.EXPENSE;
-        default -> AccountType.OTHER;
-    };
-}
-
-
+        return switch (subType) {
+            case CASH, BANK, ACCOUNTS_RECEIVABLE, INVENTORY, FIXED_ASSETS -> AccountType.ASSET;
+            case ACCOUNTS_PAYABLE, TAX_PAYABLE -> AccountType.LIABILITY;
+            case SALES_REVENUE, SERVICE_REVENUE -> AccountType.REVENUE;
+            case OPERATING_EXPENSE, SALARY_EXPENSE -> AccountType.EXPENSE;
+            default -> AccountType.OTHER;
+        };
+    }
 }

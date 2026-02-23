@@ -1,184 +1,68 @@
-| Layer      | Responsibility  |
-| ---------- | --------------- |
-| Controller | HTTP / REST     |
-| Service    | Business rules  |
-| Repository | Database access |
-| Entity     | Table mapping   |
+# ─────────────────────────────────────
 
-1. Customer.java (Entity / Domain Model)
+# JOURNAL ENTRIES
 
-# Purpose
+# ─────────────────────────────────────
 
-    - Represents the business object and database table
-    - Holds data only, no business logic
+GET http://localhost:8080/companies/1/journalEntries
+GET http://localhost:8080/companies/1/journalEntries/1
+POST http://localhost:8080/companies/1/journalEntries
+PUT http://localhost:8080/companies/1/journalEntries/1
+DELETE http://localhost:8080/companies/1/journalEntries/1
+POST http://localhost:8080/companies/1/journalEntries/1/post
+POST http://localhost:8080/companies/1/journalEntries/1/reverse
 
-# Role
+# ─────────────────────────────────────
 
-    - Maps to a database table via JPA/Hibernate
-    - Defines fields, relationships, and constraints
+# JOURNAL ENTRY LINES
 
-# Typical contents
+# ─────────────────────────────────────
 
-    - Fields (id, name, email, company, etc.)
-    - JPA annotations (@Entity, @Id, @ManyToOne)
-    - Getters/setters
+GET http://localhost:8080/companies/1/journalEntries/1/lines
+POST http://localhost:8080/companies/1/journalEntries/1/lines
+PUT http://localhost:8080/companies/1/journalEntries/1/lines/1
+DELETE http://localhost:8080/companies/1/journalEntries/1/lines/1
 
-# Why it exists
+# ─────────────────────────────────────
 
-    - Keeps your data model independent from web or business logic
-    - Allows Hibernate/JPA to manage persistence
+# TRIAL BALANCE
 
-# Think of it as
+# ─────────────────────────────────────
 
-<!-- - “What a Customer is” -->
+GET http://localhost:8080/companies/1/trial-balance
+GET http://localhost:8080/companies/1/trial-balance?startDate=2025-01-01&endDate=2025-12-31
 
-2. CustomerService.java (Service Interface)
+# ─────────────────────────────────────
 
-# Purpose
+# INVOICES
 
-    - Defines what operations are allowed
-    - Acts as a contract
+# ─────────────────────────────────────
 
-# Role
+GET http://localhost:8080/companies/1/invoices
+GET http://localhost:8080/companies/1/invoices/1
+POST http://localhost:8080/companies/1/invoices/customers/1
+PUT http://localhost:8080/companies/1/invoices/1
+DELETE http://localhost:8080/companies/1/invoices/1
+POST http://localhost:8080/companies/1/invoices/1/send
+POST http://localhost:8080/companies/1/invoices/1/void
+POST http://localhost:8080/companies/1/invoices/1/pay
 
-    *Declares business actions without implementation
-    *Decouples controllers from implementations
+# ─────────────────────────────────────
 
-# Typical contents
+# PAYMENTS
 
-    public interface CustomerService {
-        List<Customer> getCustomers(Long companyId);
-        Customer getCustomer(Long customerId, Long companyId);
-        Customer createCustomer(Customer customer, Long companyId);
-    }
+# ─────────────────────────────────────
 
-# Why it exists
-
-# Enables:
-
-    - Multiple implementations
-    - Easier testing (mocking)
-    - Cleaner architecture
-
-# Think of it as
-
-<!-- - “What the system can do with Customers” -->
-
-3. CustomerServiceImpl.java (Business Logic Layer)
-
-# Purpose
-
-    - Contains business rules
-    - Orchestrates repositories and validations
-
-# Role
-
-    - Implements CustomerService
-    - Handles:
-    - Validation
-    - Ownership checks
-    - Transactions
-    - Business constraints
-
-# Typical contents
-
-    - Calls CustomerRepository
-    - Applies rules (e.g., customer belongs to company)
-    - Throws domain-specific errors
-    - Why it exists
-    - Keeps business logic out of controllers
-    - Prevents duplication
-    - Centralizes rules
-
-# Think of it as
-
-<!-- - “How customer operations actually work” -->
-
-4. CustomerController.java (Web / API Layer)
-
-# Purpose
-
-    - Exposes REST endpoints
-    - Handles HTTP requests and responses
-
-# Role
-
-    - Maps URLs to service calls
-    - Converts:
-    - HTTP → Java
-    - Java → HTTP
-
-# Typical contents
-
-    @RestController
-    @RequestMapping("/companies/{companyId}/customers")
-    public class CustomerController {
-        @GetMapping
-        public List<Customer> getCustomers(...) { ... }
-    }
-
-# What it should NOT do
-
-    - Business logic
-    - Database access
-
-# Why it exists
-
-    - Separates web concerns from business logic
-    - Makes APIs easier to change or version
-
-# Think of it as
-
-<!-- - “How the outside world talks to your system” -->
-
-# How They Work Together (Flow)
-
-    HTTP Request
-    ↓
-    Controller (CustomerController)
-    ↓
-    Service Interface (CustomerService)
-    ↓
-    Service Implementation (CustomerServiceImpl)
-    ↓
-    Repository → Database
-
-# Why This Structure Matters (Real-World Reasons)
-
-    ✅ Easier to test
-    ✅ Easier to scale
-    ✅ Easier to debug
-    ✅ Easier to change UI / API without breaking logic
-    ✅ Required for enterprise & fintech systems
-    ✅ Aligns with Spring Boot & DDD best practices
-
-# Why @Override Is Needed in CustomerServiceImpl
-
-    - 1. It Enforces the Contract
-    * CustomerService defines a contract
-    * CustomerServiceImpl promises to follow it
-
-    @Override tells the compiler:
-
-<!-- “This method MUST match a method from the interface” -->
-
-    If it doesn’t match exactly → compile-time error
-
-🧠 Why This Structure Matters (Architecturally)
-
-# Interface (ProductService)
-
-    -Contract
-    -Testable
-    -Replaceable
-
-# ServiceImpl
-
-    -Business rules
-    -Ownership validation (companyId)
-    -No HTTP or DB leakage
-
-# Repository
-
-    -Pure persistence
-    -No business logic
+GET http://localhost:8080/api/payments/invoice-summary?invoiceNumber=INV-001
+POST http://localhost:8080/api/payments/initiate?invoiceNumber=INV-001
+POST http://localhost:8080/api/payments/cancel?invoiceNumber=INV-001
+POST http://localhost:8080/api/payments/refund/full?invoiceNumber=INV-001
+POST http://localhost:8080/api/payments/refund/partial
+POST http://localhost:8080/api/payments/webhook
+GET http://localhost:8080/api/payments/by-invoice/1
+GET http://localhost:8080/api/payments/by-customer/1
+GET http://localhost:8080/api/payments/by-customer/1/status?status=PAID
+GET http://localhost:8080/api/payments/by-status?status=PAID
+GET http://localhost:8080/api/payments/by-currency?currency=USD
+GET http://localhost:8080/api/payments/by-currency/status?currency=USD&status=PAID
+GET http://localhost:8080/api/payments/intent/pi_abc123
